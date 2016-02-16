@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+		                   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		                   http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- Load external hints.properties -->
+	<context:property-placeholder system-properties-mode="OVERRIDE" location="classpath:hints.properties" />
+
+    <!-- Database -->
+    <bean id="datasource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${db.mysql.driver}" />
+        <property name="jdbcUrl" value="${db.crm.url}" />
+        <property name="user" value="${db.crm.username}" />
+        <property name="password" value="${db.crm.password}" />
+ 		<!-- c3p0 Pool properties -->
+   		<property name="minPoolSize" value="5" />
+    	<property name="maxPoolSize" value="20" />
+    	<property name="maxIdleTime" value="300" />
+    	<property name="maxStatements" value="50" />
+    	<property name="acquireIncrement" value="1" />
+    	<property name="idleConnectionTestPeriod" value="3000" />
+    </bean>
+
+    <!-- Entity Manager -->
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="datasource" />
+        <property name="persistenceUnitName" value="crmdb" />
+    </bean>
+
+    <!-- Transaction Manager -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+ 
+    <bean id="persistenceExceptionTranslationPostProcessor"
+          class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+    
+    <!-- Jpa Repositories -->
+    <jpa:repositories base-package="us.im360.crmdbdata.repositories"></jpa:repositories>
+    
+    <!-- JSR-303 Bean Validation -->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+    
+    <!-- Scan the service directory -->
+    <context:component-scan base-package="us.im360.hints.hintservice.service" />
+    <context:component-scan base-package="us.im360.hints.hintservice" />     
+    
+    <!-- Jackson JSON ObjectMapper -->
+    <bean id="objectMapper" class="org.codehaus.jackson.map.ObjectMapper"/>
+    
+    <!-- Enable annotation style of managing transactions -->
+    <tx:annotation-driven transaction-manager="transactionManager" /> 
+    
+</beans>
