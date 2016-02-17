@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import us.im360.hints.hintservice.ReportHandler;
 import us.im360.hints.hintservice.InitHandler;
 import us.im360.hints.hintservice.service.CashReportService;
+import us.im360.hints.hintservice.service.ProductService;
 import us.im360.hints.hintservice.service.ProfitReportService;
 import us.im360.hints.hintservice.util.ResponseBuilder;
 
@@ -47,6 +48,9 @@ public class ReportHandlerImpl implements ReportHandler {
 
 	@Autowired
 	private ProfitReportService profitReportService;
+
+	@Autowired
+	private ProductService productService;
 
 	private static final String DETAILS_FIELD_NAME = "details";
 
@@ -104,6 +108,33 @@ public class ReportHandlerImpl implements ReportHandler {
 
 		return buildResponse(responseBuilder);
 	}
+
+
+	@GET
+	@Path("stock/restaurantId/{restaurantId}/userId/{userId}/productId/{productId}")
+	@Override
+	public Response getStockReport(
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("userId") Integer userId,
+			@PathParam("productId") String productId)
+	{
+		logger.debug("restaurantId: {}, userId: {}, productId: {}", restaurantId, userId, productId);
+
+		JsonNode stock = productService.getProductStock(productId);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+
+		if (stock!=null) {
+			responseBuilder.success().withPlainNode(stock);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+
+
 
 	/**
 	 * Helper method for building response object

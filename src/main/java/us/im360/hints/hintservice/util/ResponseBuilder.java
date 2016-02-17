@@ -7,6 +7,7 @@ import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 public class ResponseBuilder {
@@ -25,20 +26,33 @@ public class ResponseBuilder {
         this.mapper = mapper;
         this.objectNode = mapper.createObjectNode();
     }
+
     public ResponseBuilder success() {
         this.objectNode.put(RESULT_CODE_FIELD, RESULT_SUCCESS);
         return this;
     }
+
     public ResponseBuilder fail() {
         this.objectNode.put(RESULT_CODE_FIELD, RESULT_FAIL);
         return this;
     }
+
+    public ResponseBuilder withPlainNode(JsonNode node) {
+        Iterator<String> fieldIterator = node.getFieldNames();
+        while (fieldIterator.hasNext()) {
+            String fieldName = fieldIterator.next();
+            this.objectNode.put(fieldName, node.get(fieldName));
+        }
+        return this;
+    }
+
     public ResponseBuilder withArray(String fieldName, Collection<JsonNode> collection) {
         ArrayNode arr = new ArrayNode(mapper.getNodeFactory());
         arr.addAll(collection);
         objectNode.put(fieldName, arr);
         return this;
     }
+
     public ObjectNode build() {
         return this.objectNode;
     }

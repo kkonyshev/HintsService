@@ -18,10 +18,33 @@ public interface ReportHandler {
      */
     Response getCloseReportOnDate(Integer restaurantId, String closeDate);
 
+    /**
+     * Profit report
+     *
+     * @param restaurantId
+     * @param startDate
+     * @param endDate
+     * @param strainListComaSeparated
+     * @param tierListComaSeparated
+     * @return
+     */
     Response getProfitReport(
             Integer restaurantId,
             String startDate,
             String endDate,
             String strainListComaSeparated,
             String tierListComaSeparated);
+
+    /**
+     * Product stock report
+     *
+     * @param restaurantId
+     * @param userId
+     * @param productId
+     * @return
+     */
+    Response getStockReport(
+            Integer restaurantId,
+            Integer userId,
+            String productId);
 }

@@ -5,10 +5,17 @@ Example URL:
 http://localhost:8080/HintsService/v1.0/rest/report/cash/restaurantId/1/closeDate/2016-01-26
 
 
-
 =========Get Profit Report implementation
 API URL:
 http://localhost:8080/HintsService/v1.0/rest/report/profit/restaurantId/{restaurantId}/startDate/{startDate}/endDate/{endDate}/strains/{strainListComaSeparated}/tiers/{tierListComaSeparated}
 
 Example URL:
 http://localhost:8080/HintsService/v1.0/rest/report/profit/restaurantId/1/startDate/2016-01-01/endDate/2016-01-01/strains/39168b9a-b33d-11e5-8802-b8aeed795ea3,9dbf60c9-adab-11e5-8802-b8aeed795ea3,829197fd-97c5-11e5-8aba-4439c455558d/tiers/60
+
+
+=========Get Product Stock Report implementation
+API URL:
+http://localhost:8080/HintsService/v1.0/rest/report/stock/restaurantId/{restaurantId}/userId/{userId}/productId/{productId}
+
+Example URL:
+http://localhost:8080/HintsService/v1.0/rest/report/stock/restaurantId/1/userId/1/productId/004828e4-5c03-11e5-a043-4439c455558d
