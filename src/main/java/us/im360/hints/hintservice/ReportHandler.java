@@ -3,11 +3,11 @@ package us.im360.hints.hintservice;
 import javax.ws.rs.core.Response;
 
 /**
- * Cash report service interface
+ * Report service interface
  *
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 16/02/16.
  */
-public interface CashReportHandler {
+public interface ReportHandler {
 
     /**
      * Cash report on date
@@ -17,4 +17,11 @@ public interface CashReportHandler {
      * @return
      */
     Response getCloseReportOnDate(Integer restaurantId, String closeDate);
+
+    Response getProfitReport(
+            Integer restaurantId,
+            String startDate,
+            String endDate,
+            String strainListComaSeparated,
+            String tierListComaSeparated);
 }

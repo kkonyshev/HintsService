@@ -1,6 +1,7 @@
 package us.im360.hints.hintservice.handlerImpl;
 
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -9,9 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import us.im360.hints.hintservice.CashReportHandler;
+import us.im360.hints.hintservice.ReportHandler;
 import us.im360.hints.hintservice.InitHandler;
 import us.im360.hints.hintservice.service.CashReportService;
+import us.im360.hints.hintservice.service.ProfitReportService;
 import us.im360.hints.hintservice.util.ResponseBuilder;
 
 import javax.ws.rs.GET;
@@ -20,6 +22,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,10 +34,10 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 @Component
-@Path("cash/report")
-public class CashReportHandlerImpl implements CashReportHandler {
+@Path("report")
+public class ReportHandlerImpl implements ReportHandler {
 
-	private static final Logger logger = LoggerFactory.getLogger(InitHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReportHandler.class);
 		
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -40,7 +45,10 @@ public class CashReportHandlerImpl implements CashReportHandler {
 	@Autowired
 	private CashReportService cashReportService;
 
-	private static final String FIELD_NAME = "details";
+	@Autowired
+	private ProfitReportService profitReportService;
+
+	private static final String DETAILS_FIELD_NAME = "details";
 
 	/**
 	 * Cash report on date
@@ -50,7 +58,7 @@ public class CashReportHandlerImpl implements CashReportHandler {
 	 * @return
 	 */
 	@GET
-	@Path("/{restaurantId}/{closeDate}")
+	@Path("cash/restaurantId/{restaurantId}/closeDate/{closeDate}")
 	@Override
 	public Response getCloseReportOnDate(
 			@PathParam("restaurantId") Integer restaurantId, @PathParam("closeDate") String closeDate
@@ -61,7 +69,35 @@ public class CashReportHandlerImpl implements CashReportHandler {
 		List<JsonNode> resultList = cashReportService.getCloseReport(restaurantId, closeDate);
 
 		if (resultList!=null && !resultList.isEmpty()) {
-			responseBuilder.success().withArray(FIELD_NAME, resultList);
+			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+	@GET
+	@Path("profit/restaurantId/{restaurantId}/startDate/{startDate}/endDate/{endDate}/strains/{strainListComaSeparated}/tiers/{tierListComaSeparated}")
+	@Override
+	public Response getProfitReport(
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("startDate") String startDate,
+			@PathParam("endDate") String endDate,
+			@PathParam("strainListComaSeparated") String strainListComaSeparated,
+			@PathParam("tierListComaSeparated") String tierListComaSeparated)
+	{
+		logger.debug("restaurantId: {}, startDate: {}, endDate: {}, strainListComaSeparated: {}, tierListComaSeparated: {}", restaurantId, startDate, endDate, strainListComaSeparated, tierListComaSeparated);
+
+		Collection<String> strains = StringUtils.isEmpty(strainListComaSeparated) ? Collections.<String>emptyList() : Arrays.asList(strainListComaSeparated.split(","));
+		Collection<String> tiers = StringUtils.isEmpty(tierListComaSeparated) ? Collections.<String>emptyList() : Arrays.asList(tierListComaSeparated.split(","));
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+
+		List<JsonNode> resultList = profitReportService.getProfitReport(restaurantId, startDate, endDate, strains, tiers);
+
+		if (resultList!=null && !resultList.isEmpty()) {
+			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
 		} else {
 			responseBuilder.fail();
 		}
