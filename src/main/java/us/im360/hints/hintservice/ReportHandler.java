@@ -16,7 +16,11 @@ public interface ReportHandler {
      * @param closeDate
      * @return
      */
-    Response getCloseReportOnDate(Integer restaurantId, String closeDate);
+    Response getCloseReportOnDate(
+            Integer userId,
+            Integer restaurantId,
+            String closeDate
+    );
 
     /**
      * Profit report
@@ -24,27 +28,42 @@ public interface ReportHandler {
      * @param restaurantId
      * @param startDate
      * @param endDate
-     * @param strainListComaSeparated
-     * @param tierListComaSeparated
      * @return
      */
     Response getProfitReport(
+            Integer userId,
             Integer restaurantId,
             String startDate,
-            String endDate,
-            String strainListComaSeparated,
-            String tierListComaSeparated);
+            String endDate
+    );
 
     /**
      * Product stock report
      *
-     * @param restaurantId
      * @param userId
+     * @param restaurantId
      * @param productId
      * @return
      */
     Response getStockReport(
-            Integer restaurantId,
             Integer userId,
-            String productId);
+            Integer restaurantId,
+            String productId
+    );
+
+    /**
+     * Payment report
+     *
+     * @param userId
+     * @param restaurantId
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    Response getPaymentReport(
+            Integer userId,
+            Integer restaurantId,
+            String startDate,
+            String endDate
+    );
 }

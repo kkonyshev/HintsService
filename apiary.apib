@@ -1,0 +1,62 @@
+FORMAT: 1A
+HOST: http://localhost:8080/
+
+# im360
+
+IM360 API
+
+
+## Cash report [/HintsService/v1.0/rest/report/cash/userId/{userId}/restaurantId/{restaurantId}/closeDate/{closeDate}]
++ Parameters
+    + userId: `1` (number, required)
+    + restaurantId: `1` (number, required)
+    + closeDate: `2016-01-26` (number, required)
+    
+### get [GET]
+
++ Response 200 (application/json)
+
+        {"resultCode":"success","details":[{"id":1289,"cashregister_id":"ff8081815277cc0a01527c5379ad05cf","terminal":"dispensary-cr01","date_open":1453734387000,"date_close":1453798725000,"cash_expected":3589.46,"cash_actual":3592.0,"cash_difference":-2.54,"cashless_atm_expected":1515.0,"cashless_atm_actual":1515.0,"cashless_atm_difference":0.0,"total_expected":5104.46,"total_actual":5107.0,"total_difference":-2.54,"mostsales_userid":"ff8081814be294e2014be6979dff070b","user_id":20,"status":"SUCCESS","location_id":1,"running_debit":1515.0,"open":"09:00 AM","close":"02:58 PM","cash_drop":2300.0,"mostsales":"TAYLOR","closed_by":"JAMINA KNOWLES"},{"id":1290,"cashregister_id":"ff808081527bdf7c01527c4ec7ed018e","terminal":"dispensary-cr02","date_open":1453734081000,"date_close":1453798825000,"cash_expected":4047.34,"cash_actual":3932.0,"cash_difference":115.34,"cashless_atm_expected":2075.0,"cashless_atm_actual":2075.0,"cashless_atm_difference":0.0,"total_expected":6122.34,"total_actual":6007.0,"total_difference":115.34,"mostsales_userid":"ff8081814be294e2014be6979dff070b","user_id":20,"status":"SUCCESS","location_id":1,"running_debit":2075.0,"open":"09:00 AM","close":"03:00 PM","cash_drop":2100.0,"mostsales":"TAYLOR","closed_by":"JAMINA KNOWLES"},{"id":1291,"cashregister_id":"ff808181527cf2610152802933900272","terminal":"dispensary-cr01","date_open":1453798725000,"date_close":1453820861000,"cash_expected":4331.7,"cash_actual":4335.0,"cash_difference":-3.3,"cashless_atm_expected":2460.0,"cashless_atm_actual":2460.0,"cashless_atm_difference":0.0,"total_expected":6791.7,"total_actual":6795.0,"total_difference":-3.3,"mostsales_userid":"ff8081814967fbf0014968029ca5000a","user_id":15,"status":"SUCCESS","location_id":1,"running_debit":3975.0,"open":"02:58 PM","close":"09:07 PM","cash_drop":2160.0,"mostsales":"CHRISTOPHER","closed_by":"CHRISTOPHER BUERGER"},{"id":1292,"cashregister_id":"ff808081527dcf030152802ab14e034d","terminal":"dispensary-cr02","date_open":1453798825000,"date_close":1453820619000,"cash_expected":5917.1,"cash_actual":5935.0,"cash_difference":-17.9,"cashless_atm_expected":2755.0,"cashless_atm_actual":2755.0,"cashless_atm_difference":0.0,"total_expected":8672.1,"total_actual":8690.0,"total_difference":-17.9,"mostsales_userid":"ff8081814be294e2014be6979dff070b","user_id":15,"status":"SUCCESS","location_id":1,"running_debit":4830.0,"open":"03:00 PM","close":"09:03 PM","cash_drop":3080.0,"mostsales":"TAYLOR","closed_by":"CHRISTOPHER BUERGER"}]}
+
+
+## Profit report [/HintsService/v1.0/rest/report/profit/userId/{userId}/restaurantId/{restaurantId}/startDate/{startDate}/endDate/{endDate}]
++ Parameters
+    + userId: `1` (number, required)
+    + restaurantId: `1` (number, required)
+    + startDate: `2016-01-01` (string, required)
+    + endDate: `2016-01-01` (string, required)
+
+    
+### get [GET]
+
++ Response 200 (application/json)
+
+        {"resultCode":"success","details":[{"type":"FLOWER","strain":"91 OG KUSH","option":"SOIL - ORGANIC - LED","tier":"60","cost":209.52750000000003,"grams":22.75,"profit":378.0377999999999,"revenue":345.2399999999999,"profit_per_gram":7.407046153846148,"net_profit":135.71249999999986},{"type":"FLOWER","strain":"BLOCKHEAD","option":"SOIL - ORGANIC","tier":"45","cost":1206.2925000000005,"grams":168.25,"profit":2151.1384499999986,"revenue":1964.5099999999975,"profit_per_gram":5.615726300148577,"net_profit":758.217499999997},{"type":"FLOWER","strain":"BLUE MAZAR","option":"SOIL - ORGANIC","tier":"45","cost":150.64499999999998,"grams":20.75,"profit":269.45759999999996,"revenue":246.08000000000004,"profit_per_gram":5.725908433734938,"net_profit":95.43500000000006},{"type":"FLOWER","strain":"CHEMDOG","option":"ROCKWOOL - HYDROPONIC","tier":"60","cost":560.9024999999998,"grams":64.25,"profit":1090.0878300000002,"revenue":995.5139999999994,"profit_per_gram":8.236347548638138,"net_profit":434.61149999999964},{"type":"FLOWER","strain":"D.P. BLUEBERRY","option":"SOIL - ORGANIC","tier":"50","cost":77.30000000000001,"grams":10.0,"profit":150.015,"revenue":137.0,"profit_per_gram":7.271499999999998,"net_profit":59.69999999999999},{"type":"FLOWER","strain":"DIAMOND OG KUSH","option":"SOIL - ORGANIC","tier":"60","cost":350.29999999999995,"grams":38.75,"profit":669.9538500000001,"revenue":611.83,"profit_per_gram":8.249131612903229,"net_profit":261.5300000000001},{"type":"FLOWER","strain":"DUTCH TREAT","option":"SOIL - ORGANIC","tier":"50","cost":1049.3099999999995,"grams":135.0,"profit":1912.435019999999,"revenue":1746.5159999999994,"profit_per_gram":6.393518666666663,"net_profit":697.2059999999999},{"type":"FLOWER","strain":"HARDCORE OG","option":"SOIL - ORGANIC","tier":"60","cost":332.8949999999999,"grams":37.75,"profit":646.9807500000001,"revenue":590.85,"profit_per_gram":8.320152317880797,"net_profit":257.9550000000001},{"type":"FLOWER","strain":"HERCULES OG KUSH","option":"SOIL - ORGANIC","tier":"60","cost":821.5599999999997,"grams":94.0,"profit":1613.9653949999993,"revenue":1473.9410000000005,"profit_per_gram":8.42984462765957,"net_profit":652.3810000000008},{"type":"FLOWER","strain":"JACK HERER","option":"ROCKWOOL - HYDROPONIC","tier":"50","cost":292.5625,"grams":37.75,"profit":534.97758,"revenue":488.56399999999985,"profit_per_gram":6.421591523178807,"net_profit":196.00149999999985},{"type":"FLOWER","strain":"LOUIS XIII OG KUSH","option":"SOIL - ORGANIC","tier":"60","cost":1401.1999999999982,"grams":155.0,"profit":2663.9160000000034,"revenue":2432.800000000002,"profit_per_gram":8.14655483870971,"net_profit":1031.6000000000038},{"type":"FLOWER","strain":"MR NICE","option":"SUNGROWN","tier":"30","cost":1245.1349999999989,"grams":226.0,"profit":1908.9594900000004,"revenue":1743.3420000000015,"profit_per_gram":2.9372765044247857,"net_profit":498.2070000000026},{"type":"FLOWER","strain":"OG KUSH #18","option":"SOIL - ORGANIC","tier":"50","cost":448.14,"grams":57.75,"profit":825.9771149999997,"revenue":754.3170000000002,"profit_per_gram":6.542634025974021,"net_profit":306.17700000000025},{"type":"FLOWER","strain":"PROFESSOR OG KUSH","option":"SOIL - ORGANIC","tier":"60","cost":172.865,"grams":19.25,"profit":329.9892,"revenue":301.35999999999996,"profit_per_gram":8.162296103896102,"net_profit":128.49499999999995},{"type":"FLOWER","strain":"SATURN OG KUSH","option":"ROCKWOOL - HYDROPONIC","tier":"35","cost":1145.972500000002,"grams":193.25,"profit":1907.3049450000028,"revenue":1741.8310000000033,"profit_per_gram":3.9396245536869388,"net_profit":595.8585000000014},{"type":"FLOWER","strain":"SKYWALKER OG KUSH","option":"SOIL - ORGANIC","tier":"60","cost":294.0875,"grams":33.25,"profit":570.00225,"revenue":520.5499999999998,"profit_per_gram":8.298187969924813,"net_profit":226.46249999999986},{"type":"FLOWER","strain":"SONOMA OG","option":"SOIL - ORGANIC","tier":"50","cost":15.62,"grams":2.0,"profit":30.002999999999997,"revenue":27.4,"profit_per_gram":7.191499999999999,"net_profit":11.78},{"type":"FLOWER","strain":"SUPER GLUE","option":"SOIL - ORGANIC","tier":"60","cost":186.95250000000004,"grams":22.75,"profit":383.9946,"revenue":350.68,"profit_per_gram":8.661191208791207,"net_profit":163.72749999999996},{"type":"FLOWER","strain":"SUPERMAN OG KUSH","option":"SOIL - ORGANIC","tier":"60","cost":803.9125,"grams":91.25,"profit":1563.9348449999993,"revenue":1428.2510000000007,"profit_per_gram":8.329011999999992,"net_profit":624.3385000000006},{"type":"FLOWER","strain":"THIN MINTS","option":"ROCKWOOL - HYDROPONIC","tier":"40","cost":2370.1274999999973,"grams":360.75,"profit":4119.884940000002,"revenue":3762.452000000011,"profit_per_gram":4.850332474012486,"net_profit":1392.3245000000138},{"type":"FLOWER","strain":"TRIPLE O","option":"SOIL - ORGANIC","tier":"60","cost":164.14999999999998,"grams":24.5,"profit":410.99839499999996,"revenue":375.3409999999999,"profit_per_gram":10.07544469387755,"net_profit":211.19099999999992},{"type":"FLOWER","strain":"XJ-13","option":"SOIL - ORGANIC","tier":"50","cost":610.3999999999997,"grams":80.0,"profit":1139.9541299999999,"revenue":1041.054,"profit_per_gram":6.619426625000001,"net_profit":430.65400000000034},{"type":"MISC","strain":"SHAKE 3.5g","option":"","tier":"","cost":24.43,"grams":3.5,"profit":24.998849999999997,"revenue":22.83,"profit_per_gram":0.16252857142857075,"net_profit":0.0},{"type":"EXTRACT","strain":"BLUE DREAM","option":"OIL - TRIPLE REFINED","tier":"50","cost":25.0,"grams":1.0,"profit":49.997699999999995,"revenue":45.66,"profit_per_gram":24.997699999999995,"net_profit":20.659999999999997},{"type":"EXTRACT","strain":"GIRL SCOUT COOKIES","option":"JELLY","tier":"45","cost":175.0,"grams":10.0,"profit":445.54455,"revenue":406.89000000000004,"profit_per_gram":27.054455,"net_profit":231.89000000000004},{"type":"EXTRACT","strain":"HARLE-TSU","option":"WAX - NUG RUN 10:1","tier":"60","cost":30.0,"grams":1.0,"profit":59.99505,"revenue":54.79,"profit_per_gram":29.99505,"net_profit":24.79},{"type":"EXTRACT","strain":"LARRY OG","option":"OIL","tier":"35","cost":35.0,"grams":2.0,"profit":69.9924,"revenue":63.92,"profit_per_gram":17.4962,"net_profit":28.92},{"type":"EXTRACT","strain":"LARRY OG","option":"OIL - TRIPLE REFINED","tier":"50","cost":50.0,"grams":2.0,"profit":99.99539999999999,"revenue":91.32,"profit_per_gram":24.997699999999995,"net_profit":41.31999999999999},{"type":"EXTRACT","strain":"OG TERP STAR","option":"OIL - NUG RUN","tier":"50","cost":25.0,"grams":1.0,"profit":49.997699999999995,"revenue":45.66,"profit_per_gram":24.997699999999995,"net_profit":20.659999999999997},{"type":"EXTRACT","strain":"SFV OG KUSH","option":"OIL - TRIPLE REFINED","tier":"40","cost":20.0,"grams":1.0,"profit":40.00035,"revenue":36.53,"profit_per_gram":20.000349999999997,"net_profit":16.53},{"type":"EXTRACT","strain":"THC BLEND","option":"OIL","tier":"35","cost":140.0,"grams":8.0,"profit":279.96959999999996,"revenue":255.68000000000004,"profit_per_gram":17.496199999999995,"net_profit":115.68000000000004},{"type":"EXTRACT","strain":"THC BLEND","option":"OIL - ACTIVATED","tier":"45","cost":45.0,"grams":2.0,"profit":90.009,"revenue":82.2,"profit_per_gram":22.5045,"net_profit":37.2}]}
+        
+
+## Product Stock report [/HintsService/v1.0/rest/report/stock/userId/{userId}/restaurantId/{restaurantId}/productId/{productId}]
++ Parameters
+    + userId: `1` (number, required)
+    + restaurantId: `1` (number, required)
+    + productId: `004828e4-5c03-11e5-a043-4439c455558d` (string, required)
+
+    
+### get [GET]
+
++ Response 200 (application/json)
+
+                {"resultCode":"success","units":0.0}
+                
+## Payment report [/HintsService/v1.0/rest/report/payment/userId/{userId}/restaurantId/{restaurantId}/startDate/{startDate}/endDate/{endDate}]
++ Parameters
+    + userId: `1` (number, required)
+    + restaurantId: `1` (number, required)
+    + startDate: `2016-01-01` (string, required)
+    + endDate: `2016-01-01` (string, required)
+
+    
+### get [GET]
+
++ Response 200 (application/json)
+
+                {"resultCode":"success","details":[{"type":"CASH","cash":19957.468784999975,"tax":1731.4698945890377},{"type":"CASHLESS_ATM","cash":6525.0,"tax":566.0958904109584}]}

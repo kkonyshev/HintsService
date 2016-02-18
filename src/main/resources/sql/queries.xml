@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+    <comment>Reports</comment>
+
+    <entry key="profitReport">
+        <![CDATA[
+SELECT
+  'FLOWER'                                               AS type,
+  t1.name                                                AS strain,
+  t1.option_name                                         AS 'option',
+  t1.tier_name                                           AS tier,
+  t2.cost,
+  t2.grams,
+  t1.profit,
+  t1.revenue,
+  if((t1.profit - t2.cost) / t2.grams <= 0, 0,
+     (t1.profit - t2.cost) / t2.grams)                   AS profit_per_gram,
+  if(t1.revenue - t2.cost <= 0, 0, t1.revenue - t2.cost) AS net_profit
+FROM
+  (SELECT
+     sum(tl.priceSell * tl.amount * (1 + tl.taxRate)) AS profit,
+     sum(tl.priceSell * tl.amount)                    AS revenue,
+     ty.name                                          AS name,
+     op.name                                          AS option_name,
+     tier.tier_name,
+     ca2.id
+   FROM posper_ticketline tl, posper_ticket ti, posper_product pr, posper_category ca1, posper_category ca2,
+     im_strain_type ty, im_strain_tier tier, im_strain_category_option co LEFT JOIN im_strain_option op
+       ON op.id = co.option_id
+   WHERE date(ti.dateClose) >= :startDate AND date(ti.dateClose) <= :endDate
+         AND co.category_id = ca2.id AND ca1.parent_id = ca2.id AND tl.ticket_ticketline = ti.id AND
+         tl.product_id = pr.id
+         AND pr.category_id = ca1.id AND ty.posper_category_id = ca1.id AND ty.im_strain_tier_id = tier.id
+   GROUP BY ty.name, tier.tier_name) t1 LEFT JOIN
+  (SELECT
+     ty.name,
+     ti.tier_name,
+     sum(-1 * st.units * dt.cost_per_gram * dt.grams_per_jar) AS cost,
+     sum(-1 * st.units * dt.grams_per_jar)                    AS grams
+   FROM im_strain_detail dt, posper_stockdiary st, posper_product pr, posper_category ca, im_strain_type ty,
+     im_strain_tier ti
+   WHERE dt.id = st.im_strain_detail_id AND st.product_id = pr.id AND pr.category_id = ca.id AND
+         ty.posper_category_id = ca.id AND ty.im_strain_tier_id = ti.id
+         AND st.reason IN (-6, 6, -8, 8) AND date(st.date) >= :startDate AND date(st.date) <= :endDate
+   GROUP BY ty.name, ti.tier_name) t2
+    ON t1.name = t2.name AND t1.tier_name = t2.tier_name
+UNION ALL
+SELECT
+  'MISC'                                                 AS type,
+  t1.name                                                AS strain,
+  t1.option_name                                         AS 'option',
+  t1.tier_name                                           AS tier,
+  t2.cost,
+  t2.grams,
+  t1.profit,
+  t1.revenue,
+  if((t1.profit - t2.cost) / t2.grams <= 0, 0,
+     (t1.profit - t2.cost) / t2.grams)                   AS profit_per_gram,
+  if(t1.revenue - t2.cost <= 0, 0, t1.revenue - t2.cost) AS net_profit
+FROM
+  (SELECT
+     sum(tl.priceSell * tl.amount * (1 + tl.taxRate)) AS profit,
+     sum(tl.priceSell * tl.amount)                    AS revenue,
+     pr.description                                   AS name,
+     ''                                               AS option_name,
+     ''                                               AS tier_name
+   FROM posper_ticketline tl, posper_ticket ti, posper_product pr, posper_category ca
+   WHERE tl.ticket_ticketline = ti.id AND tl.product_id = pr.id AND pr.category_id = ca.id AND
+         pr.id IN ('shake35', 'crumb35')
+         AND date(ti.dateClose) >= :startDate AND date(ti.dateClose) <= :endDate
+   GROUP BY pr.id) t1 LEFT JOIN
+  (SELECT
+     pr.description                                           AS name,
+     ''                                                       AS tier_name,
+     sum(-1 * st.units * dt.cost_per_gram * dt.grams_per_jar) AS cost,
+     sum(-1 * st.units * dt.grams_per_jar)                    AS grams
+   FROM im_strain_detail dt, posper_stockdiary st, posper_product pr, posper_category ca
+   WHERE dt.id = st.im_strain_detail_id AND st.product_id = pr.id AND pr.category_id = ca.id
+         AND pr.id IN ('shake35', 'crumb35') AND st.reason IN (-6, 6, -8, 8) AND date(st.date) >= :startDate AND
+         date(st.date) <= :endDate
+   GROUP BY pr.id) t2
+    ON t1.name = t2.name
+UNION ALL
+SELECT
+  'EXTRACT'                                              AS type,
+  t1.name                                                AS strain,
+  t1.option_name                                         AS 'option',
+  t1.tier_name                                           AS tier,
+  t2.cost,
+  t2.grams,
+  t1.profit,
+  t1.revenue,
+  if((t1.profit - t2.cost) / t2.grams <= 0, 0,
+     (t1.profit - t2.cost) / t2.grams)                   AS profit_per_gram,
+  if(t1.revenue - t2.cost <= 0, 0, t1.revenue - t2.cost) AS net_profit
+FROM
+  (SELECT
+     sum(tl.priceSell * tl.amount * (1 + tl.taxRate)) AS profit,
+     sum(tl.priceSell * tl.amount)                    AS revenue,
+     ty.name                                          AS name,
+     op.name                                          AS option_name,
+     tier.tier                                        AS tier_name,
+     ca2.id
+   FROM posper_ticketline tl, posper_ticket ti, posper_product pr, posper_category ca1, posper_category ca2,
+     im_strain_extract_type ty, im_strain_extract_cost tier, im_strain_category_option co LEFT JOIN im_strain_option op
+       ON op.id = co.option_id
+   WHERE co.category_id = ca2.id AND ca1.parent_id = ca2.id AND tl.ticket_ticketline = ti.id AND tl.product_id = pr.id
+         AND pr.category_id = ca1.id AND ty.category_id = ca1.id AND ty.extract_cost_id = tier.id
+         AND date(ti.dateClose) >= :startDate AND date(ti.dateClose) <= :endDate
+   GROUP BY ty.name, tier.tier) t1 LEFT JOIN
+  (SELECT
+     ty.name,
+     ti.tier                                                  AS tier_name,
+     sum(-1 * st.units * dt.cost_per_gram * dt.grams_per_jar) AS cost,
+     sum(-1 * st.units * dt.grams_per_jar)                    AS grams
+   FROM im_strain_detail dt, posper_stockdiary st, posper_product pr, posper_category ca, im_strain_extract_type ty,
+     im_strain_extract_cost ti
+   WHERE
+     dt.id = st.im_strain_detail_id AND st.product_id = pr.id AND pr.category_id = ca.id AND ty.category_id = ca.id AND
+     ty.extract_cost_id = ti.id
+     AND st.reason IN (-6, 6, -8, 8) AND date(st.date) >= :startDate AND date(st.date) <= :endDate
+   GROUP BY ty.name, ti.tier) t2
+    ON t1.name = t2.name AND t1.tier_name = t2.tier_name;
+        ]]>
+    </entry>
+    
+    <entry key="productStockGetByProductId">
+        <![CDATA[
+SELECT round(units, 2) AS units
+FROM posper_product
+WHERE id = :productId
+        ]]>
+    </entry>
+
+    
+    <entry key="paymentReport">
+        <![CDATA[
+SELECT
+  :type                                                              AS type,
+  CASE
+  WHEN 'CASH' = :type
+    THEN
+      sum(cash)
+  WHEN 'CASHLESS_ATM' = :type
+    THEN sum(cashless_atm) END                                       AS cash,
+  CASE
+  WHEN 'CASH' = :type
+    THEN
+      sum(cash) - (sum(cash) / (1 + ta.rate))
+  WHEN 'CASHLESS_ATM' = :type
+    THEN sum(cashless_atm) - (sum(cashless_atm) / (1 + ta.rate)) END AS tax
+FROM posper_tax ta, (SELECT
+                       t4.id,
+                       t4.visibleId,
+                       t4.date,
+                       t4.time,
+                       t5.cash + t5.cashless_atm AS total,
+                       t5.cash,
+                       t5.cashless_atm,
+                       t4.name,
+                       t5.usage_tax
+                     FROM (SELECT
+                             ti.id,
+                             ti.visibleId,
+                             DATE(ti.dateClose) AS DATE,
+                             TIME(ti.dateClose) AS TIME,
+                             upper(us.name)     AS NAME
+                           FROM posper_ticket ti, posper_user us
+                           WHERE ti.dateClose IS NOT NULL AND us.id = ti.userid
+                                 AND DATE(ti.dateClose) >= :startDate AND DATE(ti.dateClose) <= :endDate) t4 JOIN
+                       (SELECT
+                          t1.id,
+                          t1.visibleId,
+                          total - cashless_atm AS cash,
+                          cashless_atm,
+                          usage_tax
+                        FROM
+                          (SELECT
+                             ti.id,
+                             ti.visibleId,
+                             sum(tl.priceSell * tl.amount * (1 + ta.rate)) AS total,
+                             sum(orig_tax)                                 AS usage_tax
+                           FROM posper_tax ta, posper_ticket ti LEFT JOIN posper_ticketline tl
+                               ON tl.ticket_ticketline = ti.id
+                           WHERE ti.dateClose IS NOT NULL AND ta.id = 1 AND DATE(ti.dateClose) >= :startDate AND
+                                 DATE(ti.dateClose) <= :endDate
+                           GROUP BY ti.visibleId) t1 JOIN
+                          (SELECT
+                             id,
+                             visibleId,
+                             IF(sum(cash) IS NULL, 0, sum(cash)) + IF(sum(refund) IS NULL, 0, sum(refund)) AS cash,
+                             IF(sum(cashless_atm) IS NULL, 0, sum(
+                                 cashless_atm))                                                            AS cashless_atm
+                           FROM (
+                                  SELECT
+                                    ti.id,
+                                    ti.visibleId,
+                                    CASE WHEN pa.method = 'cash'
+                                      THEN pa.amount END AS cash,
+                                    CASE WHEN pa.method = 'cheque'
+                                      THEN pa.amount END AS cashless_atm,
+                                    CASE WHEN pa.method = 'cashrefund'
+                                      THEN pa.amount END AS refund
+                                  FROM posper_ticket ti, posper_payment pa
+                                  WHERE ti.dateClose IS NOT NULL AND pa.ticket_id = ti.id
+                                        AND DATE(ti.dateClose) >= :startDate AND DATE(ti.dateClose) <= :endDate) t2
+                           GROUP BY visibleId) t3
+                            ON t1.visibleId = t3.visibleId) t5
+                         ON t4.visibleId = t5.visibleId
+                     ORDER BY t4.time) t6
+WHERE ta.id = 1;
+        ]]>
+    </entry>
+    
+    
+    <entry key="cashCloseReport">
+        <![CDATA[
+SELECT
+  cc.cashregister_id                                                            AS register,
+  cc.terminal                                                                   AS terminal,
+  if(date(cc.date_open) = ?, time_format(cc.date_open, '%h:%i %p'), '09:00 AM') AS time_open,
+  time_format(cc.date_close, '%h:%i %p')                                        AS time_closed,
+  cc.cash_expected                                                              AS expected_cash,
+  cc.cash_actual                                                                AS actual_cash,
+  cc.cash_difference                                                            AS cash_difference,
+  cc.cashless_atm_expected                                                      AS expected_debit,
+  cc.cashless_atm_actual                                                        AS actual_debit,
+  if(cc.terminal LIKE '%1', (@runtot1 := @runtot1 + cc.cashless_atm_actual),
+     (@runtot2 := @runtot2 + cc.cashless_atm_actual))
+                                                                                AS running_debit,
+  cc.cashless_atm_difference                                                    AS debit_difference,
+  cc.total_expected                                                             AS expected_total,
+  cc.total_actual                                                               AS actual_total,
+  cc.total_difference                                                           AS total_difference,
+  upper(pu.name)                                                                AS cashier,
+  upper(concat(us.first_name, ' ', us.last_name))                               AS manager
+FROM im_close_cash cc LEFT JOIN tb_users us
+    ON cc.user_id = us.id
+  LEFT JOIN posper_user pu
+    ON cc.mostsales_userid = pu.id
+  LEFT JOIN (SELECT
+               cashregister_id,
+               sum(cash_drop) AS cash_drop
+             FROM im_cash_drop
+             GROUP BY cashregister_id) t1
+    ON t1.cashregister_id = cc.cashregister_id
+WHERE date(cc.date_close) = :closeDate;
+        ]]>
+    </entry>
+</properties>

@@ -1,6 +1,7 @@
 package us.im360.hints.hintservice.handlerImpl;
 
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonNode;
@@ -11,8 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.im360.hints.hintservice.ReportHandler;
-import us.im360.hints.hintservice.InitHandler;
 import us.im360.hints.hintservice.service.CashReportService;
+import us.im360.hints.hintservice.service.PaymentService;
 import us.im360.hints.hintservice.service.ProductService;
 import us.im360.hints.hintservice.service.ProfitReportService;
 import us.im360.hints.hintservice.util.ResponseBuilder;
@@ -23,10 +24,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Cash report service handler implementation
@@ -50,6 +48,9 @@ public class ReportHandlerImpl implements ReportHandler {
 	private ProfitReportService profitReportService;
 
 	@Autowired
+	private PaymentService paymentService;
+
+	@Autowired
 	private ProductService productService;
 
 	private static final String DETAILS_FIELD_NAME = "details";
@@ -62,10 +63,12 @@ public class ReportHandlerImpl implements ReportHandler {
 	 * @return
 	 */
 	@GET
-	@Path("cash/restaurantId/{restaurantId}/closeDate/{closeDate}")
+	@Path("cash/userId/{userId}/restaurantId/{restaurantId}/closeDate/{closeDate}")
 	@Override
 	public Response getCloseReportOnDate(
-			@PathParam("restaurantId") Integer restaurantId, @PathParam("closeDate") String closeDate
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("closeDate") String closeDate
 	) {
 		logger.debug("restaurantId: {}, closeDate: {}" + restaurantId, closeDate);
 
@@ -82,23 +85,19 @@ public class ReportHandlerImpl implements ReportHandler {
 	}
 
 	@GET
-	@Path("profit/restaurantId/{restaurantId}/startDate/{startDate}/endDate/{endDate}/strains/{strainListComaSeparated}/tiers/{tierListComaSeparated}")
+	@Path("profit/userId/{userId}/restaurantId/{restaurantId}/startDate/{startDate}/endDate/{endDate}")
 	@Override
 	public Response getProfitReport(
+			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("startDate") String startDate,
-			@PathParam("endDate") String endDate,
-			@PathParam("strainListComaSeparated") String strainListComaSeparated,
-			@PathParam("tierListComaSeparated") String tierListComaSeparated)
+			@PathParam("endDate") String endDate)
 	{
-		logger.debug("restaurantId: {}, startDate: {}, endDate: {}, strainListComaSeparated: {}, tierListComaSeparated: {}", restaurantId, startDate, endDate, strainListComaSeparated, tierListComaSeparated);
-
-		Collection<String> strains = StringUtils.isEmpty(strainListComaSeparated) ? Collections.<String>emptyList() : Arrays.asList(strainListComaSeparated.split(","));
-		Collection<String> tiers = StringUtils.isEmpty(tierListComaSeparated) ? Collections.<String>emptyList() : Arrays.asList(tierListComaSeparated.split(","));
+		logger.debug("restaurantId: {}, startDate: {}, endDate: {}, strainListComaSeparated: {}, tierListComaSeparated: {}", restaurantId, startDate, endDate);
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 
-		List<JsonNode> resultList = profitReportService.getProfitReport(restaurantId, startDate, endDate, strains, tiers);
+		List<JsonNode> resultList = profitReportService.getProfitReport(restaurantId, startDate, endDate);
 
 		if (resultList!=null && !resultList.isEmpty()) {
 			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
@@ -111,11 +110,11 @@ public class ReportHandlerImpl implements ReportHandler {
 
 
 	@GET
-	@Path("stock/restaurantId/{restaurantId}/userId/{userId}/productId/{productId}")
+	@Path("stock/userId/{userId}/restaurantId/{restaurantId}/productId/{productId}")
 	@Override
 	public Response getStockReport(
-			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("productId") String productId)
 	{
 		logger.debug("restaurantId: {}, userId: {}, productId: {}", restaurantId, userId, productId);
@@ -133,7 +132,39 @@ public class ReportHandlerImpl implements ReportHandler {
 		return buildResponse(responseBuilder);
 	}
 
+	@GET
+	@Path("payment/userId/{userId}/restaurantId/{restaurantId}/startDate/{startDate}/endDate/{endDate}")
+	@Override
+	public Response getPaymentReport(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("startDate") String startDate,
+			@PathParam("endDate") String endDate
+	)
+	{
+		logger.debug("restaurantId: {}, userId: {}, productId: {}, startDate: {}, endDate: {}", restaurantId, userId, startDate, endDate);
 
+		List<JsonNode> resultList = new ArrayList<>(2);
+		JsonNode cashRow = paymentService.getPaymentReport("CASH", startDate, endDate);
+		JsonNode cashlessRow = paymentService.getPaymentReport("CASHLESS_ATM", startDate, endDate);
+
+		if (cashRow!=null) {
+			resultList.add(cashRow);
+		}
+		if (cashlessRow!=null) {
+			resultList.add(cashlessRow);
+		}
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+
+		if (CollectionUtils.isNotEmpty(resultList)) {
+			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
 
 
 	/**

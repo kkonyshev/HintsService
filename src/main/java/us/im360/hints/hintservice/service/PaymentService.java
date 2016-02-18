@@ -7,12 +7,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import us.im360.hints.hintservice.util.JsonNodeRowMapper;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Product service implementation
@@ -22,9 +26,9 @@ import java.util.*;
 @SuppressWarnings("unused")
 @Service
 @Transactional
-public class ProductService {
+public class PaymentService {
 
-	private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
+	private static final Logger logger = LoggerFactory.getLogger(PaymentService.class);
 
 	@Autowired
 	@Qualifier("queryStore")
@@ -36,23 +40,33 @@ public class ProductService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public JsonNode getProductStock(String productId)
+	public JsonNode getPaymentReport(String type, String startDate, String endDate)
 	{
-		logger.debug("productId: {}", productId);
+		logger.debug("type: {}, startDate: {}, endDate: {}", type, startDate, endDate);
 
 		try {
-			String productStockGetByProductIdQuery = queryStore.getProperty("productStockGetByProductId");
-			logger.debug("QUERY TO EXECUTE: " + productStockGetByProductIdQuery);
+			String paymentReportQuery = queryStore.getProperty("paymentReport");
+			logger.debug("QUERY TO EXECUTE: " + paymentReportQuery);
 
 			List<JsonNode> rowResult = namedParameterJdbcTemplate.query(
-					productStockGetByProductIdQuery,
-					Collections.singletonMap("productId", productId),
+					paymentReportQuery,
+					new MapSqlParameterSource()
+							.addValue("type", type)
+							.addValue("startDate", startDate)
+							.addValue("endDate", endDate),
 					new JsonNodeRowMapper(objectMapper));
+
+			logger.debug("RESULT: " + rowResult);
 
 			if (CollectionUtils.isEmpty(rowResult)) {
 				return null;
 			} else {
-				return rowResult.iterator().next();
+				JsonNode jsonNode = rowResult.iterator().next();
+				if (jsonNode.get("cash")==null) {
+					return null;
+				} else {
+					return jsonNode;
+				}
 			}
 		} catch (Exception e) {
 			logger.warn(e.getMessage(), e);

@@ -1,0 +1,27 @@
+reporter: apiary
+custom:
+  apiaryApiKey: 5605520e2fa1e38bb2785bc6fbd55ce0
+  apiaryApiName: im360
+dry-run: null
+hookfiles: null
+language: nodejs
+sandbox: false
+server: null
+server-wait: 3
+init: false
+names: false
+only: []
+output: []
+header: []
+sorted: false
+user: null
+inline-errors: false
+details: false
+method: []
+color: true
+level: info
+timestamp: false
+silent: false
+path: []
+blueprint: apiary.apib
+endpoint: 'http://localhost:8080'
