@@ -82,4 +82,24 @@ public interface ReportHandler {
             String startDate,
             String endDate
     );
+
+    /**
+     * Ticket list
+     *
+     * @param userId
+     * @param restaurantId
+     * @param date
+     * @param timeStart
+     * @param timeEnd
+     * @param userIdList
+     * @return
+     */
+    Response getTicketList(
+            Integer userId,
+            Integer restaurantId,
+            String date,
+            String timeStart,
+            String timeEnd,
+            String userIdList
+    );
 }

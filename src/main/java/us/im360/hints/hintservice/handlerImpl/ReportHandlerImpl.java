@@ -51,6 +51,9 @@ public class ReportHandlerImpl implements ReportHandler {
 	private ProductService productService;
 
 	@Autowired
+	private TicketService ticketService;
+
+	@Autowired
 	private LossReportService lossReportService;
 
 	private static final String DETAILS_FIELD_NAME = "details";
@@ -189,6 +192,33 @@ public class ReportHandlerImpl implements ReportHandler {
 		return buildResponse(responseBuilder);
 	}
 
+	@GET
+	@Path("tickets/userId/{userId}/restaurantId/{restaurantId}/date/{date}/timeStart/{timeStart}/timeEnd/{timeEnd}/userIdList/{userIdList}")
+	@Override
+	public Response getTicketList(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("date") String date,
+			@PathParam("timeStart") String timeStart,
+			@PathParam("timeEnd") String timeEnd,
+			@PathParam("userIdList") String userIdList
+	) {
+		logger.debug("restaurantId: {}, userId: {}, date: {}, timeStart: {}, timeEnd: {}, userIdList: {}", restaurantId, userId, date, timeStart, timeEnd, userIdList);
+
+		List<String> userIds = Arrays.asList(userIdList.split(","));
+
+		List<JsonNode> resultList = ticketService.getTicketList(userId, restaurantId, date, timeStart, timeEnd, userIds);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+
+		if (CollectionUtils.isNotEmpty(resultList)) {
+			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
 
 	/**
 	 * Helper method for building response object

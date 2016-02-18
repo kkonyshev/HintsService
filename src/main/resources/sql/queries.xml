@@ -313,6 +313,74 @@ ORDER BY strain, tier DESC, grams_per_jar DESC;
         ]]>
     </entry>
 
+
+    <entry key="ticketList">
+        <![CDATA[
+SELECT
+  t4.id                            AS ID,
+  t4.visibleId                     AS visibleId,
+  DATE_FORMAT(t4.date, '%Y-%m-%d') AS 'date',
+  DATE_FORMAT(t4.time, '%H:%i:%s') AS 'time',
+  t5.cash + t5.cashless_atm        AS total,
+  t5.cash                          AS cash,
+  t5.cashless_atm                  AS cashless_atm,
+  t4.name                          AS NAME,
+  t4.userid                        AS user_id
+FROM (SELECT
+        ti.id,
+        ti.visibleId,
+        date(ti.dateClose) AS date,
+        time(ti.dateClose) AS time,
+        upper(us.name)     AS name,
+        us.id              AS userid
+      FROM posper_ticket ti, posper_user us
+      WHERE ti.dateClose IS NOT NULL AND us.id = ti.userid
+            AND date(ti.dateClose) = :date AND time(ti.dateClose) >= :timeStart AND
+            time(ti.dateClose) <= :timeEnd) t4 JOIN
+  (SELECT
+     t1.id,
+     t1.visibleId,
+     total - cashless_atm AS cash,
+     cashless_atm
+   FROM
+     (SELECT
+        ti.id,
+        ti.visibleId,
+        sum(tl.priceSell * tl.amount * (1 + ta.rate)) AS total
+      FROM posper_tax ta, posper_ticket ti LEFT JOIN posper_ticketline tl
+          ON tl.ticket_ticketline = ti.id
+      WHERE
+        ti.dateClose IS NOT NULL AND ta.id = 1 AND date(ti.dateClose) = :date AND time(ti.dateClose) >= :timeStart AND
+        time(ti.dateClose) <= :timeEnd
+      GROUP BY ti.visibleId) t1 JOIN
+     (SELECT
+        id,
+        visibleId,
+        if(sum(cash) IS NULL, 0, sum(cash)) + if(sum(refund) IS NULL, 0, sum(refund)) AS cash,
+        if(sum(cashless_atm) IS NULL, 0, sum(cashless_atm))                           AS cashless_atm
+      FROM (
+             SELECT
+               ti.id,
+               ti.visibleId,
+               CASE WHEN pa.method = 'cash'
+                 THEN pa.amount END AS cash,
+               CASE WHEN pa.method = 'cheque'
+                 THEN pa.amount END AS cashless_atm,
+               CASE WHEN pa.method = 'cashrefund'
+                 THEN pa.amount END AS refund
+             FROM posper_ticket ti, posper_payment pa
+             WHERE ti.dateClose IS NOT NULL AND pa.ticket_id = ti.id
+                   AND date(ti.dateClose) = :date AND time(ti.dateClose) >= :timeStart AND
+                   time(ti.dateClose) <= :timeEnd) t2
+      GROUP BY visibleId) t3
+       ON t1.visibleId = t3.visibleId) t5
+    ON t4.visibleId = t5.visibleId
+WHERE t4.userid IN (:userIds)
+ORDER BY t4.time;
+        ]]>
+    </entry>
+
+
     <entry key="empty">
         <![CDATA[
         ]]>
