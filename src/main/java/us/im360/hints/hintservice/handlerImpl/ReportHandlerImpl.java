@@ -12,10 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.im360.hints.hintservice.ReportHandler;
-import us.im360.hints.hintservice.service.CashReportService;
-import us.im360.hints.hintservice.service.PaymentService;
-import us.im360.hints.hintservice.service.ProductService;
-import us.im360.hints.hintservice.service.ProfitReportService;
+import us.im360.hints.hintservice.service.*;
 import us.im360.hints.hintservice.util.ResponseBuilder;
 
 import javax.ws.rs.GET;
@@ -52,6 +49,9 @@ public class ReportHandlerImpl implements ReportHandler {
 
 	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	private LossReportService lossReportService;
 
 	private static final String DETAILS_FIELD_NAME = "details";
 
@@ -108,6 +108,29 @@ public class ReportHandlerImpl implements ReportHandler {
 		return buildResponse(responseBuilder);
 	}
 
+	@GET
+	@Path("loss/userId/{userId}/restaurantId/{restaurantId}/startDate/{startDate}/endDate/{endDate}")
+	@Override
+	public Response getLossReport(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("startDate") String startDate,
+			@PathParam("endDate") String endDate)
+	{
+		logger.debug("restaurantId: {}, startDate: {}, endDate: {}, strainListComaSeparated: {}, tierListComaSeparated: {}", restaurantId, startDate, endDate);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+
+		List<JsonNode> resultList = lossReportService.getProfitReport(restaurantId, startDate, endDate);
+
+		if (resultList!=null && !resultList.isEmpty()) {
+			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
 
 	@GET
 	@Path("stock/userId/{userId}/restaurantId/{restaurantId}/productId/{productId}")

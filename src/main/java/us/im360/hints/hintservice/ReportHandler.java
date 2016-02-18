@@ -1,5 +1,6 @@
 package us.im360.hints.hintservice;
 
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -36,6 +37,21 @@ public interface ReportHandler {
             String startDate,
             String endDate
     );
+
+    /**
+     * Loss report
+     *
+     * @param userId
+     * @param restaurantId
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    Response getLossReport(
+            Integer userId,
+            Integer restaurantId,
+            String startDate,
+            String endDate);
 
     /**
      * Product stock report

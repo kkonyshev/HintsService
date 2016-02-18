@@ -249,4 +249,72 @@ FROM im_close_cash cc LEFT JOIN tb_users us
 WHERE date(cc.date_close) = :closeDate;
         ]]>
     </entry>
+
+    <entry key="lossReport">
+        <![CDATA[
+SELECT
+  'FLOWER'                                 AS type,
+  ty.name                                  AS strain,
+  op.name                                  AS 'option',
+  ti.tier_name                             AS tier,
+  dt.grams_per_jar                         AS grams_per_jar,
+  sum(dt.quantity)                         AS jars_lost,
+  sum(dt.total_grams)                      AS total_grams,
+  sum(dt.total_cost)                       AS total_cost,
+  sum(dt.total_cost) / sum(dt.total_grams) AS cost_per_gram
+FROM im_strain_detail dt, im_strain_type ty, im_strain_tier ti, posper_product pr, posper_category ca1,
+  posper_category ca2, im_strain_category_option co LEFT JOIN im_strain_option op
+    ON op.id = co.option_id
+WHERE ca1.parent_id = ca2.id AND co.category_id = ca2.id AND dt.posper_product_id = pr.id AND pr.category_id = ca1.id
+      AND ty.posper_category_id = ca1.id AND ty.im_strain_tier_id = ti.id AND ty.active = 1 AND dt.ATTR1 = 'LOST'
+      AND date(dt.start_date) >= :startDate AND date(dt.start_date) <= :endDate
+GROUP BY ca2.id, ti.tier_name, dt.grams_per_jar
+UNION ALL
+SELECT
+  'MISC'           AS type,
+  ''               AS strain,
+  ''               AS 'option',
+  t2.name          AS tier,
+  t2.grams_per_jar AS grams_per_jar,
+  t2.jars_lost     AS jars_lost,
+  t2.total_grams   AS total_grams,
+  t2.total_cost    AS total_cost,
+  t2.cost_per_gram AS cost_per_gram
+FROM (SELECT
+        if(dt.posper_product_id = 'shake35', 'SHAKE', 'CRUMB') AS name,
+        sum(dt.total_grams)                                    AS total_grams,
+        dt.grams_per_jar                                       AS grams_per_jar,
+        sum(dt.quantity)                                       AS jars_lost,
+        sum(dt.total_cost)                                     AS total_cost,
+        sum(dt.total_cost) / sum(dt.total_grams)               AS cost_per_gram
+      FROM im_strain_detail dt
+      WHERE dt.ATTR1 = 'LOST' AND dt.posper_product_id IN ('shake35', 'crumb35')
+            AND date(dt.start_date) >= :startDate AND date(dt.start_date) <= :endDate) t2
+WHERE t2.total_grams IS NOT NULL
+UNION ALL
+SELECT
+  'EXTRACT'                                AS type,
+  ty.name                                  AS strain,
+  op.name                                  AS 'option',
+  ti.tier                                  AS tier,
+  dt.grams_per_jar                         AS grams_per_jar,
+  sum(dt.quantity)                         AS jars_lost,
+  sum(dt.total_grams)                      AS total_grams,
+  sum(dt.total_cost)                       AS total_cost,
+  sum(dt.total_cost) / sum(dt.total_grams) AS cost_per_gram
+FROM im_strain_detail dt, im_strain_extract_type ty, im_strain_extract_cost ti, posper_product pr, posper_category ca1,
+  posper_category ca2, im_strain_category_option co LEFT JOIN im_strain_option op
+    ON op.id = co.option_id
+WHERE ca1.parent_id = ca2.id AND co.category_id = ca2.id AND dt.posper_product_id = pr.id AND pr.category_id = ca1.id
+      AND ty.category_id = ca1.id AND ty.extract_cost_id = ti.id AND ty.active = 1 AND dt.ATTR1 = 'LOST'
+      AND date(dt.start_date) >= :startDate AND date(dt.start_date) <= :endDate
+GROUP BY ca2.id, ti.tier, dt.grams_per_jar
+ORDER BY strain, tier DESC, grams_per_jar DESC;
+        ]]>
+    </entry>
+
+    <entry key="empty">
+        <![CDATA[
+        ]]>
+    </entry>
 </properties>
