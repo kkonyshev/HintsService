@@ -29,8 +29,8 @@ public class LossReportService {
 	private static final Logger logger = LoggerFactory.getLogger(LossReportService.class);
 
 	@Autowired
-	@Qualifier("queryStore")
-	private Properties queryStore;
+	@Qualifier("reportQueryStore")
+	private Properties reportQueryStore;
 
 	@Autowired
 	protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -43,7 +43,7 @@ public class LossReportService {
 		logger.debug("restaurantId: {}, startDate: {}, endDate: {}", restaurantId, startDate, endDate);
 
 		try {
-			String lossReportQuery = queryStore.getProperty("lossReport");
+			String lossReportQuery = reportQueryStore.getProperty("lossReport");
 			logger.debug("QUERY TO EXECUTE: " + lossReportQuery);
 
 			return namedParameterJdbcTemplate.query(lossReportQuery,

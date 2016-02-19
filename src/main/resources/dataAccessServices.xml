@@ -67,7 +67,8 @@
         <constructor-arg ref="datasource" />
     </bean>
 
-    <util:properties id="queryStore" location="classpath:sql/queries.xml" />
+    <util:properties id="reportQueryStore" location="classpath:sql/reports.xml" />
+    <util:properties id="commonQUeryStore" location="classpath:sql/common.xml" />
 
     <!-- Enable annotation style of managing transactions -->
     <tx:annotation-driven transaction-manager="transactionManager" /> 

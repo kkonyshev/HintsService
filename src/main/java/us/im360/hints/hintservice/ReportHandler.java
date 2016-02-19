@@ -94,12 +94,24 @@ public interface ReportHandler {
      * @param userIdList
      * @return
      */
-    Response getTicketList(
+    Response getTickets(
             Integer userId,
             Integer restaurantId,
             String date,
             String timeStart,
             String timeEnd,
             String userIdList
+    );
+
+    /**
+     * Unit list
+     *
+     * @param userId
+     * @param restaurantId
+     * @return
+     */
+    Response getUnits(
+            Integer userId,
+            Integer restaurantId
     );
 }

@@ -31,8 +31,8 @@ public class PaymentService {
 	private static final Logger logger = LoggerFactory.getLogger(PaymentService.class);
 
 	@Autowired
-	@Qualifier("queryStore")
-	private Properties queryStore;
+	@Qualifier("reportQueryStore")
+	private Properties reportQueryStore;
 
 	@Autowired
 	protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -45,7 +45,7 @@ public class PaymentService {
 		logger.debug("type: {}, startDate: {}, endDate: {}", type, startDate, endDate);
 
 		try {
-			String paymentReportQuery = queryStore.getProperty("paymentReport");
+			String paymentReportQuery = reportQueryStore.getProperty("paymentReport");
 			logger.debug("QUERY TO EXECUTE: " + paymentReportQuery);
 
 			List<JsonNode> rowResult = namedParameterJdbcTemplate.query(

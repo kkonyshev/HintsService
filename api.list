@@ -44,10 +44,20 @@ http://localhost:8080/HintsService/v1.0/rest/report/payment/userId/1/restaurantI
 
 
 =========
-Get Get ticket list implementation
+Get ticket list implementation
 API URL:
 http://localhost:8080/HintsService/v1.0/rest/report/tickets/userId/{userId}/restaurantId/{restaurantId}/date/{date}/timeStart/{timeStart}/timeEnd/{timeEnd}/userIdList/{userIdList}
 
 Example URL:
 http://localhost:8080/HintsService/v1.0/rest/reporttickets/userId/1/restaurantId/1/date/2015-04-24/timeStart/00:11:00/timeEnd/12:12:22/userIdList/ff8081814968fc4201496905e785000b,ff8081814968fc4201496906c85d000d
+=========
+
+
+=========
+Get units list implementation
+API URL:
+http://localhost:8080/HintsService/v1.0/rest/report/units/userId/{userId}/restaurantId
+
+Example URL:
+http://localhost:8080/HintsService/v1.0/rest/reporttickets/userId/1/restaurantId/1
 =========

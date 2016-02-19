@@ -56,6 +56,9 @@ public class ReportHandlerImpl implements ReportHandler {
 	@Autowired
 	private LossReportService lossReportService;
 
+	@Autowired
+	private UnitsService unitsService;
+
 	private static final String DETAILS_FIELD_NAME = "details";
 
 	/**
@@ -195,7 +198,7 @@ public class ReportHandlerImpl implements ReportHandler {
 	@GET
 	@Path("tickets/userId/{userId}/restaurantId/{restaurantId}/date/{date}/timeStart/{timeStart}/timeEnd/{timeEnd}/userIdList/{userIdList}")
 	@Override
-	public Response getTicketList(
+	public Response getTickets(
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("date") String date,
@@ -208,6 +211,29 @@ public class ReportHandlerImpl implements ReportHandler {
 		List<String> userIds = Arrays.asList(userIdList.split(","));
 
 		List<JsonNode> resultList = ticketService.getTicketList(userId, restaurantId, date, timeStart, timeEnd, userIds);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+
+		if (CollectionUtils.isNotEmpty(resultList)) {
+			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+
+	@GET
+	@Path("units/userId/{userId}/restaurantId/{restaurantId}")
+	@Override
+	public Response getUnits(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId
+	) {
+		logger.debug("restaurantId: {}, userId: {}", restaurantId, userId);
+
+		List<JsonNode> resultList = unitsService.getUnits(restaurantId);
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 

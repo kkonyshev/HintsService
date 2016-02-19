@@ -27,8 +27,8 @@ public class ProductService {
 	private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
 	@Autowired
-	@Qualifier("queryStore")
-	private Properties queryStore;
+	@Qualifier("reportQueryStore")
+	private Properties reportQueryStore;
 
 	@Autowired
 	protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -41,7 +41,7 @@ public class ProductService {
 		logger.debug("productId: {}", productId);
 
 		try {
-			String productStockGetByProductIdQuery = queryStore.getProperty("productStockGetByProductId");
+			String productStockGetByProductIdQuery = reportQueryStore.getProperty("productStockGetByProductId");
 			logger.debug("QUERY TO EXECUTE: " + productStockGetByProductIdQuery);
 
 			List<JsonNode> rowResult = namedParameterJdbcTemplate.query(

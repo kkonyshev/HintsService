@@ -30,8 +30,8 @@ public class CashReportService {
 	private static final Logger logger = LoggerFactory.getLogger(CashReportService.class);
 
 	@Autowired
-	@Qualifier("queryStore")
-	private Properties queryStore;
+	@Qualifier("reportQueryStore")
+	private Properties reportQueryStore;
 
 	@Autowired
 	protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -47,7 +47,7 @@ public class CashReportService {
 		logger.debug("restaurantId: {}, closeDate: {}", restaurantId, closeDate);
 
 		try {
-			String cashCloseReportQuery = queryStore.getProperty("cashCloseReport");
+			String cashCloseReportQuery = reportQueryStore.getProperty("cashCloseReport");
 			logger.debug("QUERY TO EXECUTE: " + cashCloseReportQuery);
 
 			jdbcTemplate.update("set @runtot1:=0;");

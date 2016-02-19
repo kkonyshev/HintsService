@@ -380,6 +380,41 @@ ORDER BY t4.time;
         ]]>
     </entry>
 
+    <entry key="getUnits">
+        <![CDATA[
+SELECT
+  'FLOWER'                          AS type,
+  ca2.category_name                 AS strain,
+  op.name                           AS 'option',
+  ti.tier_name                      AS tier,
+  count(*)                          AS units,
+  sum(ud.price_per_unit)            AS total_cost,
+  sum(ud.price_per_unit) / count(*) AS cost_per_unit
+FROM im_strain_units ut, im_strain_units_details ud, posper_category ca1, posper_category ca2, im_strain_type ty,
+  im_strain_tier ti, im_strain_category_option co LEFT JOIN im_strain_option op
+    ON op.id = co.option_id
+WHERE ud.im_strain_units_id = ut.id AND ut.posper_category_id = ca1.id AND ca1.parent_id = ca2.id AND
+      co.category_id = ca2.id
+      AND ca1.id = ty.posper_category_id AND ty.im_strain_tier_id = ti.id AND ud.status != 1 AND ud.ATTR1 IS NULL
+GROUP BY ca2.category_name, op.name, ti.tier_name
+UNION ALL
+SELECT
+  'EXTRACT'                                           AS type,
+  ca2.category_name                                   AS strain,
+  op.name                                             AS 'option',
+  ti.tier                                             AS tier,
+  sum(ud.grams)                                       AS units,
+  sum(ud.grams) * sum(ud.total_price) / sum(ud.grams) AS total_cost,
+  sum(ud.total_price) / sum(ud.grams)                 AS cost_per_unit
+FROM im_strain_extract_details ud, posper_category ca1, posper_category ca2, im_strain_extract_type ty,
+  im_strain_extract_cost ti, im_strain_category_option co LEFT JOIN im_strain_option op
+    ON op.id = co.option_id
+WHERE ud.posper_category_id = ca1.id AND ca1.parent_id = ca2.id AND co.category_id = ca2.id
+      AND ca1.id = ty.category_id AND ty.extract_cost_id = ti.id AND ud.status != 1 AND ud.ATTR1 IS NULL
+GROUP BY ca2.category_name, op.name, ti.tier
+ORDER BY strain, 'option', tier DESC;
+        ]]>
+    </entry>
 
     <entry key="empty">
         <![CDATA[

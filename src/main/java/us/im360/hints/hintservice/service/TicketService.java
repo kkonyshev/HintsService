@@ -30,8 +30,8 @@ public class TicketService {
 	private static final Logger logger = LoggerFactory.getLogger(TicketService.class);
 
 	@Autowired
-	@Qualifier("queryStore")
-	private Properties queryStore;
+	@Qualifier("reportQueryStore")
+	private Properties reportQueryStore;
 
 	@Autowired
 	protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -50,7 +50,7 @@ public class TicketService {
 		logger.debug("productId: {}", userId);
 
 		try {
-			String ticketListQuery = queryStore.getProperty("ticketList");
+			String ticketListQuery = reportQueryStore.getProperty("ticketList");
 			logger.debug("QUERY TO EXECUTE: " + ticketListQuery);
 
 			List<JsonNode> rowResult = namedParameterJdbcTemplate.query(
