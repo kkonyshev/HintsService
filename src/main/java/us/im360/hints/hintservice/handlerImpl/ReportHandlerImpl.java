@@ -2,7 +2,6 @@ package us.im360.hints.hintservice.handlerImpl;
 
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -21,7 +20,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Cash report service handler implementation
@@ -57,17 +58,13 @@ public class ReportHandlerImpl implements ReportHandler {
 	private LossReportService lossReportService;
 
 	@Autowired
+	private SalesReportService salesReportService;
+
+	@Autowired
 	private UnitsService unitsService;
 
 	private static final String DETAILS_FIELD_NAME = "details";
 
-	/**
-	 * Cash report on date
-	 *
-	 * @param restaurantId terminal identifier
-	 * @param closeDate report date
-	 * @return
-	 */
 	@GET
 	@Path("cash/userId/{userId}/restaurantId/{restaurantId}/closeDate/{closeDate}")
 	@Override
@@ -246,11 +243,34 @@ public class ReportHandlerImpl implements ReportHandler {
 		return buildResponse(responseBuilder);
 	}
 
+	@GET
+	@Path("sales/userId/{userId}/restaurantId/{restaurantId}/startDate/{startDate}/endDate/{endDate}")
+	@Override
+	public Response getSalesReport(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("startDate") String startDate,
+			@PathParam("endDate") String endDate)
+	{
+		logger.debug("restaurantId: {}, startDate: {}, endDate: {}, strainListComaSeparated: {}, tierListComaSeparated: {}", restaurantId, startDate, endDate);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+
+		List<JsonNode> resultList = salesReportService.getSalesReport(restaurantId, startDate, endDate);
+
+		if (resultList!=null && !resultList.isEmpty()) {
+			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
 	/**
 	 * Helper method for building response object
 	 *
 	 * @param responseBuilder response success/fail builder instance
-	 * @return
      */
 	private Response buildResponse(ResponseBuilder responseBuilder) {
 		try {

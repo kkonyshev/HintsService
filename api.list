@@ -4,6 +4,8 @@ API URL:
 http://localhost:8080/HintsService/v1.0/rest/report/cash/userId/{userId}/restaurantId/{restaurantId}/closeDate/{closeDate}
 Example URL:
 http://localhost:8080/HintsService/v1.0/rest/report/cash/userId/1/restaurantId/1/closeDate/2016-01-26
+
+{"resultCode":"success","details":[{"register":"ff8081815277cc0a01527c5379ad05cf","terminal":"dispensary-cr01","time_open":"09:00 AM","time_closed":"02:58 PM","expected_cash":3589.46,"actual_cash":3592.0,"cash_difference":-2.54,"expected_debit":1515.0,"actual_debit":1515.0,"running_debit":1515.0,"debit_difference":0.0,"expected_total":5104.46,"actual_total":5107.0,"total_difference":-2.54,"cashier":"TAYLOR","manager":"JAMINA KNOWLES"},{"register":"ff808081527bdf7c01527c4ec7ed018e","terminal":"dispensary-cr02","time_open":"09:00 AM","time_closed":"03:00 PM","expected_cash":4047.34,"actual_cash":3932.0,"cash_difference":115.34,"expected_debit":2075.0,"actual_debit":2075.0,"running_debit":2075.0,"debit_difference":0.0,"expected_total":6122.34,"actual_total":6007.0,"total_difference":115.34,"cashier":"TAYLOR","manager":"JAMINA KNOWLES"},{"register":"ff808181527cf2610152802933900272","terminal":"dispensary-cr01","time_open":"02:58 PM","time_closed":"09:07 PM","expected_cash":4331.7,"actual_cash":4335.0,"cash_difference":-3.3,"expected_debit":2460.0,"actual_debit":2460.0,"running_debit":3975.0,"debit_difference":0.0,"expected_total":6791.7,"actual_total":6795.0,"total_difference":-3.3,"cashier":"CHRISTOPHER","manager":"CHRISTOPHER BUERGER"},{"register":"ff808081527dcf030152802ab14e034d","terminal":"dispensary-cr02","time_open":"03:00 PM","time_closed":"09:03 PM","expected_cash":5917.1,"actual_cash":5935.0,"cash_difference":-17.9,"expected_debit":2755.0,"actual_debit":2755.0,"running_debit":4830.0,"debit_difference":0.0,"expected_total":8672.1,"actual_total":8690.0,"total_difference":-17.9,"cashier":"TAYLOR","manager":"CHRISTOPHER BUERGER"}]}
 =========
 
 =========
@@ -42,6 +44,14 @@ Example URL:
 http://localhost:8080/HintsService/v1.0/rest/report/payment/userId/1/restaurantId/1/startDate/2016-01-01/endDate/2016-01-01
 =========
 
+=========
+Get Sales Report implementation
+API URL:
+http://localhost:8080/HintsService/v1.0/rest/report/sales/userId/{userId}/restaurantId/{restaurantId}/startDate/{startDate}/endDate/{endDate}
+
+Example URL:
+http://localhost:8080/HintsService/v1.0/rest/report/sales/userId/1/restaurantId/1/startDate/2016-01-01/endDate/2016-01-01
+=========
 
 =========
 Get ticket list implementation

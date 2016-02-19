@@ -104,6 +104,22 @@ public interface ReportHandler {
     );
 
     /**
+     * Sales report
+     *
+     * @param userId
+     * @param restaurantId
+     * @param dateStart
+     * @param dateEnd
+     * @return
+     */
+    Response getSalesReport(
+            Integer userId,
+            Integer restaurantId,
+            String dateStart,
+            String dateEnd
+    );
+
+    /**
      * Unit list
      *
      * @param userId

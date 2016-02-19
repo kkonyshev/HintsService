@@ -134,6 +134,62 @@ WHERE id = :productId
         ]]>
     </entry>
 
+    <entry key="salesReport">
+        <![CDATA[
+SELECT
+  'FLOWER'                                                                          AS type,
+  ty.name                                                                           AS strain,
+  op.name                                                                           AS 'option',
+  tier.tier_name                                                                    AS tier,
+  sum(tl.priceSell * tl.amount * (1 + tl.taxRate))                                  AS gross,
+  sum(tl.priceSell * tl.amount)                                                     AS net,
+  sum(tl.priceSell * tl.amount * tl.taxRate)                                        AS tax,
+  sum((pr.priceSell * (1 + ta.rate) - tl.priceSell * (1 + tl.taxRate)) * tl.amount) AS discount,
+  sum(tl.orig_tax)                                                                  AS usage_tax
+FROM posper_ticketline tl, posper_ticket ti, posper_product pr, posper_category ca1, posper_category ca2,
+  im_strain_type ty, im_strain_tier tier, posper_tax ta, im_strain_category_option co LEFT JOIN im_strain_option op
+    ON op.id = co.option_id
+WHERE date(ti.dateClose) >= :startDate AND date(ti.dateClose) <= :endDate
+      AND co.category_id = ca2.id AND ca1.parent_id = ca2.id AND tl.ticket_ticketline = ti.id AND tl.product_id = pr.id
+      AND pr.category_id = ca1.id AND ty.posper_category_id = ca1.id AND ty.im_strain_tier_id = tier.id AND ta.id = 1
+GROUP BY ty.name, tier.tier_name
+UNION ALL
+SELECT
+  'MISC'                                                                            AS type,
+  pr.description                                                                    AS strain,
+  ''                                                                                AS 'option',
+  ''                                                                                AS tier,
+  sum(tl.priceSell * tl.amount * (1 + tl.taxRate))                                  AS gross,
+  sum(tl.priceSell * tl.amount)                                                     AS net,
+  sum(tl.priceSell * tl.amount * tl.taxRate)                                        AS tax,
+  sum((pr.priceSell * (1 + ta.rate) - tl.priceSell * (1 + tl.taxRate)) * tl.amount) AS discount,
+  sum(tl.orig_tax)                                                                  AS usage_tax
+FROM posper_ticketline tl, posper_ticket ti, posper_product pr, posper_category ca, posper_tax ta
+WHERE date(ti.dateClose) >= :startDate AND date(ti.dateClose) <= :endDate AND
+      tl.ticket_ticketline = ti.id AND tl.product_id = pr.id AND pr.category_id = ca.id AND
+      pr.id IN ('shake35', 'crumb35') AND ta.id = 1
+GROUP BY pr.id
+UNION ALL
+SELECT
+  'EXTRACT'                                                                         AS type,
+  ty.name                                                                           AS strain,
+  op.name                                                                           AS 'option',
+  tier.tier                                                                         AS tier,
+  sum(tl.priceSell * tl.amount * (1 + tl.taxRate))                                  AS gross,
+  sum(tl.priceSell * tl.amount)                                                     AS net,
+  sum(tl.priceSell * tl.amount * tl.taxRate)                                        AS tax,
+  sum((pr.priceSell * (1 + ta.rate) - tl.priceSell * (1 + tl.taxRate)) * tl.amount) AS discount,
+  sum(tl.orig_tax)                                                                  AS usage_tax
+FROM posper_ticketline tl, posper_ticket ti, posper_product pr, posper_category ca1, posper_category ca2,
+  im_strain_extract_type ty, im_strain_extract_cost tier, posper_tax ta,
+  im_strain_category_option co LEFT JOIN im_strain_option op
+    ON op.id = co.option_id
+WHERE date(ti.dateClose) >= :startDate AND date(ti.dateClose) <= :endDate AND
+co.category_id = ca2.id AND ca1.parent_id = ca2.id AND tl.ticket_ticketline = ti.id AND tl.product_id = pr.id
+AND pr.category_id = ca1.id AND ty.category_id = ca1.id AND ty.extract_cost_id = tier.id AND ta.id = 1
+GROUP BY ty.name, tier.tier;
+        ]]>
+    </entry>
     
     <entry key="paymentReport">
         <![CDATA[
@@ -214,29 +270,38 @@ WHERE ta.id = 1;
         ]]>
     </entry>
     
-    
     <entry key="cashCloseReport">
         <![CDATA[
 SELECT
-  cc.cashregister_id                                                            AS register,
-  cc.terminal                                                                   AS terminal,
-  if(date(cc.date_open) = ?, time_format(cc.date_open, '%h:%i %p'), '09:00 AM') AS time_open,
-  time_format(cc.date_close, '%h:%i %p')                                        AS time_closed,
-  cc.cash_expected                                                              AS expected_cash,
-  cc.cash_actual                                                                AS actual_cash,
-  cc.cash_difference                                                            AS cash_difference,
-  cc.cashless_atm_expected                                                      AS expected_debit,
-  cc.cashless_atm_actual                                                        AS actual_debit,
-  if(cc.terminal LIKE '%1', (@runtot1 := @runtot1 + cc.cashless_atm_actual),
-     (@runtot2 := @runtot2 + cc.cashless_atm_actual))
-                                                                                AS running_debit,
-  cc.cashless_atm_difference                                                    AS debit_difference,
-  cc.total_expected                                                             AS expected_total,
-  cc.total_actual                                                               AS actual_total,
-  cc.total_difference                                                           AS total_difference,
-  upper(pu.name)                                                                AS cashier,
-  upper(concat(us.first_name, ' ', us.last_name))                               AS manager
-FROM im_close_cash cc LEFT JOIN tb_users us
+  cc.cashregister_id                                                                     AS register,
+  if(date(cc.date_open) = :closeDate, time_format(cc.date_open, '%h:%i %p'), '09:00 AM') AS time_open,
+  time_format(cc.date_close, '%h:%i %p')                                                 AS time_closed,
+  cc.cash_expected                                                                       AS expected_cash,
+  cc.cash_actual                                                                         AS actual_cash,
+  cc.cash_difference                                                                     AS cash_difference,
+  cc.cashless_atm_expected                                                               AS expected_debit,
+  cc.cashless_atm_actual                                                                 AS actual_debit,
+  if(cc.terminal LIKE '%1', (SELECT SUM(x.cashless_atm_actual)
+                             FROM im_close_cash x
+                             WHERE x.terminal LIKE '%1'
+                                   AND date(x.date_close) = date(cc.date_close)
+                                   AND x.location_id = cc.location_id
+                                   AND x.id <= cc.id)
+  , (SELECT SUM(x.cashless_atm_actual)
+     FROM im_close_cash x
+     WHERE x.terminal NOT LIKE '%1'
+           AND date(x.date_close) = date(cc.date_close)
+           AND x.location_id = cc.location_id
+           AND x.id <= cc.id)
+  )                                                                                      AS running_debit_sum,
+  cc.cashless_atm_difference                                                             AS debit_difference,
+  cc.total_expected                                                                      AS expected_total,
+  cc.total_actual                                                                        AS actual_total,
+  cc.total_difference                                                                    AS total_difference,
+  upper(pu.name)                                                                         AS cashier,
+  upper(concat(us.first_name, ' ', us.last_name))                                        AS manager
+FROM im_close_cash cc
+  LEFT JOIN tb_users us
     ON cc.user_id = us.id
   LEFT JOIN posper_user pu
     ON cc.mostsales_userid = pu.id
@@ -246,7 +311,8 @@ FROM im_close_cash cc LEFT JOIN tb_users us
              FROM im_cash_drop
              GROUP BY cashregister_id) t1
     ON t1.cashregister_id = cc.cashregister_id
-WHERE date(cc.date_close) = :closeDate;
+WHERE date(cc.date_close) = :closeDate
+      AND cc.location_id = :restaurantId;
         ]]>
     </entry>
 
@@ -312,7 +378,6 @@ GROUP BY ca2.id, ti.tier, dt.grams_per_jar
 ORDER BY strain, tier DESC, grams_per_jar DESC;
         ]]>
     </entry>
-
 
     <entry key="ticketList">
         <![CDATA[

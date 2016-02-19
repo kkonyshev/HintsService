@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -27,40 +26,38 @@ import java.util.Properties;
 @Transactional
 public class CashReportService {
 
-	private static final Logger logger = LoggerFactory.getLogger(CashReportService.class);
+    private static final Logger logger = LoggerFactory.getLogger(CashReportService.class);
 
-	@Autowired
-	@Qualifier("reportQueryStore")
-	private Properties reportQueryStore;
+    @Autowired
+    @Qualifier("reportQueryStore")
+    private Properties reportQueryStore;
 
-	@Autowired
-	protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    @Autowired
+    protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	@Autowired
-	protected JdbcTemplate jdbcTemplate;
 
-	@Autowired
-	private ObjectMapper objectMapper;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-	public List<JsonNode> getCloseReport(Integer restaurantId, String closeDate) {
+    public List<JsonNode> getCloseReport(Integer restaurantId, String closeDate) {
 
-		logger.debug("restaurantId: {}, closeDate: {}", restaurantId, closeDate);
+        logger.debug("restaurantId: {}, closeDate: {}", restaurantId, closeDate);
 
-		try {
-			String cashCloseReportQuery = reportQueryStore.getProperty("cashCloseReport");
-			logger.debug("QUERY TO EXECUTE: " + cashCloseReportQuery);
+        try {
+            String cashCloseReportQuery = reportQueryStore.getProperty("cashCloseReport");
+            logger.debug("QUERY TO EXECUTE: " + cashCloseReportQuery);
 
-			jdbcTemplate.update("set @runtot1:=0;");
-			jdbcTemplate.update("set @runtot2:=0;");
-			return namedParameterJdbcTemplate.query(cashCloseReportQuery,
-					new MapSqlParameterSource()
-							.addValue("closeDate", closeDate),
-					new JsonNodeRowMapper(objectMapper));
+            return namedParameterJdbcTemplate.query(
+                    cashCloseReportQuery,
+                    new MapSqlParameterSource()
+                            .addValue("closeDate", closeDate)
+                            .addValue("restaurantId", restaurantId),
+                    new JsonNodeRowMapper(objectMapper));
 
-		} catch (Exception e) {
-			return Collections.emptyList();
-		}
-	}
-	
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
+    }
+
 
 }
