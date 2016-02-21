@@ -4,6 +4,42 @@
 
     <comment>Common queries</comment>
 
+    <entry key="ticketDetails">
+        <![CDATA[
+SELECT
+  t1.id                                                                               AS id,
+  amount                                                                              AS amount,
+  priceSell                                                                           AS price,
+  description                                                                         AS description,
+  opt                                                                                 AS 'option',
+  if(flower IS NOT NULL, 'FLOWER', if(extract IS NOT NULL, 'EXTRACT', 'SHAKE/CRUMB')) AS type,
+  ifnull(dr.reason, comment)                                                          AS comment
+FROM (SELECT
+        tl.amount,
+        tl.priceSell,
+        pr.description,
+        op.name AS opt,
+        pr.id   AS id,
+        tl.discountReason_id,
+        tl.comment,
+        ty.id   AS flower,
+        ex.id   AS extract,
+        ti.visibleId
+      FROM posper_ticketline tl, posper_ticket ti, posper_product pr, posper_category ca1
+        LEFT JOIN im_strain_type ty ON ca1.id = ty.posper_category_id
+        LEFT JOIN im_strain_extract_type ex ON ca1.id = ex.category_id
+        ,
+        posper_category ca2, im_strain_category_option co LEFT JOIN im_strain_option op
+          ON co.option_id = op.id
+      WHERE
+        ti.id = tl.ticket_ticketline AND tl.product_id = pr.id AND pr.category_id = ca1.id AND ca1.parent_id = ca2.id
+        AND ca2.id = co.category_id
+        AND ti.visibleId = :ticketVisibleId
+     ) t1 LEFT JOIN posper_discountreason dr
+    ON t1.discountReason_id = dr.id;
+        ]]>
+    </entry>
+
     <entry key="empty">
         <![CDATA[
         ]]>

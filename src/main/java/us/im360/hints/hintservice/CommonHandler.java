@@ -13,10 +13,12 @@ public interface CommonHandler {
      *
      * @param userId
      * @param restaurantId
+     * @param ticketVisibleId
      * @return
      */
-    Response get(
+    Response getTicketDetail(
             Integer userId,
-            Integer restaurantId
+            Integer restaurantId,
+            Integer ticketVisibleId
     );
 }

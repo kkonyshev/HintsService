@@ -19,7 +19,7 @@ import java.util.*;
 
 /**
  * Ticket service implementation
- *
+ * <p>
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 18/02/16.
  */
 @SuppressWarnings("unused")
@@ -27,76 +27,97 @@ import java.util.*;
 @Transactional
 public class TicketService {
 
-	private static final Logger logger = LoggerFactory.getLogger(TicketService.class);
+    private static final Logger logger = LoggerFactory.getLogger(TicketService.class);
 
-	@Autowired
-	@Qualifier("reportQueryStore")
-	private Properties reportQueryStore;
+    @Autowired
+    @Qualifier("reportQueryStore")
+    private Properties reportQueryStore;
 
-	@Autowired
-	protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    @Autowired
+    @Qualifier("commonQueryStore")
+    private Properties commonQueryStore;
 
-	@Autowired
-	private ObjectMapper objectMapper;
+    @Autowired
+    protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	public List<JsonNode>  getTicketList(
-			Integer userId,
-			Integer restaurantId,
-			String date,
-			String timeStart,
-			String timeEnd,
-			Collection<String> userIds)
-	{
-		logger.debug("productId: {}", userId);
+    @Autowired
+    private ObjectMapper objectMapper;
 
-		try {
-			String ticketListQuery = reportQueryStore.getProperty("ticketList");
-			logger.debug("QUERY TO EXECUTE: " + ticketListQuery);
+    public List<JsonNode> getTicketList(
+            Integer userId,
+            Integer restaurantId,
+            String date,
+            String timeStart,
+            String timeEnd,
+            Collection<String> userIds) {
+        logger.debug("userId: {}", userId);
 
-			List<JsonNode> rowResult = namedParameterJdbcTemplate.query(
-					ticketListQuery,
-					new MapSqlParameterSource()
-							.addValue("date", date)
-							.addValue("timeStart", timeStart)
-							.addValue("timeEnd", timeEnd)
-							.addValue("userIds", userIds),
-					new JsonNodeRowMapper(objectMapper));
+        try {
+            String ticketListQuery = reportQueryStore.getProperty("ticketList");
+            logger.debug("QUERY TO EXECUTE: " + ticketListQuery);
 
-			logger.debug("result set: {}", rowResult);
+            List<JsonNode> rowResult = namedParameterJdbcTemplate.query(
+                    ticketListQuery,
+                    new MapSqlParameterSource()
+                            .addValue("date", date)
+                            .addValue("timeStart", timeStart)
+                            .addValue("timeEnd", timeEnd)
+                            .addValue("userIds", userIds),
+                    new JsonNodeRowMapper(objectMapper));
 
-			if (CollectionUtils.isEmpty(rowResult)) {
-				return Collections.emptyList();
-			} else {
-				Iterator<JsonNode> it = rowResult.iterator();
-				while (it.hasNext()) {
-					JsonNode node = it.next();
-					ObjectNode nodeObj = (ObjectNode) node;
+            logger.debug("result set: {}", rowResult);
 
-					ObjectNode paymentCashNode = objectMapper.createObjectNode();
-					paymentCashNode.put("type", "CASH");
-					paymentCashNode.put("amount", node.get("cash"));
-					nodeObj.remove("cash");
+            if (CollectionUtils.isEmpty(rowResult)) {
+                return Collections.emptyList();
+            } else {
+                for (JsonNode node : rowResult) {
+                    ObjectNode nodeObj = (ObjectNode) node;
 
-					ObjectNode paymentCashlessNode = objectMapper.createObjectNode();
-					paymentCashlessNode.put("type", "CASHLESS_ATM");
-					paymentCashlessNode.put("amount", node.get("cashless_atm"));
-					nodeObj.remove("cashless_atm");
+                    ObjectNode paymentCashNode = objectMapper.createObjectNode();
+                    paymentCashNode.put("type", "CASH");
+                    paymentCashNode.put("amount", node.get("cash"));
+                    nodeObj.remove("cash");
 
-					ArrayNode arr = new ArrayNode(objectMapper.getNodeFactory());
-					arr.add(paymentCashNode);
-					arr.add(paymentCashlessNode);
+                    ObjectNode paymentCashlessNode = objectMapper.createObjectNode();
+                    paymentCashlessNode.put("type", "CASHLESS_ATM");
+                    paymentCashlessNode.put("amount", node.get("cashless_atm"));
+                    nodeObj.remove("cashless_atm");
 
-					nodeObj.put("payments", arr);
-				}
+                    ArrayNode arr = new ArrayNode(objectMapper.getNodeFactory());
+                    arr.add(paymentCashNode);
+                    arr.add(paymentCashlessNode);
 
-				return rowResult;
-			}
+                    nodeObj.put("payments", arr);
+                }
 
-		} catch (Exception e) {
-			logger.warn(e.getMessage(), e);
-			return null;
-		}
-	}
-	
+                return rowResult;
+            }
+
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            return null;
+        }
+    }
+
+    public List<JsonNode> getTicketDetails(
+            Integer userId,
+            Integer restaurantId,
+            Integer ticketVisibleId) {
+        logger.debug("userId: {}", userId);
+
+
+        String ticketDetailsQuery = commonQueryStore.getProperty("ticketDetails");
+        logger.debug("QUERY TO EXECUTE: " + ticketDetailsQuery);
+
+        List<JsonNode> rowResult = namedParameterJdbcTemplate.query(
+                ticketDetailsQuery,
+                new MapSqlParameterSource()
+                        .addValue("ticketVisibleId", ticketVisibleId),
+                new JsonNodeRowMapper(objectMapper));
+
+        logger.debug("result set: {}", rowResult);
+
+        return rowResult;
+    }
 
 }

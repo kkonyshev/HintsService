@@ -71,3 +71,14 @@ http://localhost:8080/HintsService/v1.0/rest/report/units/userId/{userId}/restau
 Example URL:
 http://localhost:8080/HintsService/v1.0/rest/reporttickets/userId/1/restaurantId/1
 =========
+
+
+
+=========
+Ticket details
+API URL:
+http://localhost:8080/HintsService/v1.0/rest/details/ticket/userId/{userId}/restaurantId/{restaurantId}/ticketVisibleId/{ticketVisibleId}
+
+Example URL:
+http://localhost:8080/HintsService/v1.0/rest/details/ticket/userId/1/restaurantId/1/ticketVisibleId/70385
+=========

@@ -68,7 +68,7 @@
     </bean>
 
     <util:properties id="reportQueryStore" location="classpath:sql/reports.xml" />
-    <util:properties id="commonQUeryStore" location="classpath:sql/common.xml" />
+    <util:properties id="commonQueryStore" location="classpath:sql/common.xml" />
 
     <!-- Enable annotation style of managing transactions -->
     <tx:annotation-driven transaction-manager="transactionManager" /> 
