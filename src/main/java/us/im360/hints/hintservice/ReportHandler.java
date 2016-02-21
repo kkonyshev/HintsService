@@ -1,5 +1,7 @@
 package us.im360.hints.hintservice;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
@@ -159,5 +161,34 @@ public interface ReportHandler {
             Integer userId,
             Integer restaurantId,
             String date
+    );
+
+    /**
+     * Extracts list
+     *
+     * @param userId
+     * @param restaurantId
+     * @param status
+     * @param attr1
+     * @return
+     */
+    Response getExtracts(
+            Integer userId,
+            Integer restaurantId,
+            Integer status,
+            String attr1
+    );
+
+    /**
+     * Extracts list with null attr1
+     * @param userId
+     * @param restaurantId
+     * @param status
+     * @return
+     */
+    Response getExtractsNullStatus(
+            Integer userId,
+            Integer restaurantId,
+            Integer status
     );
 }

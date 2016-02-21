@@ -602,6 +602,29 @@ ORDER BY ud.visibleId;
         ]]>
     </entry>
 
+    <entry key="getExtracts">
+        <![CDATA[
+SELECT
+  ed.id             AS id,
+  ed.visibleId      AS visibleId,
+  ed.price_per_gram AS price_per_gram,
+  ec.tier           AS tier,
+  ed.grams          AS grams,
+  ca.id             AS category_id,
+  ca2.id            AS parent_category_id,
+  ca2.category_name AS category_name
+FROM im_strain_extract_details ed, posper_category ca, posper_category ca2, im_strain_extract_type et,
+  im_strain_extract_cost ec
+WHERE ed.location_id = :restaurantId AND ed.status = :status AND ed.posper_category_id = ca.id AND ca.parent_id = ca2.id
+      AND et.category_id = ca.id AND et.extract_cost_id = ec.id AND CASE WHEN :attr1 IS NULL
+  THEN ed.ATTR1 IS NULL
+                                                                    ELSE
+                                                                      ed.ATTR1 = :attr1
+END
+ORDER BY ed.visibleId;
+        ]]>
+    </entry>
+
     <entry key="empty">
         <![CDATA[
         ]]>

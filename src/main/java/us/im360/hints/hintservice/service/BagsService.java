@@ -58,6 +58,26 @@ public class BagsService {
 			return Collections.emptyList();
 		}
 	}
-	
+
+	public List<JsonNode> getExtracts(Integer restaurantId, Integer status, String attr1)
+	{
+		logger.debug("restaurantId: {}", restaurantId);
+
+		try {
+			String profitReportQuery = reportQueryStore.getProperty("getExtracts");
+			logger.debug("QUERY TO EXECUTE: " + profitReportQuery);
+
+			return namedParameterJdbcTemplate.query(
+					profitReportQuery,
+					new MapSqlParameterSource()
+							.addValue("restaurantId", restaurantId)
+							.addValue("status", status)
+							.addValue("attr1", StringUtils.isEmpty(attr1) ? null : attr1),
+					new JsonNodeRowMapper(objectMapper));
+
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
+	}
 
 }

@@ -294,6 +294,41 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 
 		return buildResponse(responseBuilder);
 	}
+
+	@GET
+	@Path("extracts/userId/{userId}/restaurantId/{restaurantId}/status/{status}/attr1/{attr1}")
+	@Override
+	public Response getExtracts(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("status") Integer status,
+			@PathParam("attr1") String attr1
+	) {
+		logger.debug("restaurantId: {}, userId: {}", restaurantId, userId);
+
+		List<JsonNode> resultList = bagsService.getExtracts(restaurantId, status, attr1);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+
+		if (CollectionUtils.isNotEmpty(resultList)) {
+			responseBuilder.success().withArray(BAGS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+	@GET
+	@Path("extracts/userId/{userId}/restaurantId/{restaurantId}/status/{status}")
+	@Override
+	public Response getExtractsNullStatus(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("status") Integer status
+	) {
+		return getBags(userId, restaurantId, status, null);
+	}
 }
 
 

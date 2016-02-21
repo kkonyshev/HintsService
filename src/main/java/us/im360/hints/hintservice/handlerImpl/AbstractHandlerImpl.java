@@ -6,7 +6,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import us.im360.hints.hintservice.ReportHandler;
 import us.im360.hints.hintservice.util.ResponseBuilder;
 
 import javax.ws.rs.core.MediaType;
@@ -17,7 +16,7 @@ import java.io.IOException;
  *
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com>
  */
-public class AbstractHandlerImpl  {
+public abstract class AbstractHandlerImpl  {
 
     public static final String DETAILS_FIELD_NAME = "details";
     public static final String USERS_FIELD_NAME = "users";
