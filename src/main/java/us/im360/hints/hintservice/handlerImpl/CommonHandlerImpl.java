@@ -14,6 +14,7 @@ import us.im360.hints.hintservice.InitHandler;
 import us.im360.hints.hintservice.result.AbstractResult;
 import us.im360.hints.hintservice.service.InitService;
 import us.im360.hints.hintservice.service.TicketService;
+import us.im360.hints.hintservice.service.UserService;
 import us.im360.hints.hintservice.util.ResponseBuilder;
 
 import javax.ws.rs.GET;
@@ -27,8 +28,9 @@ import java.util.List;
 /**
  *
  */
+@SuppressWarnings("unused")
 @Component
-@Path("details")
+@Path("/")
 public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(InitHandler.class);
@@ -36,8 +38,11 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Autowired
 	private TicketService ticketService;
 
+	@Autowired
+	private UserService userService;
+
 	@GET
-	@Path("ticket/userId/{userId}/restaurantId/{restaurantId}/ticketVisibleId/{ticketVisibleId}")
+	@Path("details/ticket/userId/{userId}/restaurantId/{restaurantId}/ticketVisibleId/{ticketVisibleId}")
 	@Override
 	public Response getTicketDetail(
 			@PathParam("userId") Integer userId,
@@ -58,6 +63,28 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 		return buildResponse(responseBuilder);
 	}
 
+	@GET
+	@Path("user/list/userId/{userId}/restaurantId/{restaurantId}/groupId/{groupId}/active/{active}")
+	@Override
+	public Response getUsers(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("groupId") Integer groupId,
+			@PathParam("active") Integer active
+	) {
+		logger.debug("userId: {}, restaurantId: {}, groupId: {}, active: {}", userId, restaurantId, active);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		List<JsonNode> resultList = userService.getUsers(restaurantId, groupId, active);
+
+		if (resultList!=null && !resultList.isEmpty()) {
+			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
 }
 
 

@@ -21,4 +21,19 @@ public interface CommonHandler {
             Integer restaurantId,
             Integer ticketVisibleId
     );
+
+    /**
+     *
+     * @param userId
+     * @param restaurantId
+     * @param groupId
+     * @param active
+     * @return
+     */
+    Response getUsers(
+            Integer userId,
+            Integer restaurantId,
+            Integer groupId,
+            Integer active
+    );
 }

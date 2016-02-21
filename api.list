@@ -101,3 +101,13 @@ http://localhost:8080/HintsService/v1.0/rest/report/bags/userId/{userId}/restaur
 Example URL:
 http://localhost:8080/HintsService/v1.0/rest/report/bags/userId/1/restaurantId/1/status/1
 =========
+
+
+=========
+User list
+API URL:
+http://localhost:8080/HintsService/v1.0/rest/user/list/userId/{userId}/restaurantId/{restaurantId}/groupId/{groupId}/active/{active}
+
+Example URL:
+http://localhost:8080/HintsService/v1.0/rest/user/list/userId/1/restaurantId/1/groupId/2/active/1
+=========

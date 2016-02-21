@@ -40,6 +40,18 @@ FROM (SELECT
         ]]>
     </entry>
 
+    <entry key="getUsers">
+        <![CDATA[
+SELECT
+  id         AS id,
+  first_name AS first_name,
+  last_name  AS last_name
+FROM tb_users
+WHERE group_id = :groupId AND active = :active
+ORDER BY first_name, last_name;
+        ]]>
+    </entry>
+
     <entry key="empty">
         <![CDATA[
         ]]>
