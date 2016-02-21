@@ -44,13 +44,12 @@ public class TicketService {
     private ObjectMapper objectMapper;
 
     public List<JsonNode> getTicketList(
-            Integer userId,
             Integer restaurantId,
             String date,
             String timeStart,
             String timeEnd,
             Collection<String> userIds) {
-        logger.debug("userId: {}", userId);
+        logger.debug("restaurantId: {}", restaurantId);
 
         try {
             String ticketListQuery = reportQueryStore.getProperty("ticketList");

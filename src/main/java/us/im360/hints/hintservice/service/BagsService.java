@@ -44,14 +44,15 @@ public class BagsService {
 		logger.debug("restaurantId: {}", restaurantId);
 
 		try {
-			String profitReportQuery = reportQueryStore.getProperty("getBags");
-			logger.debug("QUERY TO EXECUTE: " + profitReportQuery);
+			String query = reportQueryStore.getProperty("getBags");
+			logger.debug("QUERY TO EXECUTE: " + query);
 
 			return namedParameterJdbcTemplate.query(
-					profitReportQuery,
+					query,
 					new MapSqlParameterSource()
 							.addValue("status", status)
-							.addValue("attr1", StringUtils.isEmpty(attr1) ? null : attr1),
+							.addValue("attr1", StringUtils.isEmpty(attr1) ? null : attr1)
+							.addValue("restaurantId", restaurantId),
 					new JsonNodeRowMapper(objectMapper));
 
 		} catch (Exception e) {
@@ -61,14 +62,14 @@ public class BagsService {
 
 	public List<JsonNode> getExtracts(Integer restaurantId, Integer status, String attr1)
 	{
-		logger.debug("restaurantId: {}", restaurantId);
+		logger.debug("restaurantId: {}, status: {}, attr1: {}", restaurantId, status, attr1);
 
 		try {
-			String profitReportQuery = reportQueryStore.getProperty("getExtracts");
-			logger.debug("QUERY TO EXECUTE: " + profitReportQuery);
+			String query = reportQueryStore.getProperty("getExtracts");
+			logger.debug("QUERY TO EXECUTE: " + query);
 
 			return namedParameterJdbcTemplate.query(
-					profitReportQuery,
+					query,
 					new MapSqlParameterSource()
 							.addValue("restaurantId", restaurantId)
 							.addValue("status", status)

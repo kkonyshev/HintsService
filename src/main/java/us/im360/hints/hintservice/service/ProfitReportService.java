@@ -43,14 +43,16 @@ public class ProfitReportService {
 		logger.debug("restaurantId: {}, startDate: {}, endDate: {}", restaurantId, startDate, endDate);
 
 		try {
-			String profitReportQuery = reportQueryStore.getProperty("profitReport");
-			logger.debug("QUERY TO EXECUTE: " + profitReportQuery);
+			String query = reportQueryStore.getProperty("profitReport");
+			logger.debug("QUERY TO EXECUTE: " + query);
 
-			return namedParameterJdbcTemplate.query(profitReportQuery,
+			return namedParameterJdbcTemplate.query(
+					query,
 					new MapSqlParameterSource()
 							.addValue("startDate", startDate)
-							.addValue("endDate", endDate),
-							new JsonNodeRowMapper(objectMapper));
+							.addValue("endDate", endDate)
+							.addValue("restaurantId", restaurantId),
+					new JsonNodeRowMapper(objectMapper));
 
 		} catch (Exception e) {
 			return Collections.emptyList();

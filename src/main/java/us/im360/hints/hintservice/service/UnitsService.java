@@ -43,12 +43,13 @@ public class UnitsService {
 		logger.debug("restaurantId: {}", restaurantId);
 
 		try {
-			String profitReportQuery = reportQueryStore.getProperty("getUnits");
-			logger.debug("QUERY TO EXECUTE: " + profitReportQuery);
+			String query = reportQueryStore.getProperty("getUnits");
+			logger.debug("QUERY TO EXECUTE: " + query);
 
 			return namedParameterJdbcTemplate.query(
-					profitReportQuery,
-					new MapSqlParameterSource(),
+					query,
+					new MapSqlParameterSource()
+							.addValue("restaurantId", restaurantId),
 					new JsonNodeRowMapper(objectMapper));
 
 		} catch (Exception e) {

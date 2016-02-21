@@ -46,11 +46,13 @@ public class LossReportService {
 			String lossReportQuery = reportQueryStore.getProperty("lossReport");
 			logger.debug("QUERY TO EXECUTE: " + lossReportQuery);
 
-			return namedParameterJdbcTemplate.query(lossReportQuery,
+			return namedParameterJdbcTemplate.query(
+					lossReportQuery,
 					new MapSqlParameterSource()
 							.addValue("startDate", startDate)
-							.addValue("endDate", endDate),
-							new JsonNodeRowMapper(objectMapper));
+							.addValue("endDate", endDate)
+							.addValue("restaurantId", restaurantId),
+					new JsonNodeRowMapper(objectMapper));
 
 		} catch (Exception e) {
 			return Collections.emptyList();

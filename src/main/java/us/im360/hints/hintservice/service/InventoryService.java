@@ -39,8 +39,7 @@ public class InventoryService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public List<JsonNode> getInventory(
-            Integer restaurantId) {
+    public List<JsonNode> getInventory(Integer restaurantId) {
         logger.debug("restaurantId: {}", restaurantId);
 
         try {

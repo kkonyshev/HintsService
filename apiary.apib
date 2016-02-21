@@ -19,6 +19,17 @@ IM360 API
         {"resultCode":"success","details":[{"register":"ff8081815277cc0a01527c5379ad05cf","time_open":"09:00 AM","time_closed":"02:58 PM","expected_cash":3589.46,"actual_cash":3592.0,"cash_difference":-2.54,"expected_debit":1515.0,"actual_debit":1515.0,"running_debit_sum":1515.0,"debit_difference":0.0,"expected_total":5104.46,"actual_total":5107.0,"total_difference":-2.54,"cashier":"TAYLOR","manager":"JAMINA KNOWLES"},{"register":"ff808081527bdf7c01527c4ec7ed018e","time_open":"09:00 AM","time_closed":"03:00 PM","expected_cash":4047.34,"actual_cash":3932.0,"cash_difference":115.34,"expected_debit":2075.0,"actual_debit":2075.0,"running_debit_sum":2075.0,"debit_difference":0.0,"expected_total":6122.34,"actual_total":6007.0,"total_difference":115.34,"cashier":"TAYLOR","manager":"JAMINA KNOWLES"},{"register":"ff808181527cf2610152802933900272","time_open":"02:58 PM","time_closed":"09:07 PM","expected_cash":4331.7,"actual_cash":4335.0,"cash_difference":-3.3,"expected_debit":2460.0,"actual_debit":2460.0,"running_debit_sum":3975.0,"debit_difference":0.0,"expected_total":6791.7,"actual_total":6795.0,"total_difference":-3.3,"cashier":"CHRISTOPHER","manager":"CHRISTOPHER BUERGER"},{"register":"ff808081527dcf030152802ab14e034d","time_open":"03:00 PM","time_closed":"09:03 PM","expected_cash":5917.1,"actual_cash":5935.0,"cash_difference":-17.9,"expected_debit":2755.0,"actual_debit":2755.0,"running_debit_sum":4830.0,"debit_difference":0.0,"expected_total":8672.1,"actual_total":8690.0,"total_difference":-17.9,"cashier":"TAYLOR","manager":"CHRISTOPHER BUERGER"}]}
 
 
+### Cash report for non-existing restaurantId [GET /HintsService/v1.0/rest/report/cash/userId/{userId}/restaurantId/-1/closeDate/{closeDate}]
++ Parameters
+    + userId: `1` (number, required)
+    + closeDate: `2016-01-26` (number, required)
+
+
++ Response 200 (application/json)
+
+        {"resultCode":"fail"}
+
+
 ### Profit report [GET /HintsService/v1.0/rest/report/profit/userId/{userId}/restaurantId/{restaurantId}/startDate/{startDate}/endDate/{endDate}]
 + Parameters
     + userId: `1` (number, required)
@@ -30,6 +41,18 @@ IM360 API
 + Response 200 (application/json)
 
         {"resultCode":"success","details":[{"type":"FLOWER","strain":"91 OG KUSH","option":"SOIL - ORGANIC - LED","tier":"60","cost":209.52750000000003,"grams":22.75,"profit":378.0377999999999,"revenue":345.2399999999999,"profit_per_gram":7.407046153846148,"net_profit":135.71249999999986},{"type":"FLOWER","strain":"BLOCKHEAD","option":"SOIL - ORGANIC","tier":"45","cost":1206.2925000000005,"grams":168.25,"profit":2151.1384499999986,"revenue":1964.5099999999975,"profit_per_gram":5.615726300148577,"net_profit":758.217499999997},{"type":"FLOWER","strain":"BLUE MAZAR","option":"SOIL - ORGANIC","tier":"45","cost":150.64499999999998,"grams":20.75,"profit":269.45759999999996,"revenue":246.08000000000004,"profit_per_gram":5.725908433734938,"net_profit":95.43500000000006},{"type":"FLOWER","strain":"CHEMDOG","option":"ROCKWOOL - HYDROPONIC","tier":"60","cost":560.9024999999998,"grams":64.25,"profit":1090.0878300000002,"revenue":995.5139999999994,"profit_per_gram":8.236347548638138,"net_profit":434.61149999999964},{"type":"FLOWER","strain":"D.P. BLUEBERRY","option":"SOIL - ORGANIC","tier":"50","cost":77.30000000000001,"grams":10.0,"profit":150.015,"revenue":137.0,"profit_per_gram":7.271499999999998,"net_profit":59.69999999999999},{"type":"FLOWER","strain":"DIAMOND OG KUSH","option":"SOIL - ORGANIC","tier":"60","cost":350.29999999999995,"grams":38.75,"profit":669.9538500000001,"revenue":611.83,"profit_per_gram":8.249131612903229,"net_profit":261.5300000000001},{"type":"FLOWER","strain":"DUTCH TREAT","option":"SOIL - ORGANIC","tier":"50","cost":1049.3099999999995,"grams":135.0,"profit":1912.435019999999,"revenue":1746.5159999999994,"profit_per_gram":6.393518666666663,"net_profit":697.2059999999999},{"type":"FLOWER","strain":"HARDCORE OG","option":"SOIL - ORGANIC","tier":"60","cost":332.8949999999999,"grams":37.75,"profit":646.9807500000001,"revenue":590.85,"profit_per_gram":8.320152317880797,"net_profit":257.9550000000001},{"type":"FLOWER","strain":"HERCULES OG KUSH","option":"SOIL - ORGANIC","tier":"60","cost":821.5599999999997,"grams":94.0,"profit":1613.9653949999993,"revenue":1473.9410000000005,"profit_per_gram":8.42984462765957,"net_profit":652.3810000000008},{"type":"FLOWER","strain":"JACK HERER","option":"ROCKWOOL - HYDROPONIC","tier":"50","cost":292.5625,"grams":37.75,"profit":534.97758,"revenue":488.56399999999985,"profit_per_gram":6.421591523178807,"net_profit":196.00149999999985},{"type":"FLOWER","strain":"LOUIS XIII OG KUSH","option":"SOIL - ORGANIC","tier":"60","cost":1401.1999999999982,"grams":155.0,"profit":2663.9160000000034,"revenue":2432.800000000002,"profit_per_gram":8.14655483870971,"net_profit":1031.6000000000038},{"type":"FLOWER","strain":"MR NICE","option":"SUNGROWN","tier":"30","cost":1245.1349999999989,"grams":226.0,"profit":1908.9594900000004,"revenue":1743.3420000000015,"profit_per_gram":2.9372765044247857,"net_profit":498.2070000000026},{"type":"FLOWER","strain":"OG KUSH #18","option":"SOIL - ORGANIC","tier":"50","cost":448.14,"grams":57.75,"profit":825.9771149999997,"revenue":754.3170000000002,"profit_per_gram":6.542634025974021,"net_profit":306.17700000000025},{"type":"FLOWER","strain":"PROFESSOR OG KUSH","option":"SOIL - ORGANIC","tier":"60","cost":172.865,"grams":19.25,"profit":329.9892,"revenue":301.35999999999996,"profit_per_gram":8.162296103896102,"net_profit":128.49499999999995},{"type":"FLOWER","strain":"SATURN OG KUSH","option":"ROCKWOOL - HYDROPONIC","tier":"35","cost":1145.972500000002,"grams":193.25,"profit":1907.3049450000028,"revenue":1741.8310000000033,"profit_per_gram":3.9396245536869388,"net_profit":595.8585000000014},{"type":"FLOWER","strain":"SKYWALKER OG KUSH","option":"SOIL - ORGANIC","tier":"60","cost":294.0875,"grams":33.25,"profit":570.00225,"revenue":520.5499999999998,"profit_per_gram":8.298187969924813,"net_profit":226.46249999999986},{"type":"FLOWER","strain":"SONOMA OG","option":"SOIL - ORGANIC","tier":"50","cost":15.62,"grams":2.0,"profit":30.002999999999997,"revenue":27.4,"profit_per_gram":7.191499999999999,"net_profit":11.78},{"type":"FLOWER","strain":"SUPER GLUE","option":"SOIL - ORGANIC","tier":"60","cost":186.95250000000004,"grams":22.75,"profit":383.9946,"revenue":350.68,"profit_per_gram":8.661191208791207,"net_profit":163.72749999999996},{"type":"FLOWER","strain":"SUPERMAN OG KUSH","option":"SOIL - ORGANIC","tier":"60","cost":803.9125,"grams":91.25,"profit":1563.9348449999993,"revenue":1428.2510000000007,"profit_per_gram":8.329011999999992,"net_profit":624.3385000000006},{"type":"FLOWER","strain":"THIN MINTS","option":"ROCKWOOL - HYDROPONIC","tier":"40","cost":2370.1274999999973,"grams":360.75,"profit":4119.884940000002,"revenue":3762.452000000011,"profit_per_gram":4.850332474012486,"net_profit":1392.3245000000138},{"type":"FLOWER","strain":"TRIPLE O","option":"SOIL - ORGANIC","tier":"60","cost":164.14999999999998,"grams":24.5,"profit":410.99839499999996,"revenue":375.3409999999999,"profit_per_gram":10.07544469387755,"net_profit":211.19099999999992},{"type":"FLOWER","strain":"XJ-13","option":"SOIL - ORGANIC","tier":"50","cost":610.3999999999997,"grams":80.0,"profit":1139.9541299999999,"revenue":1041.054,"profit_per_gram":6.619426625000001,"net_profit":430.65400000000034},{"type":"MISC","strain":"SHAKE 3.5g","option":"","tier":"","cost":24.43,"grams":3.5,"profit":24.998849999999997,"revenue":22.83,"profit_per_gram":0.16252857142857075,"net_profit":0.0},{"type":"EXTRACT","strain":"BLUE DREAM","option":"OIL - TRIPLE REFINED","tier":"50","cost":25.0,"grams":1.0,"profit":49.997699999999995,"revenue":45.66,"profit_per_gram":24.997699999999995,"net_profit":20.659999999999997},{"type":"EXTRACT","strain":"GIRL SCOUT COOKIES","option":"JELLY","tier":"45","cost":175.0,"grams":10.0,"profit":445.54455,"revenue":406.89000000000004,"profit_per_gram":27.054455,"net_profit":231.89000000000004},{"type":"EXTRACT","strain":"HARLE-TSU","option":"WAX - NUG RUN 10:1","tier":"60","cost":30.0,"grams":1.0,"profit":59.99505,"revenue":54.79,"profit_per_gram":29.99505,"net_profit":24.79},{"type":"EXTRACT","strain":"LARRY OG","option":"OIL","tier":"35","cost":35.0,"grams":2.0,"profit":69.9924,"revenue":63.92,"profit_per_gram":17.4962,"net_profit":28.92},{"type":"EXTRACT","strain":"LARRY OG","option":"OIL - TRIPLE REFINED","tier":"50","cost":50.0,"grams":2.0,"profit":99.99539999999999,"revenue":91.32,"profit_per_gram":24.997699999999995,"net_profit":41.31999999999999},{"type":"EXTRACT","strain":"OG TERP STAR","option":"OIL - NUG RUN","tier":"50","cost":25.0,"grams":1.0,"profit":49.997699999999995,"revenue":45.66,"profit_per_gram":24.997699999999995,"net_profit":20.659999999999997},{"type":"EXTRACT","strain":"SFV OG KUSH","option":"OIL - TRIPLE REFINED","tier":"40","cost":20.0,"grams":1.0,"profit":40.00035,"revenue":36.53,"profit_per_gram":20.000349999999997,"net_profit":16.53},{"type":"EXTRACT","strain":"THC BLEND","option":"OIL","tier":"35","cost":140.0,"grams":8.0,"profit":279.96959999999996,"revenue":255.68000000000004,"profit_per_gram":17.496199999999995,"net_profit":115.68000000000004},{"type":"EXTRACT","strain":"THC BLEND","option":"OIL - ACTIVATED","tier":"45","cost":45.0,"grams":2.0,"profit":90.009,"revenue":82.2,"profit_per_gram":22.5045,"net_profit":37.2}]}
+
+
+### Profit report for non-existing restaurantId [GET /HintsService/v1.0/rest/report/profit/userId/{userId}/restaurantId/-1/startDate/{startDate}/endDate/{endDate}]
++ Parameters
+    + userId: `1` (number, required)
+    + startDate: `2016-01-01` (string, required)
+    + endDate: `2016-01-01` (string, required)
+
+
++ Response 200 (application/json)
+
+        {"resultCode":"fail"}
 
 
 ### Loss report [GET /HintsService/v1.0/rest/report/loss/userId/{userId}/restaurantId/{restaurantId}/startDate/{startDate}/endDate/{endDate}]
@@ -45,7 +68,19 @@ IM360 API
         {"resultCode":"success","details":[{"type":"EXTRACT","strain":"ACDC","option":"OIL - ACTIVATED - 5:1","tier":"70","grams_per_jar":1.0,"jars_lost":1,"total_grams":1.0,"total_cost":35.0,"cost_per_gram":35.0},{"type":"EXTRACT","strain":"ACDC","option":"OIL - ACTIVATED - 10:1","tier":"70","grams_per_jar":1.0,"jars_lost":1,"total_grams":1.0,"total_cost":35.0,"cost_per_gram":35.0},{"type":"FLOWER","strain":"BLOCKHEAD","option":"SOIL - ORGANIC","tier":"45","grams_per_jar":3.5,"jars_lost":1,"total_grams":3.5,"total_cost":29.3,"cost_per_gram":8.371428571428572},{"type":"FLOWER","strain":"FORTUNE COOKIES","option":"SOIL - ORGANIC","tier":"40","grams_per_jar":1.0,"jars_lost":1,"total_grams":1.0,"total_cost":6.59,"cost_per_gram":6.59},{"type":"FLOWER","strain":"JACK HERER","option":"ROCKWOOL - HYDROPONIC","tier":"50","grams_per_jar":3.5,"jars_lost":1,"total_grams":3.5,"total_cost":27.12,"cost_per_gram":7.748571428571429},{"type":"FLOWER","strain":"JACK HERER","option":"ROCKWOOL - HYDROPONIC","tier":"50","grams_per_jar":1.0,"jars_lost":1,"total_grams":1.0,"total_cost":7.75,"cost_per_gram":7.75},{"type":"EXTRACT","strain":"LARRY OG","option":"OIL - TRIPLE REFINED","tier":"50","grams_per_jar":1.0,"jars_lost":1,"total_grams":1.0,"total_cost":25.0,"cost_per_gram":25.0},{"type":"FLOWER","strain":"OG KUSH #18","option":"SOIL - ORGANIC","tier":"50","grams_per_jar":1.75,"jars_lost":1,"total_grams":1.75,"total_cost":13.56,"cost_per_gram":7.748571428571429},{"type":"FLOWER","strain":"THIN MINTS","option":"ROCKWOOL - HYDROPONIC","tier":"40","grams_per_jar":3.5,"jars_lost":1,"total_grams":3.5,"total_cost":23.0,"cost_per_gram":6.571428571428571}]}
 
 
-### Product Stock report [GET /HintsService/v1.0/rest/product/stock/userId/{userId}/restaurantId/{restaurantId}/productId/{productId}]
+### Loss report for non-existing restaurantId [GET /HintsService/v1.0/rest/report/loss/userId/{userId}/restaurantId/-1/startDate/{startDate}/endDate/{endDate}]
++ Parameters
+    + userId: `1` (number, required)
+    + startDate: `2016-01-01` (string, required)
+    + endDate: `2016-01-20` (string, required)
+
+
++ Response 200 (application/json)
+
+        {"resultCode":"fail"}
+
+
+### Product stock [GET /HintsService/v1.0/rest/product/stock/userId/{userId}/restaurantId/{restaurantId}/productId/{productId}]
 + Parameters
     + userId: `1` (number, required)
     + restaurantId: `1` (number, required)
@@ -67,6 +102,18 @@ IM360 API
 + Response 200 (application/json)
 
                 {"resultCode":"success","details":[{"type":"CASH","cash":19957.468784999975,"tax":1731.4698945890377},{"type":"CASHLESS_ATM","cash":6525.0,"tax":566.0958904109584}]}
+
+
+### Payment report for non-existing restaurantId [GET /HintsService/v1.0/rest/report/payment/userId/{userId}/restaurantId/-1/startDate/{startDate}/endDate/{endDate}]
++ Parameters
+    + userId: `1` (number, required)
+    + startDate: `2016-01-01` (string, required)
+    + endDate: `2016-01-01` (string, required)
+
+
++ Response 200 (application/json)
+
+                {"resultCode":"fail"}
 
 
 ### Ticket list [GET /HintsService/v1.0/rest/report/tickets/userId/{userId}/restaurantId/{restaurantId}/date/{date}/timeStart/{timeStart}/timeEnd/{timeEnd}/userIdList/{userIdList}]
@@ -95,6 +142,16 @@ IM360 API
                 {"resultCode":"success","details":[{"type":"FLOWER","strain":"91 OG KUSH","option":"SOIL - ORGANIC","tier":"60","units":3.0,"total_cost":12000.0,"cost_per_unit":4000.0},{"type":"FLOWER","strain":"91 OG KUSH","option":"SOIL - ORGANIC - LED","tier":"60","units":1.0,"total_cost":4000.0,"cost_per_unit":4000.0},{"type":"FLOWER","strain":"ANIMAL COOKIES","option":"ROCKWOOL - HYDROPONIC","tier":"45","units":2.0,"total_cost":6500.0,"cost_per_unit":3250.0},{"type":"FLOWER","strain":"ANIMAL COOKIES","option":"SOIL - ORGANIC","tier":"40","units":5.0,"total_cost":15000.0,"cost_per_unit":3000.0},{"type":"FLOWER","strain":"BANANA","option":"SOIL","tier":"35","units":2.0,"total_cost":5500.0,"cost_per_unit":2750.0},{"type":"FLOWER","strain":"BLUE BALLS ","option":"SOIL - ORGANIC","tier":"50","units":1.0,"total_cost":3500.0,"cost_per_unit":3500.0},{"type":"EXTRACT","strain":"BLUE DREAM","option":"OIL - TRIPLE REFINED","tier":"50","units":124.0,"total_cost":3100.0,"cost_per_unit":25.0},{"type":"FLOWER","strain":"BLUE DREAM","option":"SOIL - ORGANIC","tier":"40","units":3.0,"total_cost":9000.0,"cost_per_unit":3000.0},{"type":"FLOWER","strain":"COTTON CANDY","option":"CLEAN GREEN CERTIFIED","tier":"40","units":1.0,"total_cost":3000.0,"cost_per_unit":3000.0},{"type":"EXTRACT","strain":"CRIPPLER","option":"OIL - TRIPLE REFINED","tier":"45","units":117.0,"total_cost":2632.5,"cost_per_unit":22.5},{"type":"FLOWER","strain":"D.P. BLUEBERRY","option":"SOIL - ORGANIC","tier":"50","units":3.0,"total_cost":10500.0,"cost_per_unit":3500.0},{"type":"FLOWER","strain":"DIABLO OG KUSH","option":"SOIL - ORGANIC","tier":"60","units":4.0,"total_cost":16000.0,"cost_per_unit":4000.0},{"type":"FLOWER","strain":"DIESEL COOKIES","option":"ROCKWOOL - HYDROPONIC","tier":"40","units":1.0,"total_cost":3000.0,"cost_per_unit":3000.0},{"type":"FLOWER","strain":"GHOST OG KUSH","option":"SOIL - ORGANIC","tier":"60","units":5.0,"total_cost":20000.0,"cost_per_unit":4000.0},{"type":"EXTRACT","strain":"GIRL SCOUT COOKIES","option":"JELLY","tier":"45","units":252.0,"total_cost":5670.0,"cost_per_unit":22.5},{"type":"EXTRACT","strain":"GIRL SCOUT COOKIES","option":"JELLY","tier":"35","units":143.0,"total_cost":2502.5,"cost_per_unit":17.5},{"type":"EXTRACT","strain":"GIRL SCOUT COOKIES","option":"OIL","tier":"30","units":110.0,"total_cost":1650.0,"cost_per_unit":15.0},{"type":"FLOWER","strain":"GOLDEN GOAT","option":"SOIL - ORGANIC","tier":"45","units":2.0,"total_cost":6500.0,"cost_per_unit":3250.0},{"type":"FLOWER","strain":"HAZE","option":"ROCKWOOL - HYDROPONIC","tier":"40","units":1.0,"total_cost":3000.0,"cost_per_unit":3000.0},{"type":"FLOWER","strain":"JACK HERER","option":"SOIL - ORGANIC","tier":"50","units":1.0,"total_cost":3500.0,"cost_per_unit":3500.0},{"type":"FLOWER","strain":"KING TUT","option":"SOIL - ORGANIC","tier":"60","units":6.0,"total_cost":24000.0,"cost_per_unit":4000.0},{"type":"FLOWER","strain":"KOSHER KUSH","option":"SOIL - ORGANIC","tier":"60","units":4.0,"total_cost":16000.0,"cost_per_unit":4000.0},{"type":"FLOWER","strain":"LARRY OG","option":"ROCKWOOL - HYDROPONIC","tier":"50","units":1.0,"total_cost":3500.0,"cost_per_unit":3500.0},{"type":"EXTRACT","strain":"LARRY OG","option":"OIL - TRIPLE REFINED","tier":"40","units":117.0,"total_cost":2340.0,"cost_per_unit":20.0},{"type":"FLOWER","strain":"NATURAL GAS","option":"SOIL - ORGANIC","tier":"60","units":3.0,"total_cost":12000.0,"cost_per_unit":4000.0},{"type":"FLOWER","strain":"NATURAL LOUIS XIII","option":"SOIL - ORGANIC","tier":"60","units":6.0,"total_cost":24000.0,"cost_per_unit":4000.0},{"type":"FLOWER","strain":"NEPALESE KUSH","option":"SOIL - ORGANIC","tier":"60","units":4.0,"total_cost":16000.0,"cost_per_unit":4000.0},{"type":"FLOWER","strain":"OG KUSH #4","option":"ROCKWOOL - HYDROPONIC","tier":"40","units":1.0,"total_cost":3000.0,"cost_per_unit":3000.0},{"type":"FLOWER","strain":"OGRE","option":"SOIL - ORGANIC","tier":"45","units":5.0,"total_cost":16250.0,"cost_per_unit":3250.0},{"type":"FLOWER","strain":"PARIS OG KUSH","option":"SOIL - ORGANIC","tier":"50","units":1.0,"total_cost":3500.0,"cost_per_unit":3500.0},{"type":"EXTRACT","strain":"RASCAL OG KUSH","option":"JELLY","tier":"35","units":99.0,"total_cost":1732.5,"cost_per_unit":17.5},{"type":"FLOWER","strain":"RASPBERRY KUSH","option":"ROCKWOOL - HYDROPONIC","tier":"50","units":1.0,"total_cost":3500.0,"cost_per_unit":3500.0},{"type":"EXTRACT","strain":"SFV OG KUSH","option":"OIL - TRIPLE REFINED","tier":"40","units":310.0,"total_cost":6200.0,"cost_per_unit":20.0},{"type":"FLOWER","strain":"SHERBERT","option":"ROCKWOOL - HYDROPONIC","tier":"50","units":1.0,"total_cost":3500.0,"cost_per_unit":3500.0},{"type":"FLOWER","strain":"SKYWALKER OG KUSH","option":"SOIL - ORGANIC","tier":"60","units":1.0,"total_cost":4000.0,"cost_per_unit":4000.0},{"type":"FLOWER","strain":"SOUR DIESEL","option":"ROCKWOOL - HYDROPONIC","tier":"40","units":2.0,"total_cost":6000.0,"cost_per_unit":3000.0},{"type":"FLOWER","strain":"STARBURST","option":"SOIL - ORGANIC","tier":"40","units":3.0,"total_cost":9000.0,"cost_per_unit":3000.0},{"type":"FLOWER","strain":"STRAWBERRY BANANA","option":"ROCKWOOL - HYDROPONIC","tier":"40","units":3.0,"total_cost":9000.0,"cost_per_unit":3000.0},{"type":"FLOWER","strain":"SUPER GLUE","option":"SOIL - ORGANIC","tier":"45","units":4.0,"total_cost":13000.0,"cost_per_unit":3250.0},{"type":"FLOWER","strain":"SUPER JACK","option":"COCO - HYDROPONIC","tier":"50","units":9.0,"total_cost":31500.0,"cost_per_unit":3500.0},{"type":"FLOWER","strain":"SUPERMAN OG KUSH","option":"COCO - HYDROPONIC","tier":"60","units":2.0,"total_cost":8000.0,"cost_per_unit":4000.0},{"type":"FLOWER","strain":"TRAINWRECK","option":"SOIL - ORGANIC","tier":"60","units":4.0,"total_cost":16000.0,"cost_per_unit":4000.0},{"type":"FLOWER","strain":"TRIPLE O","option":"CLEAN GREEN CERTIFIED","tier":"40","units":3.0,"total_cost":12000.0,"cost_per_unit":4000.0},{"type":"FLOWER","strain":"WHITE BUFFALO","option":"ROCKWOOL - HYDROPONIC","tier":"40","units":3.0,"total_cost":9000.0,"cost_per_unit":3000.0}]}
 
 
+### Units report for non-existing restaurantId [GET /HintsService/v1.0/rest/report/units/userId/{userId}/restaurantId/-1]
++ Parameters
+    + userId: `1` (number, required)
+
+
++ Response 200 (application/json)
+
+                {"resultCode":"fail"}
+
+
 ### Sales report [GET /HintsService/v1.0/rest/report/sales/userId/{userId}/restaurantId/{restaurantId}/startDate/{startDate}/endDate/{endDate}]
 + Parameters
     + userId: `1` (number, required)
@@ -118,6 +175,18 @@ IM360 API
 + Response 200 (application/json)
 
                 {"resultCode":"success","products":[{"id":"crumb35","amount":1.0,"price":27.4,"description":"CRUMB 3.5g","option":null,"type":"SHAKE/CRUMB","comment":null}]}
+
+
+### Bag list with ATTR1!=null for non-existing restaurantId [GET /HintsService/v1.0/rest/report/bags/userId/{userId}/restaurantId/-1/status/{status}/attr1/{attr1}]
++ Parameters
+    + userId: `1` (number, required)
+    + status: `0` (number, required)
+    + attr1: `LAB` (string, required)
+
+
++ Response 200 (application/json)
+
+                {"resultCode":"fail"}
 
 
 ### Bag list with ATTR1!=null [GET /HintsService/v1.0/rest/report/bags/userId/{userId}/restaurantId/{restaurantId}/status/{status}/attr1/{attr1}]
@@ -217,6 +286,18 @@ IM360 API
                 {"resultCode":"success","tiers":[{"id":1,"vendor":null,"tier":60,"cost":4000.0},{"id":2,"vendor":null,"tier":50,"cost":3500.0},{"id":3,"vendor":null,"tier":45,"cost":3250.0},{"id":4,"vendor":null,"tier":40,"cost":3000.0},{"id":5,"vendor":null,"tier":35,"cost":2750.0},{"id":6,"vendor":null,"tier":30,"cost":2500.0},{"id":7,"vendor":null,"tier":25,"cost":2000.0}]}
 
 
+### Extracts list with ATTR1!=null for non-existing restaurantId  [GET /HintsService/v1.0/rest/report/extracts/userId/{userId}/restaurantId/-1/status/{status}/attr1/{attr1}]
++ Parameters
+    + userId: `1` (number, required)
+    + status: `0` (number, required)
+    + attr1: `LAB` (string, required)
+
+
++ Response 200 (application/json)
+
+                {"resultCode":"fail"}
+
+
 ### Extracts list with ATTR1!=null [GET /HintsService/v1.0/rest/report/extracts/userId/{userId}/restaurantId/{restaurantId}/status/{status}/attr1/{attr1}]
 + Parameters
     + userId: `1` (number, required)
@@ -251,6 +332,16 @@ IM360 API
 + Response 200 (application/json)
 
                 {"resultCode":"success","tiers":[{"id":1,"vendor":null,"tier":60,"cost":4000.0},{"id":2,"vendor":null,"tier":50,"cost":3500.0},{"id":3,"vendor":null,"tier":45,"cost":3250.0},{"id":4,"vendor":null,"tier":40,"cost":3000.0},{"id":5,"vendor":null,"tier":35,"cost":2750.0},{"id":6,"vendor":null,"tier":30,"cost":2500.0},{"id":7,"vendor":null,"tier":25,"cost":2000.0}]}
+
+
+### Get current inventory for non-existing restaurantId [GET /HintsService/v1.0/rest/report/inventory/userId/{userId}/restaurantId/-1]
++ Parameters
+    + userId: `1` (number, required)
+
+
++ Response 200 (application/json)
+
+                {"resultCode":"fail"}
 
 
 ### Get current inventory [GET /HintsService/v1.0/rest/report/inventory/userId/{userId}/restaurantId/{restaurantId}]
