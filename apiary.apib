@@ -219,3 +219,17 @@ IM360 API
 + Response 200 (application/json)
 
                 {"resultCode":"success","attributes":[{"id":8,"name":"CBD"},{"id":1,"name":"HYBRID"},{"id":5,"name":"I/S"},{"id":2,"name":"INDICA"},{"id":3,"name":"KUSH"},{"id":9,"name":"NONE"},{"id":6,"name":"S/I"},{"id":4,"name":"SATIVA"}]}
+
+
+## List of options [/HintsService/v1.0/rest/option/list/userId/{userId}/restaurantId/{restaurantId}/active/{active}]
++ Parameters
+    + userId: `1` (number, required)
+    + restaurantId: `1` (number, required)
+    + active: `1` (number, required)
+
+
+### get [GET]
+
++ Response 200 (application/json)
+
+                {"resultCode":"success","options":[{"id":46,"name":"100 PUFFS"},{"id":28,"name":"CLEAN GREEN"},{"id":33,"name":"CLEAN GREEN CERTIFIED"},{"id":29,"name":"COCO - HYDROPONIC"},{"id":8,"name":"CRUMBLE - NUG RUN - 5:1"},{"id":19,"name":"HYDROPONIC"},{"id":11,"name":"JELLY"},{"id":27,"name":"JELLY - 3:1"},{"id":23,"name":"JELLY - FRESH FROZEN - NUG RUN"},{"id":25,"name":"JELLY - NUG RUN"},{"id":4,"name":"NUG RUN SHATTER 1:1"},{"id":26,"name":"OCEAN GROWN"},{"id":12,"name":"OIL"},{"id":42,"name":"OIL - ACTIVATED"},{"id":40,"name":"OIL - ACTIVATED - 10:1"},{"id":41,"name":"OIL - ACTIVATED - 1:10"},{"id":31,"name":"OIL - ACTIVATED - 5:1"},{"id":32,"name":"OIL - NUG RUN"},{"id":36,"name":"OIL - TRIPLE REFINED"},{"id":35,"name":"ROCK WOOL - HYDROPONICS"},{"id":39,"name":"ROCKWOOL - HYDROPONIC"},{"id":47,"name":"ROSIN"},{"id":9,"name":"SHATTER"},{"id":20,"name":"SHATTER - FRESH FROZEN - NUG RUN"},{"id":22,"name":"SHATTER - NUG RUN "},{"id":5,"name":"SHATTER - NUG RUN - 2:1"},{"id":37,"name":"SHATTER - TRIPLE REFINED"},{"id":3,"name":"SOIL"},{"id":24,"name":"SOIL - ORGANIC"},{"id":44,"name":"SOIL - ORGANIC - CLEAN GREEN"},{"id":38,"name":"SOIL - ORGANIC - CO2 ENHANCED"},{"id":45,"name":"SOIL - ORGANIC - LED"},{"id":34,"name":"SOIL - VEGANIC"},{"id":30,"name":"SUNGROWN"},{"id":21,"name":"WAX"},{"id":7,"name":"WAX - 10:1"},{"id":14,"name":"WAX - 1:10"},{"id":15,"name":"WAX - 4:1"},{"id":10,"name":"WAX - 5:1"},{"id":6,"name":"WAX - NUG RUN "},{"id":43,"name":"WAX - TRIPLE REFINED"}]}

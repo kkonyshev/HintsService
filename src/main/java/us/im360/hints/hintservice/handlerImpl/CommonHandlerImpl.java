@@ -49,6 +49,9 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Autowired
 	private AttributeService attributeService;
 
+	@Autowired
+	private OptionService optionService;
+
 	@GET
 	@Path("details/ticket/userId/{userId}/restaurantId/{restaurantId}/ticketVisibleId/{ticketVisibleId}")
 	@Override
@@ -154,6 +157,28 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 
 		if (CollectionUtils.isNotEmpty(resultList)) {
 			responseBuilder.success().withArray(ATTRIBUTES_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+	@GET
+	@Path("option/list/userId/{userId}/restaurantId/{restaurantId}/active/{active}")
+	@Override
+	public Response getOptions(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("active") Integer active
+	) {
+		logger.debug("userId: {}, restaurantId: {}, active: {}", userId, restaurantId, active);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		List<JsonNode> resultList = optionService.getOptions(restaurantId, active);
+
+		if (CollectionUtils.isNotEmpty(resultList)) {
+			responseBuilder.success().withArray(OPTIONS_FIELD_NAME, resultList);
 		} else {
 			responseBuilder.fail();
 		}

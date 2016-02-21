@@ -83,6 +83,17 @@ ORDER BY name;
         ]]>
     </entry>
 
+    <entry key="getOptions">
+        <![CDATA[
+SELECT
+  id,
+  name
+FROM im_strain_option
+WHERE active = :active
+ORDER BY name;
+        ]]>
+    </entry>
+
     <entry key="empty">
         <![CDATA[
         ]]>
