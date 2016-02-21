@@ -50,6 +50,9 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	private AttributeService attributeService;
 
 	@Autowired
+	private TierService tierService;
+
+	@Autowired
 	private OptionService optionService;
 
 	@GET
@@ -179,6 +182,27 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 
 		if (CollectionUtils.isNotEmpty(resultList)) {
 			responseBuilder.success().withArray(OPTIONS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+	@GET
+	@Path("tier/list/userId/{userId}/restaurantId/{restaurantId}")
+	@Override
+	public Response getTiers(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId
+	) {
+		logger.debug("userId: {}, restaurantId: {}", userId, restaurantId);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		List<JsonNode> resultList = tierService.getTiers(restaurantId);
+
+		if (CollectionUtils.isNotEmpty(resultList)) {
+			responseBuilder.success().withArray(TIERS_FIELD_NAME, resultList);
 		} else {
 			responseBuilder.fail();
 		}

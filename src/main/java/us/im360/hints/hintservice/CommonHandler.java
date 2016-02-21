@@ -1,5 +1,8 @@
 package us.im360.hints.hintservice;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -90,5 +93,17 @@ public interface CommonHandler {
             Integer userId,
             Integer restaurantId,
             Integer active
+    );
+
+    /**
+     * Tiers cost list
+     *
+     * @param userId
+     * @param restaurantId
+     * @return
+     */
+    Response getTiers(
+            Integer userId,
+            Integer restaurantId
     );
 }

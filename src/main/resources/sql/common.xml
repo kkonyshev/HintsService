@@ -94,6 +94,18 @@ ORDER BY name;
         ]]>
     </entry>
 
+    <entry key="getTiers">
+        <![CDATA[
+SELECT
+  id,
+  vendor,
+  tier,
+  cost
+FROM im_strain_cost
+WHERE location_id = :restaurantId;
+        ]]>
+    </entry>
+
     <entry key="empty">
         <![CDATA[
         ]]>
