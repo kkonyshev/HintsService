@@ -1,8 +1,5 @@
 package us.im360.hints.hintservice;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -190,5 +187,16 @@ public interface ReportHandler {
             Integer userId,
             Integer restaurantId,
             Integer status
+    );
+
+    /**
+     *
+     * @param userId
+     * @param restaurantId
+     * @return
+     */
+    Response getInventory(
+            Integer userId,
+            Integer restaurantId
     );
 }

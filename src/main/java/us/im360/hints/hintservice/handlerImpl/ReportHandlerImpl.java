@@ -58,6 +58,9 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	@Autowired
 	private BagsService bagsService;
 
+	@Autowired
+	private InventoryService inventoryService;
+
 	@GET
 	@Path("cash/userId/{userId}/restaurantId/{restaurantId}/closeDate/{closeDate}")
 	@Override
@@ -328,6 +331,28 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("status") Integer status
 	) {
 		return getExtracts(userId, restaurantId, status, null);
+	}
+
+	@GET
+	@Path("inventory/userId/{userId}/restaurantId/{restaurantId}")
+	@Override
+	public Response getInventory(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId
+	) {
+		logger.debug("restaurantId: {}, userId: {}", restaurantId, userId);
+
+		List<JsonNode> resultList = inventoryService.getInventory(restaurantId);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+
+		if (CollectionUtils.isNotEmpty(resultList)) {
+			responseBuilder.success().withArray(INVENTORY_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
 	}
 }
 
