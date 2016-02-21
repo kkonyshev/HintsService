@@ -1,6 +1,7 @@
 package us.im360.hints.hintservice.handlerImpl;
 
 
+import org.apache.commons.collections.CollectionUtils;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -12,10 +13,7 @@ import org.springframework.stereotype.Component;
 import us.im360.hints.hintservice.CommonHandler;
 import us.im360.hints.hintservice.InitHandler;
 import us.im360.hints.hintservice.result.AbstractResult;
-import us.im360.hints.hintservice.service.InitService;
-import us.im360.hints.hintservice.service.ProductService;
-import us.im360.hints.hintservice.service.TicketService;
-import us.im360.hints.hintservice.service.UserService;
+import us.im360.hints.hintservice.service.*;
 import us.im360.hints.hintservice.util.ResponseBuilder;
 
 import javax.ws.rs.GET;
@@ -45,6 +43,8 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Autowired
 	private ProductService productService;
 
+	@Autowired
+	private StrainService strainService;
 
 	@GET
 	@Path("details/ticket/userId/{userId}/restaurantId/{restaurantId}/ticketVisibleId/{ticketVisibleId}")
@@ -107,6 +107,28 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 
 		if (stock!=null) {
 			responseBuilder.success().withPlainNode(stock);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+	@GET
+	@Path("strain/list/userId/{userId}/restaurantId/{restaurantId}/active/{active}")
+	@Override
+	public Response getStrains(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("active") Integer active
+	) {
+		logger.debug("userId: {}, restaurantId: {}, active: {}", userId, restaurantId, active);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		List<JsonNode> resultList = strainService.getStrains(restaurantId, active);
+
+		if (CollectionUtils.isNotEmpty(resultList)) {
+			responseBuilder.success().withArray(STRAINS_FIELD_NAME, resultList);
 		} else {
 			responseBuilder.fail();
 		}

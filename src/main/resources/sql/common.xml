@@ -60,6 +60,18 @@ WHERE id = :productId
         ]]>
     </entry>
 
+    <entry key="getStrains">
+        <![CDATA[
+SELECT
+  id,
+  name
+FROM im_strain_type
+WHERE active = :active
+GROUP BY name
+ORDER BY name;
+        ]]>
+    </entry>
+
     <entry key="empty">
         <![CDATA[
         ]]>

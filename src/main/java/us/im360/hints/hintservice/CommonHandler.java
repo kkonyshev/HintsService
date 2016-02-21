@@ -1,6 +1,5 @@
 package us.im360.hints.hintservice;
 
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -50,5 +49,19 @@ public interface CommonHandler {
             Integer userId,
             Integer restaurantId,
             String productId
+    );
+
+    /**
+     * Strains list
+     *
+     * @param userId
+     * @param restaurantId
+     * @param active
+     * @return
+     */
+    Response getStrains(
+            Integer userId,
+            Integer restaurantId,
+            Integer active
     );
 }

@@ -23,6 +23,7 @@ public class AbstractHandlerImpl  {
     public static final String USERS_FIELD_NAME = "users";
     public static final String BAGS_FIELD_NAME = "bags";
     public static final String PRODUCTS_FIELD_NAME = "products";
+    public static final String STRAINS_FIELD_NAME = "strains";
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractHandlerImpl.class);
 
