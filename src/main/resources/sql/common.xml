@@ -72,6 +72,17 @@ ORDER BY name;
         ]]>
     </entry>
 
+    <entry key="getAttributes">
+        <![CDATA[
+SELECT
+  id,
+  name
+FROM im_strain_attributes
+WHERE active = :active
+ORDER BY name;
+        ]]>
+    </entry>
+
     <entry key="empty">
         <![CDATA[
         ]]>

@@ -46,6 +46,9 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Autowired
 	private StrainService strainService;
 
+	@Autowired
+	private AttributeService attributeService;
+
 	@GET
 	@Path("details/ticket/userId/{userId}/restaurantId/{restaurantId}/ticketVisibleId/{ticketVisibleId}")
 	@Override
@@ -129,6 +132,28 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 
 		if (CollectionUtils.isNotEmpty(resultList)) {
 			responseBuilder.success().withArray(STRAINS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+	@GET
+	@Path("attribute/list/userId/{userId}/restaurantId/{restaurantId}/active/{active}")
+	@Override
+	public Response getAttributes(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("active") Integer active
+	) {
+		logger.debug("userId: {}, restaurantId: {}, active: {}", userId, restaurantId, active);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		List<JsonNode> resultList = attributeService.getAttributes(restaurantId, active);
+
+		if (CollectionUtils.isNotEmpty(resultList)) {
+			responseBuilder.success().withArray(ATTRIBUTES_FIELD_NAME, resultList);
 		} else {
 			responseBuilder.fail();
 		}

@@ -24,6 +24,8 @@ public class AbstractHandlerImpl  {
     public static final String BAGS_FIELD_NAME = "bags";
     public static final String PRODUCTS_FIELD_NAME = "products";
     public static final String STRAINS_FIELD_NAME = "strains";
+    public static final String ATTRIBUTES_FIELD_NAME = "attributes";
+
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractHandlerImpl.class);
 
