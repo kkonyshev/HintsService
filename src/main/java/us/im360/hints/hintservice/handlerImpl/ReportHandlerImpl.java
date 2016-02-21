@@ -254,7 +254,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 
 		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+			responseBuilder.success().withArray(BAGS_FIELD_NAME, resultList);
 		} else {
 			responseBuilder.fail();
 		}

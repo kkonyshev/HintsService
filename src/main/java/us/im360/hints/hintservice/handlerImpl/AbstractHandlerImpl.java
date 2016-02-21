@@ -20,6 +20,9 @@ import java.io.IOException;
 public class AbstractHandlerImpl  {
 
     public static final String DETAILS_FIELD_NAME = "details";
+    public static final String USERS_FIELD_NAME = "users";
+    public static final String BAGS_FIELD_NAME = "bags";
+    public static final String PRODUCTS_FIELD_NAME = "products";
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractHandlerImpl.class);
 

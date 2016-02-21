@@ -60,7 +60,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 		List<JsonNode> resultList = ticketService.getTicketDetails(userId, restaurantId, ticketVisibleId);
 
 		if (resultList!=null && !resultList.isEmpty()) {
-			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+			responseBuilder.success().withArray(PRODUCTS_FIELD_NAME, resultList);
 		} else {
 			responseBuilder.fail();
 		}
@@ -83,7 +83,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 		List<JsonNode> resultList = userService.getUsers(restaurantId, groupId, active);
 
 		if (resultList!=null && !resultList.isEmpty()) {
-			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+			responseBuilder.success().withArray(USERS_FIELD_NAME, resultList);
 		} else {
 			responseBuilder.fail();
 		}
