@@ -2,26 +2,20 @@ package us.im360.hints.hintservice.handlerImpl;
 
 
 import org.apache.commons.collections.CollectionUtils;
-import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.im360.hints.hintservice.CommonHandler;
 import us.im360.hints.hintservice.InitHandler;
-import us.im360.hints.hintservice.result.AbstractResult;
 import us.im360.hints.hintservice.service.*;
 import us.im360.hints.hintservice.util.ResponseBuilder;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -48,9 +42,6 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 
 	@Autowired
 	private AttributeService attributeService;
-
-	@Autowired
-	private TierService tierService;
 
 	@Autowired
 	private OptionService optionService;
@@ -190,16 +181,37 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	}
 
 	@GET
-	@Path("tier/list/userId/{userId}/restaurantId/{restaurantId}")
+	@Path("tier/costs/userId/{userId}/restaurantId/{restaurantId}")
 	@Override
-	public Response getTiers(
+	public Response getTiersCost(
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId
 	) {
 		logger.debug("userId: {}, restaurantId: {}", userId, restaurantId);
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		List<JsonNode> resultList = tierService.getTiers(restaurantId);
+		List<JsonNode> resultList = strainService.getTiersCost(restaurantId);
+
+		if (CollectionUtils.isNotEmpty(resultList)) {
+			responseBuilder.success().withArray(TIERS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+	@GET
+	@Path("extract/costs/userId/{userId}/restaurantId/{restaurantId}")
+	@Override
+	public Response getExtractsCost(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId
+	) {
+		logger.debug("userId: {}, restaurantId: {}", userId, restaurantId);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		List<JsonNode> resultList = strainService.getExtractsCost(restaurantId);
 
 		if (CollectionUtils.isNotEmpty(resultList)) {
 			responseBuilder.success().withArray(TIERS_FIELD_NAME, resultList);

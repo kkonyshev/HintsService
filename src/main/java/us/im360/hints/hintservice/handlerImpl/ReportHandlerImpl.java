@@ -311,7 +311,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 
 		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(BAGS_FIELD_NAME, resultList);
+			responseBuilder.success().withArray(EXTRACTS_BAGS_FIELD_NAME, resultList);
 		} else {
 			responseBuilder.fail();
 		}
@@ -327,7 +327,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("status") Integer status
 	) {
-		return getBags(userId, restaurantId, status, null);
+		return getExtracts(userId, restaurantId, status, null);
 	}
 }
 

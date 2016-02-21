@@ -38,8 +38,7 @@ public class StrainService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public List<JsonNode> getStrains(Integer restaurantId, Integer active)
-	{
+	public List<JsonNode> getStrains(Integer restaurantId, Integer active) {
 		try {
 			String profitReportQuery = commonQueryStore.getProperty("getStrains");
 			logger.debug("QUERY TO EXECUTE: " + profitReportQuery);
@@ -54,6 +53,36 @@ public class StrainService {
 			return Collections.emptyList();
 		}
 	}
-	
 
+	public List<JsonNode> getTiersCost(Integer restaurantId) {
+		try {
+			String query = commonQueryStore.getProperty("getTiersCost");
+			logger.debug("QUERY TO EXECUTE: " + query);
+
+			return namedParameterJdbcTemplate.query(
+					query,
+					new MapSqlParameterSource()
+							.addValue("restaurantId", restaurantId),
+					new JsonNodeRowMapper(objectMapper));
+
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
+	}
+
+	public List<JsonNode> getExtractsCost(Integer restaurantId) {
+		try {
+			String query = commonQueryStore.getProperty("getExtractsCost");
+			logger.debug("QUERY TO EXECUTE: " + query);
+
+			return namedParameterJdbcTemplate.query(
+					query,
+					new MapSqlParameterSource()
+							.addValue("restaurantId", restaurantId),
+					new JsonNodeRowMapper(objectMapper));
+
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
+	}
 }
