@@ -69,9 +69,8 @@ API URL:
 http://localhost:8080/HintsService/v1.0/rest/report/units/userId/{userId}/restaurantId
 
 Example URL:
-http://localhost:8080/HintsService/v1.0/rest/reporttickets/userId/1/restaurantId/1
+http://localhost:8080/HintsService/v1.0/rest/report/units/userId/1/restaurantId/1
 =========
-
 
 
 =========
@@ -81,4 +80,24 @@ http://localhost:8080/HintsService/v1.0/rest/details/ticket/userId/{userId}/rest
 
 Example URL:
 http://localhost:8080/HintsService/v1.0/rest/details/ticket/userId/1/restaurantId/1/ticketVisibleId/70385
+=========
+
+
+=========
+Bag list with ATTR1!=null
+API URL:
+http://localhost:8080/HintsService/v1.0/rest/report/bags/userId/{userId}/restaurantId/{restaurantId}/status/{status}/attr1/{attr1}
+
+Example URL:
+http://localhost:8080/HintsService/v1.0/rest/report/bags/userId/1/restaurantId/1/status/1/attr1/LAB
+=========
+
+
+=========
+Bag list with ATTR1=null
+API URL:
+http://localhost:8080/HintsService/v1.0/rest/report/bags/userId/{userId}/restaurantId/{restaurantId}/status/{status}
+
+Example URL:
+http://localhost:8080/HintsService/v1.0/rest/report/bags/userId/1/restaurantId/1/status/1
 =========

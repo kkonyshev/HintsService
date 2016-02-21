@@ -481,6 +481,27 @@ ORDER BY strain, 'option', tier DESC;
         ]]>
     </entry>
 
+    <entry key="getBags">
+        <![CDATA[
+SELECT
+  ud.id             AS id,
+  ud.visibleId      AS visibleId,
+  ud.price_per_unit AS price_per_unit,
+  ti.tier_name      AS tier_name,
+  ca.id             AS category_id,
+  ca2.id            AS parent_category_id,
+  ca2.category_name AS category_name
+FROM im_strain_units_details ud, im_strain_units ut, posper_category ca, posper_category ca2, im_strain_type ty,
+  im_strain_tier ti
+WHERE ud.status = :status AND CASE WHEN :attr1 IS NOT NULL
+  THEN ud.ATTR1 = :attr1
+                              ELSE ud.ATTR1 IS NULL END AND ud.im_strain_units_id = ut.id AND
+      ut.posper_category_id = ca.id
+      AND ty.posper_category_id = ca.id AND ty.im_strain_tier_id = ti.id AND ca.parent_id = ca2.id
+ORDER BY ud.visibleId;
+        ]]>
+    </entry>
+
     <entry key="empty">
         <![CDATA[
         ]]>

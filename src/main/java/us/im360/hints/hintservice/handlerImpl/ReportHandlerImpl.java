@@ -55,6 +55,9 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	@Autowired
 	private UnitsService unitsService;
 
+	@Autowired
+	private BagsService bagsService;
+
 	@GET
 	@Path("cash/userId/{userId}/restaurantId/{restaurantId}/closeDate/{closeDate}")
 	@Override
@@ -257,6 +260,41 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 		return buildResponse(responseBuilder);
 	}
 
+
+	@GET
+	@Path("bags/userId/{userId}/restaurantId/{restaurantId}/status/{status}/attr1/{attr1}")
+	@Override
+	public Response getBags(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("status") Integer status,
+			@PathParam("attr1") String attr1
+	) {
+		logger.debug("restaurantId: {}, userId: {}", restaurantId, userId);
+
+		List<JsonNode> resultList = bagsService.getBags(restaurantId, status, attr1);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+
+		if (CollectionUtils.isNotEmpty(resultList)) {
+			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+	@GET
+	@Path("bags/userId/{userId}/restaurantId/{restaurantId}/status/{status}")
+	@Override
+	public Response getBagsNullStatus(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("status") Integer status
+	) {
+		return getBags(userId, restaurantId, status, null);
+	}
 }
 
 

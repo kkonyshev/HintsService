@@ -130,4 +130,34 @@ public interface ReportHandler {
             Integer userId,
             Integer restaurantId
     );
+
+    /**
+     * List of bags
+     *
+     * @param userId
+     * @param restaurantId
+     * @param status
+     * @param attr1
+     * @return
+     */
+    Response getBags(
+            Integer userId,
+            Integer restaurantId,
+            Integer status,
+            String attr1
+    );
+
+    /**
+     * List of bags with null attr1
+     *
+     * @param userId
+     * @param restaurantId
+     * @param status
+     * @return
+     */
+    Response getBagsNullStatus(
+            Integer userId,
+            Integer restaurantId,
+            Integer status
+    );
 }
