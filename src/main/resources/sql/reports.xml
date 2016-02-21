@@ -125,12 +125,112 @@ FROM
     ON t1.name = t2.name AND t1.tier_name = t2.tier_name;
         ]]>
     </entry>
-    
-    <entry key="productStockGetByProductId">
+
+    <entry key="stockReport">
         <![CDATA[
-SELECT round(units, 2) AS units
-FROM posper_product
-WHERE id = :productId
+SELECT
+  'FLOWER'                              AS type,
+  name                                  AS strain,
+  option_name                           AS 'option',
+  tier_name                             AS tier,
+  grams_per_jar                         AS grams_per_jar,
+  units                                 AS unite,
+  units * grams_per_jar                 AS total_grams,
+  units * grams_per_jar * cost_per_gram AS total_cost,
+  cost_per_gram
+FROM
+  (SELECT
+     st.product_id,
+     pr.weight                  AS grams_per_jar,
+     sum(st.units)              AS units,
+     ti.tier_name,
+     ty.name,
+     op.name                    AS option_name,
+     ca2.id                     AS category_id,
+     iv.cost / iv.ending_weight AS cost_per_gram
+   FROM (SELECT *
+         FROM (
+                SELECT *
+                FROM im_strain_inventory
+                ORDER BY start_datetime DESC) t1
+         GROUP BY im_strain_type_id) iv, posper_stockdiary st, posper_product pr, posper_category ca1,
+     posper_category ca2, im_strain_type ty, im_strain_tier ti,
+     im_strain_category_option co LEFT JOIN im_strain_option op
+       ON op.id = co.option_id
+   WHERE iv.im_strain_type_id = ty.id AND co.category_id = ca2.id AND ca1.parent_id = ca2.id
+         AND pr.id = st.product_id AND pr.category_id = ca1.id AND ca1.id = ty.posper_category_id AND
+         ti.id = ty.im_strain_tier_id AND ty.active = 1
+         AND date(st.date) <= :date
+   GROUP BY st.product_id) t2
+WHERE units > 0
+UNION ALL
+SELECT
+  'MISC'                                         AS type,
+  category_name                                  AS strain,
+  ''                                             AS 'option',
+  ''                                             AS tier,
+  grams_per_jar                                  AS grams_per_jar,
+  units                                          AS units,
+  units * grams_per_jar                          AS total_grams,
+  total_cost,
+  round(total_cost / (units * grams_per_jar), 2) AS cost_per_gram
+FROM (
+       SELECT
+         pr.id,
+         concat(ca.category_name, 'S - 3.5 GRAM JARS')              AS category_name,
+         dt.grams_per_jar,
+         if(sum(dt.cost_per_gram * st.units * dt.grams_per_jar) >= 0,
+            sum(dt.cost_per_gram * st.units * dt.grams_per_jar), 0) AS total_cost
+       FROM posper_stockdiary st, im_strain_detail dt, posper_product pr, posper_category ca
+       WHERE st.im_strain_detail_id = dt.id AND st.product_id = pr.id AND pr.category_id = ca.id AND
+             pr.id IN ('crumb35', 'shake35')
+       GROUP BY st.product_id) t1 JOIN
+  (SELECT
+     st.product_id,
+     sum(st.units) AS units
+   FROM posper_stockdiary st, posper_product pr, posper_category ca
+   WHERE
+     pr.id = st.product_id AND pr.category_id = ca.id AND pr.id IN ('crumb35', 'shake35') AND date(st.date) <= :date
+   GROUP BY st.product_id) t2
+    ON t1.id = t2.product_id
+WHERE units > 0
+UNION ALL
+SELECT
+  'EXTRACT'                             AS type,
+  name                                  AS strain,
+  option_name                           AS 'option',
+  tier_name                             AS tier,
+  grams_per_jar                         AS grams_per_jar,
+  units                                 AS units,
+  units * grams_per_jar                 AS total_grams,
+  units * grams_per_jar * cost_per_gram AS total_cost,
+  cost_per_gram
+FROM
+  (SELECT
+     st.product_id,
+     pr.weight                   AS grams_per_jar,
+     sum(st.units)               AS units,
+     ti.tier                     AS tier_name,
+     ty.name,
+     op.name                     AS option_name,
+     ca2.id                      AS category_id,
+     ex.cost / ex.starting_grams AS cost_per_gram
+   FROM (SELECT *
+         FROM (
+                SELECT *
+                FROM im_strain_extracts
+                ORDER BY start_datetime DESC) t1
+         GROUP BY extract_type_id) ex, posper_stockdiary st, posper_product pr, posper_category ca1,
+     posper_category ca2, im_strain_extract_type ty, im_strain_extract_cost ti,
+     im_strain_category_option co LEFT JOIN im_strain_option op
+       ON op.id = co.option_id
+   WHERE ex.extract_type_id = ty.id AND co.category_id = ca2.id AND ca1.parent_id = ca2.id
+         AND pr.id = st.product_id AND pr.category_id = ca1.id AND ca1.id = ty.category_id AND
+         ti.id = ty.extract_cost_id AND ty.active = 1
+         AND date(st.date) <= :date
+   GROUP BY st.product_id) t2
+WHERE units > 0
+ORDER BY strain, 'option', tier DESC, grams_per_jar DESC;
         ]]>
     </entry>
 

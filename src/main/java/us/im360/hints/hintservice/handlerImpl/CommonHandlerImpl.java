@@ -13,6 +13,7 @@ import us.im360.hints.hintservice.CommonHandler;
 import us.im360.hints.hintservice.InitHandler;
 import us.im360.hints.hintservice.result.AbstractResult;
 import us.im360.hints.hintservice.service.InitService;
+import us.im360.hints.hintservice.service.ProductService;
 import us.im360.hints.hintservice.service.TicketService;
 import us.im360.hints.hintservice.service.UserService;
 import us.im360.hints.hintservice.util.ResponseBuilder;
@@ -40,6 +41,10 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private ProductService productService;
+
 
 	@GET
 	@Path("details/ticket/userId/{userId}/restaurantId/{restaurantId}/ticketVisibleId/{ticketVisibleId}")
@@ -79,6 +84,29 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 
 		if (resultList!=null && !resultList.isEmpty()) {
 			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+	@GET
+	@Path("product/stock/userId/{userId}/restaurantId/{restaurantId}/productId/{productId}")
+	@Override
+	public Response getProductStock(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("productId") String productId)
+	{
+		logger.debug("restaurantId: {}, userId: {}, productId: {}", restaurantId, userId, productId);
+
+		JsonNode stock = productService.getProductStock(productId);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+
+		if (stock!=null) {
+			responseBuilder.success().withPlainNode(stock);
 		} else {
 			responseBuilder.fail();
 		}

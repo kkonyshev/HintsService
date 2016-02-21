@@ -1,5 +1,6 @@
 package us.im360.hints.hintservice;
 
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -35,5 +36,19 @@ public interface CommonHandler {
             Integer restaurantId,
             Integer groupId,
             Integer active
+    );
+
+    /**
+     * Product stock
+     *
+     * @param userId
+     * @param restaurantId
+     * @param productId
+     * @return
+     */
+    Response getProductStock(
+            Integer userId,
+            Integer restaurantId,
+            String productId
     );
 }

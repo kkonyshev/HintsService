@@ -129,29 +129,6 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	}
 
 	@GET
-	@Path("stock/userId/{userId}/restaurantId/{restaurantId}/productId/{productId}")
-	@Override
-	public Response getStockReport(
-			@PathParam("userId") Integer userId,
-			@PathParam("restaurantId") Integer restaurantId,
-			@PathParam("productId") String productId)
-	{
-		logger.debug("restaurantId: {}, userId: {}, productId: {}", restaurantId, userId, productId);
-
-		JsonNode stock = productService.getProductStock(productId);
-
-		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-
-		if (stock!=null) {
-			responseBuilder.success().withPlainNode(stock);
-		} else {
-			responseBuilder.fail();
-		}
-
-		return buildResponse(responseBuilder);
-	}
-
-	@GET
 	@Path("payment/userId/{userId}/restaurantId/{restaurantId}/startDate/{startDate}/endDate/{endDate}")
 	@Override
 	public Response getPaymentReport(
@@ -294,6 +271,28 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("status") Integer status
 	) {
 		return getBags(userId, restaurantId, status, null);
+	}
+
+	@GET
+	@Path("stock/userId/{userId}/restaurantId/{restaurantId}/date/{date}")
+	@Override
+	public Response getStockReport(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("date") String date
+	) {
+		logger.debug("restaurantId: {}, date: {}" + restaurantId, date);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		List<JsonNode> resultList = productService.getStockReport(restaurantId, date);
+
+		if (resultList!=null && !resultList.isEmpty()) {
+			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
 	}
 }
 

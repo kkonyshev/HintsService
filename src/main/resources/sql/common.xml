@@ -52,6 +52,14 @@ ORDER BY first_name, last_name;
         ]]>
     </entry>
 
+    <entry key="productStock">
+        <![CDATA[
+SELECT round(units, 2) AS units
+FROM posper_product
+WHERE id = :productId
+        ]]>
+    </entry>
+
     <entry key="empty">
         <![CDATA[
         ]]>

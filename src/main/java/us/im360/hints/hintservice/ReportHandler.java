@@ -54,20 +54,6 @@ public interface ReportHandler {
             String endDate);
 
     /**
-     * Product stock report
-     *
-     * @param userId
-     * @param restaurantId
-     * @param productId
-     * @return
-     */
-    Response getStockReport(
-            Integer userId,
-            Integer restaurantId,
-            String productId
-    );
-
-    /**
      * Payment report
      *
      * @param userId
@@ -159,5 +145,19 @@ public interface ReportHandler {
             Integer userId,
             Integer restaurantId,
             Integer status
+    );
+
+    /**
+     * Stock report
+     *
+     * @param userId
+     * @param restaurantId
+     * @param date
+     * @return
+     */
+    Response getStockReport(
+            Integer userId,
+            Integer restaurantId,
+            String date
     );
 }

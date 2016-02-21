@@ -31,17 +31,20 @@ public class ProductService {
 	private Properties reportQueryStore;
 
 	@Autowired
+	@Qualifier("commonQueryStore")
+	private Properties commonQueryStore;
+
+	@Autowired
 	protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public JsonNode getProductStock(String productId)
-	{
+	public JsonNode getProductStock(String productId) {
 		logger.debug("productId: {}", productId);
 
 		try {
-			String productStockGetByProductIdQuery = reportQueryStore.getProperty("productStockGetByProductId");
+			String productStockGetByProductIdQuery = commonQueryStore.getProperty("productStock");
 			logger.debug("QUERY TO EXECUTE: " + productStockGetByProductIdQuery);
 
 			List<JsonNode> rowResult = namedParameterJdbcTemplate.query(
@@ -54,6 +57,24 @@ public class ProductService {
 			} else {
 				return rowResult.iterator().next();
 			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage(), e);
+			return null;
+		}
+	}
+
+	public List<JsonNode> getStockReport(Integer restaurantId, String date) {
+		logger.debug("restaurantId: {}, date: {}", restaurantId, date);
+
+		try {
+			String query = reportQueryStore.getProperty("stockReport");
+			logger.debug("QUERY TO EXECUTE: " + query);
+
+			return namedParameterJdbcTemplate.query(
+					query,
+					Collections.singletonMap("date", date),
+					new JsonNodeRowMapper(objectMapper));
+
 		} catch (Exception e) {
 			logger.warn(e.getMessage(), e);
 			return null;

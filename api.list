@@ -27,12 +27,12 @@ http://localhost:8080/HintsService/v1.0/rest/report/loss/userId/1/restaurantId/1
 =========
 
 =========
-Get Product Stock Report implementation
+Get Product Stock
 API URL:
-http://localhost:8080/HintsService/v1.0/rest/report/stock/userId/{userId}/restaurantId/{restaurantId}/productId/{productId}
+http://localhost:8080/HintsService/v1.0/rest/product/stock/userId/{userId}/restaurantId/{restaurantId}/productId/{productId}
 
 Example URL:
-http://localhost:8080/HintsService/v1.0/rest/report/stock/userId/1/restaurantId/1/productId/004828e4-5c03-11e5-a043-4439c455558d
+http://localhost:8080/HintsService/v1.0/rest/product/stock/userId/1/restaurantId/1/productId/004828e4-5c03-11e5-a043-4439c455558d
 =========
 
 =========
@@ -59,7 +59,7 @@ API URL:
 http://localhost:8080/HintsService/v1.0/rest/report/tickets/userId/{userId}/restaurantId/{restaurantId}/date/{date}/timeStart/{timeStart}/timeEnd/{timeEnd}/userIdList/{userIdList}
 
 Example URL:
-http://localhost:8080/HintsService/v1.0/rest/reporttickets/userId/1/restaurantId/1/date/2015-04-24/timeStart/00:11:00/timeEnd/12:12:22/userIdList/ff8081814968fc4201496905e785000b,ff8081814968fc4201496906c85d000d
+http://localhost:8080/HintsService/v1.0/rest/report/tickets/userId/1/restaurantId/1/date/2015-04-24/timeStart/00:11:00/timeEnd/12:12:22/userIdList/ff8081814968fc4201496905e785000b,ff8081814968fc4201496906c85d000d
 =========
 
 
@@ -110,4 +110,14 @@ http://localhost:8080/HintsService/v1.0/rest/user/list/userId/{userId}/restauran
 
 Example URL:
 http://localhost:8080/HintsService/v1.0/rest/user/list/userId/1/restaurantId/1/groupId/2/active/1
+=========
+
+
+=========
+Bag list with ATTR1=null
+API URL:
+http://localhost:8080/HintsService/v1.0/rest/report/stock/userId/{userId}/restaurantId/{restaurantId}/date/{date}
+
+Example URL:
+http://localhost:8080/HintsService/v1.0/rest/report/stock/userId/1/restaurantId/1/date/2016-01-26
 =========
