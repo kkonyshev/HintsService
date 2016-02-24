@@ -1,6 +1,5 @@
 package us.im360.hints.hintservice;
 
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -116,5 +115,21 @@ public interface CommonHandler {
     Response getExtractsCost(
             Integer userId,
             Integer restaurantId
+    );
+
+    /**
+     * Print information
+     *
+     * @param userId
+     * @param restaurantId
+     * @param categoryId
+     * @param tier
+     * @return
+     */
+    Response getPrintInformation(
+            Integer userId,
+            Integer restaurantId,
+            String categoryId,
+            Integer tier
     );
 }

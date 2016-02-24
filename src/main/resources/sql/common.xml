@@ -118,6 +118,62 @@ WHERE location_id = :restaurantId;
         ]]>
     </entry>
 
+    <entry key="getPrintInfo">
+        <![CDATA[
+SELECT
+  pr.id                                                                       AS product,
+  ti.tier_name                                                                AS tier,
+  pr.priceSell                                                                AS price,
+  pr.code                                                                     AS code,
+  att.name                                                                    AS attribute,
+  ca2.category_name                                                           AS name,
+  if(op.name IS NULL, '', op.name)                                            AS 'options',
+  if(pr.weight != 1, concat(pr.weight, ' GRAMS'), concat(pr.weight, ' GRAM')) AS grams,
+  pr.weight                                                                   AS weight
+FROM posper_product pr, posper_category ca1, posper_category ca2, im_strain_type ty, im_strain_tier ti,
+  im_strain_attributes att, im_strain_category_option co LEFT JOIN im_strain_option op
+    ON co.option_id = op.id
+WHERE ty.location_id = :restaurantId AND
+      ca2.id = co.category_id AND pr.category_id = ca1.id AND ca1.parent_id = ca2.id AND ca1.id = ty.posper_category_id
+      AND
+      ty.im_strain_tier_id = ti.id AND ty.attribute = att.id
+      AND ca2.id = :categoryId AND ti.tier_name = :tier
+UNION ALL
+SELECT
+  pr.id                       AS product,
+  ''                          AS tier,
+  pr.priceSell                AS price,
+  pr.code                     AS code,
+  ''                          AS attribute,
+  ca1.category_name           AS name,
+  ''                          AS 'options',
+  concat(pr.weight, ' GRAMS') AS grams,
+  pr.weight                   AS weight
+FROM posper_product pr, posper_category ca1, im_strain_type ty
+WHERE pr.unitType = 'jars' AND pr.category_id = ca1.id
+      AND ca1.id = :categoryId AND ca1.id = ty.posper_category_id AND ty.location_id = :restaurantId
+UNION ALL
+SELECT
+  pr.id                                                                       AS product,
+  ec.tier                                                                     AS tier,
+  pr.priceSell                                                                AS price,
+  pr.code                                                                     AS code,
+  ''                                                                          AS attribute,
+  ca2.category_name                                                           AS name,
+  if(op.name IS NULL, '', op.name)                                            AS 'options',
+  if(pr.weight != 1, concat(pr.weight, ' GRAMS'), concat(pr.weight, ' GRAM')) AS grams,
+  pr.weight                                                                   AS weight
+FROM posper_product pr, posper_category ca1, posper_category ca2, im_strain_extract_type et, im_strain_extract_cost ec,
+  im_strain_category_option co LEFT JOIN im_strain_option op
+    ON co.option_id = op.id
+WHERE ca2.id = co.category_id AND pr.category_id = ca1.id AND ca1.parent_id = ca2.id AND ca1.id = et.category_id AND
+      et.extract_cost_id = ec.id
+      AND ca2.id = :categoryId AND ec.tier = :tier
+      AND co.location_id = :restaurantId
+ORDER BY weight DESC;
+        ]]>
+    </entry>
+
     <entry key="empty">
         <![CDATA[
         ]]>

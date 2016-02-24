@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.im360.hints.hintservice.CommonHandler;
 import us.im360.hints.hintservice.InitHandler;
+import us.im360.hints.hintservice.model.AuditInfo;
 import us.im360.hints.hintservice.service.*;
 import us.im360.hints.hintservice.util.ResponseBuilder;
 
@@ -29,6 +30,9 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	private static final Logger logger = LoggerFactory.getLogger(InitHandler.class);
 
 	@Autowired
+	private AuditService auditService;
+
+	@Autowired
 	private TicketService ticketService;
 
 	@Autowired
@@ -46,27 +50,8 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Autowired
 	private OptionService optionService;
 
-	@GET
-	@Path("details/ticket/userId/{userId}/restaurantId/{restaurantId}/ticketVisibleId/{ticketVisibleId}")
-	@Override
-	public Response getTicketDetail(
-			@PathParam("userId") Integer userId,
-			@PathParam("restaurantId") Integer restaurantId,
-			@PathParam("ticketVisibleId") Integer ticketVisibleId)
-	{
-		logger.debug("userId: {}, restaurantId: {}, ticketVisibleId: {}", userId, restaurantId, ticketVisibleId);
-
-		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		List<JsonNode> resultList = ticketService.getTicketDetails(userId, restaurantId, ticketVisibleId);
-
-		if (resultList!=null && !resultList.isEmpty()) {
-			responseBuilder.success().withArray(PRODUCTS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
-		}
-
-		return buildResponse(responseBuilder);
-	}
+	@Autowired
+	private PrintService printService;
 
 	@GET
 	@Path("user/list/userId/{userId}/restaurantId/{restaurantId}/groupId/{groupId}/active/{active}")
@@ -82,7 +67,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		List<JsonNode> resultList = userService.getUsers(restaurantId, groupId, active);
 
-		if (resultList!=null && !resultList.isEmpty()) {
+		if (resultList != null && !resultList.isEmpty()) {
 			responseBuilder.success().withArray(USERS_FIELD_NAME, resultList);
 		} else {
 			responseBuilder.fail();
@@ -97,15 +82,14 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	public Response getProductStock(
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
-			@PathParam("productId") String productId)
-	{
+			@PathParam("productId") String productId) {
 		logger.debug("restaurantId: {}, userId: {}, productId: {}", restaurantId, userId, productId);
 
 		JsonNode stock = productService.getProductStock(productId);
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 
-		if (stock!=null) {
+		if (stock != null) {
 			responseBuilder.success().withPlainNode(stock);
 		} else {
 			responseBuilder.fail();
@@ -221,11 +205,53 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 
 		return buildResponse(responseBuilder);
 	}
+
+	@GET
+	@Path("details/ticket/userId/{userId}/restaurantId/{restaurantId}/ticketVisibleId/{ticketVisibleId}")
+	@Override
+	public Response getTicketDetail(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("ticketVisibleId") Integer ticketVisibleId) {
+		logger.debug("userId: {}, restaurantId: {}, ticketVisibleId: {}", userId, restaurantId, ticketVisibleId);
+		auditService.log(userId, new AuditInfo());
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		List<JsonNode> resultList = ticketService.getTicketDetails(userId, restaurantId, ticketVisibleId);
+
+		if (resultList != null && !resultList.isEmpty()) {
+			responseBuilder.success().withArray(PRODUCTS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+	@GET
+	@Path("print/information/userId/{userId}/restaurantId/{restaurantId}/categoryId/{categoryId}/tier/{tier}")
+	@Override
+	public Response getPrintInformation(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("categoryId") String categoryId,
+			@PathParam("tier") Integer tier
+	) {
+		logger.debug("userId: {}, restaurantId: {}, categoryId: {}, tier: {}", userId, restaurantId, categoryId, tier);
+
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		List<JsonNode> resultList = printService.getPrintInformation(restaurantId, categoryId, tier);
+
+		if (CollectionUtils.isNotEmpty(resultList)) {
+			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
 }
-
-
-
-
 
 
 
