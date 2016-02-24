@@ -29,7 +29,7 @@ public abstract class AbstractHandlerImpl  {
     public static final String EXTRACTS_BAGS_FIELD_NAME = "extractBags";
     public static final String INVENTORY_FIELD_NAME = "inventory";
     public static final String INVENTORY_LIST_FIELD_NAME = "inventories";
-
+    public static final String ITEMS_LIST_FIELD_NAME = "items";
 
 
 

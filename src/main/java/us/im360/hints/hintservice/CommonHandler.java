@@ -132,4 +132,16 @@ public interface CommonHandler {
             String categoryId,
             Integer tier
     );
+
+    /**
+     * Flowers menu
+     *
+     * @param userId
+     * @param restaurantId
+     * @return
+     */
+    Response getFlowersMenu(
+            Integer userId,
+            Integer restaurantId
+    );
 }

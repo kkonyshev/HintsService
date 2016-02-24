@@ -174,6 +174,99 @@ ORDER BY weight DESC;
         ]]>
     </entry>
 
+    <entry key="getFlowersMenu">
+        <![CDATA[
+SELECT
+  t1.category_name                                                         AS category_name,
+  t1.attribute                                                             AS attribute,
+  t1.tier_name                                                             AS tier_name,
+  t1.attr2                                                                 AS 'opttion',
+  if(ce.long_description IS NULL, 'THC -.-%, Cannabinoids -.-%, Terpenoids -.-%',
+     replace(replace(ce.long_description, 'Cannabinoids', 'Cannabinoids'), 'Terpenoids',
+             'Terpenoids'))                                                AS description,
+  if(sum(t1.7g) IS NULL, 0, sum(t1.7g))                                    AS 7g_units,
+  if(sum(35g) IS NULL, 0, sum(35g))                                        AS 35g_units,
+  if(sum(175g) IS NULL, 0, sum(175g))                                      AS 175g_units,
+  if(sum(t1.1g) IS NULL, 0, sum(t1.1g))                                    AS 1g_units,
+  concat('$', floor(round(ti.7g * @rate * 2) /  2))                        AS 7g_price,
+  concat('$', floor(round(ti.3_5g * @rate * 2) / 2))                       AS 35g_price,
+  concat('$', floor(round(ti.1_75g * @rate * 2) / 2))                      AS 175g_price,
+  concat('$', floor(round(ti.1g * @rate * 2) / 2))                         AS 1g_price,
+  if(round(round(ti.7g * @rate * 2) / 2 % 1 * 100) = 0, '', round(round(ti.7g * @rate * 2) / 2 % 1 *
+                                                                  100))    AS 7g_sup,
+  if(round(round(ti.3_5g * @rate * 2) / 2 % 1 * 100) = 0, '', round(round(ti.3_5g * @rate * 2) / 2 % 1 *
+                                                                    100))  AS 35g_sup,
+  if(round(round(ti.1_75g * @rate * 2) / 2 % 1 * 100) = 0, '', round(round(ti.1_75g * @rate * 2) / 2 % 1 *
+                                                                     100)) AS 175g_sup,
+  if(round(round(ti.1g * @rate * 2) / 2 % 1 * 100) = 0, '', round(round(ti.1g * @rate * 2) / 2 % 1 *
+                                                                  100))    AS 1g_sup
+FROM im_strain_tier ti,
+  (SELECT
+     att.name                        AS attribute,
+     if(ce.id IS NULL, ca2.id, NULL) AS id,
+     ca2.id                          AS cat_id,
+     ca2.category_name,
+     ti.tier_name,
+     op.name                         AS attr2,
+     CASE WHEN pr.weight = 7
+       THEN pr.units END             AS 7g,
+     CASE WHEN pr.weight = 3.5
+       THEN pr.units END             AS 35g,
+     CASE WHEN pr.weight = 1.75
+       THEN pr.units END             AS 175g,
+     CASE WHEN pr.weight = 1
+       THEN pr.units END             AS 1g,
+     ce.id                           AS certification_id
+   FROM im_strain_type ty, im_strain_tier ti, posper_category ca1, posper_category ca2, im_strain_attributes att,
+     im_strain_category_option co LEFT JOIN im_strain_option op
+       ON co.option_id = op.id
+     , posper_product pr LEFT JOIN (SELECT *
+                                    FROM im_strain_detail
+                                    WHERE ATTR1 = 'ACTIVE'
+                                    GROUP BY posper_product_id) t2
+       ON pr.id = t2.posper_product_id
+     , im_strain_inventory iv, im_strain_units_details ud1, im_strain_units ut,
+     im_strain_units_details ud2 LEFT JOIN im_strain_certification ce
+       ON ud2.id = ce.unit_details_id
+   WHERE iv.units_details_id = ud1.id AND ud1.im_strain_units_id = ut.id AND ut.id = ud2.im_strain_units_id AND
+         ud2.ATTR1 = 'LAB' AND t2.im_strain_inventory_id = iv.id
+         AND ca2.id = co.category_id AND att.id = ty.attribute AND pr.inStock = 1 AND pr.category_id = ca1.id AND
+         ca1.parent_id = ca2.id AND ca1.id = ty.posper_category_id AND ty.im_strain_tier_id = ti.id) t1
+  LEFT JOIN (SELECT *
+             FROM (SELECT *
+                   FROM im_strain_certification
+                   WHERE flag IN (1)
+                   ORDER BY date DESC) t1) ce
+    ON t1.id = ce.posper_category_id OR t1.certification_id = ce.id
+WHERE ti.tier_name = t1.tier_name
+GROUP BY t1.cat_id, t1.tier_name
+UNION
+SELECT
+  ca.category_name                                         AS category_name,
+  ''                                                       AS attribute,
+  '-misc'                                                  AS tier_name,
+  ''                                                       AS 'option',
+  ''                                                       AS description,
+  0                                                        AS 7g_units,
+  pr.units                                                 AS 35g_units,
+  0                                                        AS 175g_units,
+  0                                                        AS 1g_units,
+  ''                                                       AS 7g_price,
+  concat('$', floor(round(pr.priceSell * @rate * 2) / 2))  AS 35g_price,
+  ''                                                       AS 175g_price,
+  ''                                                       AS 1g_price,
+  ''                                                       AS 7g_sup,
+  if(round(round(pr.priceSell * @rate * 2) / 2 % 1 * 100) = 0, '',
+     round(round(pr.priceSell * @rate * 2) / 2 % 1 * 100)) AS 35g_sup,
+  ''                                                       AS 175g_sup,
+  ''                                                       AS 1g_sup
+FROM posper_product pr, posper_category ca
+WHERE pr.category_id = ca.id AND pr.id IN ('shake35', 'crumb35') AND pr.inStock = 1
+ORDER BY tier_name DESC, 35g_price DESC, category_name, 'option';
+
+        ]]>
+    </entry>
+
     <entry key="empty">
         <![CDATA[
         ]]>
