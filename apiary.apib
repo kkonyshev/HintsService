@@ -442,3 +442,26 @@ IM360 API
 + Response 200 (application/json)
 
                 {"resultCode":"fail"}
+
+
+### Get flowers shipments for non-existing restaurantId [GET /HintsService/v1.0/rest/shipments/flowers/userId/{userId}/restaurantId/-1/dateStart/{dateStart}/dateEnd/{dateEnd}]
++ Parameters
+    + userId: `1` (number, required)
+    + dateStart: `2016-01-01` (string, required)
+    + dateEnd: `2016-01-26` (string, required)
+
++ Response 200 (application/json)
+
+                {"resultCode":"fail"}
+
+
+### Get flowers shipments [GET /HintsService/v1.0/rest/shipments/flowers/userId/{userId}/restaurantId/{restaurantId}/dateStart/{dateStart}/dateEnd/{dateEnd}]
++ Parameters
+    + userId: `1` (number, required)
+    + restaurantId: `1` (number, required)
+    + dateStart: `2016-01-01` (string, required)
+    + dateEnd: `2016-01-26` (string, required)
+
++ Response 200 (application/json)
+
+                {"resultCode":"success","shipments":[{"id":"33a1ccaf-b33d-11e5-8802-b8aeed795ea3","visible_id":115,"vendor":"BROKER","date":"2016-01-04","price":169000.0,"units":48.0,"price_per_unit":3520.8333333333335},{"id":"29285989-b4c9-11e5-8802-b8aeed795ea3","visible_id":119,"vendor":"BROKER","date":"2016-01-06","price":2500.0,"units":1.0,"price_per_unit":2500.0},{"id":"5e951346-b662-11e5-8802-b8aeed795ea3","visible_id":120,"vendor":"BROKER","date":"2016-01-08","price":3000.0,"units":1.0,"price_per_unit":3000.0},{"id":"3abb439b-bffb-11e5-8802-b8aeed795ea3","visible_id":127,"vendor":"BROKER","date":"2016-01-20","price":113750.0,"units":35.0,"price_per_unit":3250.0}]}

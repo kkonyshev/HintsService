@@ -317,6 +317,24 @@ ORDER BY priceOrder DESC, category_name, attribute, 'option', description;
         ]]>
     </entry>
 
+    <entry key="getFlowersShipments">
+        <![CDATA[
+SELECT
+  sm.id                            AS id,
+  sm.visibleId                     AS visible_id,
+  sm.vendor                        AS vendor,
+  DATE_FORMAT(sm.date, '%Y-%m-%d') AS 'date',
+  sum(ut.price)                    AS price,
+  sum(ut.units)                    AS units,
+  sum(ut.price) / sum(ut.units)    AS price_per_unit
+FROM im_strain_shipment sm, im_strain_units ut
+WHERE sm.location_id = :restaurantId AND sm.id = ut.shipment_id AND date(sm.date) >= :dateStart AND
+      date(sm.date) <= :dateEnd
+GROUP BY sm.id
+ORDER BY sm.visibleId;
+        ]]>
+    </entry>
+
     <entry key="empty">
         <![CDATA[
         ]]>

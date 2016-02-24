@@ -155,4 +155,20 @@ public interface CommonHandler {
             Integer userId,
             Integer restaurantId
     );
+
+    /**
+     * Flowers Shipments
+     *
+     * @param userId
+     * @param restaurantId
+     * @param dateStart
+     * @param dateEnd
+     * @return
+     */
+    Response getShipmentsFlowers(
+            Integer userId,
+            Integer restaurantId,
+            String dateStart,
+            String dateEnd
+    );
 }

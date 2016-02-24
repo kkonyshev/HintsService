@@ -56,6 +56,9 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Autowired
 	private MenuService menuService;
 
+	@Autowired
+	private ShipmentService shipmentService;
+
 	@GET
 	@Path("user/list/userId/{userId}/restaurantId/{restaurantId}/groupId/{groupId}/active/{active}")
 	@Override
@@ -276,7 +279,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 		List<JsonNode> resultList = menuService.getFlowersMenu(restaurantId);
 
 		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(ITEMS_LIST_FIELD_NAME, resultList);
+			responseBuilder.success().withArray(ITEMS_FIELD_NAME, resultList);
 		} else {
 			responseBuilder.fail();
 		}
@@ -298,7 +301,31 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 		List<JsonNode> resultList = menuService.getExtractsMenu(restaurantId);
 
 		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(ITEMS_LIST_FIELD_NAME, resultList);
+			responseBuilder.success().withArray(ITEMS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+	@GET
+	@Path("shipments/flowers/userId/{userId}/restaurantId/{restaurantId}/dateStart/{dateStart}/dateEnd/{dateEnd}")
+	@Override
+	public Response getShipmentsFlowers(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("dateStart") String dateStart,
+			@PathParam("dateEnd") String dateEnd
+	) {
+		logger.debug("userId: {}, restaurantId: {}, dateStart: {}, dateEnd: {}", userId, restaurantId, dateStart, dateEnd);
+		auditService.log(userId, new AuditInfo());
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		List<JsonNode> resultList = shipmentService.getFlowersShipments(restaurantId, dateStart, dateEnd);
+
+		if (CollectionUtils.isNotEmpty(resultList)) {
+			responseBuilder.success().withArray(SHIPMENTS_FIELD_NAME, resultList);
 		} else {
 			responseBuilder.fail();
 		}
