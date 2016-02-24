@@ -28,10 +28,12 @@ public abstract class AbstractHandlerImpl  {
     public static final String TIERS_FIELD_NAME = "tiers";
     public static final String EXTRACTS_BAGS_FIELD_NAME = "extractBags";
     public static final String INVENTORY_FIELD_NAME = "inventory";
+    public static final String INVENTORY_LIST_FIELD_NAME = "inventories";
 
 
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractHandlerImpl.class);
+
+        private static final Logger logger = LoggerFactory.getLogger(AbstractHandlerImpl.class);
 
     @Autowired
     protected ObjectMapper objectMapper;

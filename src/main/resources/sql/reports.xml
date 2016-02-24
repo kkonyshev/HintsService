@@ -775,6 +775,63 @@ ORDER BY id, tier_name DESC, 'opttion', grams_per_jar DESC;
         ]]>
     </entry>
 
+    <entry key="getInventoryList">
+        <![CDATA[
+SELECT
+  t4.id                                                     AS id,
+  t4.visibleId                                              AS visible_id,
+  t4.name                                                   AS strain_name,
+  t4.option_name                                            AS 'option',
+  t4.tier_name                                              AS tier_name,
+  DATE_FORMAT(t4.date, '%Y-%m-%d')                          AS 'date',
+  t4.cost                                                   AS cost,
+  t4.starting_weight                                        AS starting_weight,
+  t3.grams_sold + t3.grams_inventory                        AS ending_weight,
+  t4.starting_weight - (t3.grams_sold + t3.grams_inventory) AS total_loss,
+  t3.grams_sold                                             AS grams_sold,
+  t3.grams_inventory                                        AS grams_inventory,
+  t4.status
+FROM (SELECT
+        t1.id,
+        t1.grams_sold + t2.grams_sold           AS grams_sold,
+        t1.grams_inventory + t2.grams_inventory AS grams_inventory
+      FROM (SELECT
+              iv.id,
+              sum(dt.jars_sold * dt.grams_per_jar)                 AS grams_sold,
+              sum((dt.quantity - dt.jars_sold) * dt.grams_per_jar) AS grams_inventory
+            FROM im_strain_detail dt, im_strain_inventory iv
+            WHERE dt.location_id = :restaurantId AND dt.im_strain_inventory_id = iv.id AND dt.ATTR1 NOT IN ('LOST')
+            GROUP BY iv.id) t1,
+        (SELECT
+           iv.id,
+           sum(mi.grams_sold)                                                             AS grams_sold,
+           sum(if(mi.grams_sold IS NULL, mi.total_grams, mi.total_grams - mi.grams_sold)) AS grams_inventory
+         FROM im_strain_misc mi, im_strain_inventory iv
+         WHERE mi.im_strain_inventory_id = iv.id
+         GROUP BY iv.id) t2,
+        im_strain_inventory iv
+      WHERE t1.id = t2.id AND t1.id = iv.id AND iv.ATTR1 = :attr1) t3,
+  (SELECT
+     ca2.id            AS category_id,
+     iv.visibleId,
+     iv.id,
+     ca2.category_name AS name,
+     op.name           AS option_name,
+     ti.tier_name,
+     iv.date,
+     iv.cost,
+     iv.starting_weight,
+     iv.ATTR1          AS status
+   FROM im_strain_inventory iv, posper_category ca1, posper_category ca2, im_strain_type ty, im_strain_tier ti,
+     im_strain_category_option co LEFT JOIN im_strain_option op
+       ON co.option_id = op.id
+   WHERE co.category_id = ca2.id AND iv.im_strain_type_id = ty.id AND ty.im_strain_tier_id = ti.id AND
+         ty.posper_category_id = ca1.id AND ca1.parent_id = ca2.id AND ty.active = 1 AND iv.ATTR1 = :attr1) t4
+WHERE t3.id = t4.id AND t3.grams_inventory > 0
+ORDER BY t4.name, t4.tier_name DESC, t4.visibleId;
+        ]]>
+    </entry>
+
     <entry key="empty">
         <![CDATA[
         ]]>

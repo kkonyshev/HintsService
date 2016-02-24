@@ -368,6 +368,30 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 
 		return buildResponse(responseBuilder);
 	}
+
+	@GET
+	@Path("inventory/list/userId/{userId}/restaurantId/{restaurantId}/attr1/{attr1}")
+	@Override
+	public Response getInventoryList(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("attr1") String attr1
+	) {
+		logger.debug("userId: {}, restaurantId: {}", userId, restaurantId);
+		auditService.log(userId, new AuditInfo());
+
+		List<JsonNode> resultList = inventoryService.getInventoryList(restaurantId, attr1);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+
+		if (CollectionUtils.isNotEmpty(resultList)) {
+			responseBuilder.success().withArray(INVENTORY_LIST_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
 }
 
 

@@ -199,4 +199,17 @@ public interface ReportHandler {
             Integer userId,
             Integer restaurantId
     );
+
+    /**
+     *
+     * @param userId
+     * @param restaurantId
+     * @param attr1 status
+     * @return
+     */
+    Response getInventoryList(
+            Integer userId,
+            Integer restaurantId,
+            String attr1
+    );
 }
