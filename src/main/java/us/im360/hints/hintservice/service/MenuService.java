@@ -45,8 +45,30 @@ public class MenuService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public List<JsonNode> getFlowersMenu(Integer restaurantId)
-	{
+	public List<JsonNode> getExtractsMenu(Integer restaurantId) {
+		try {
+			jdbcTemplate.execute("SELECT @rate := (rate + 1) FROM posper_tax WHERE id = 1;");
+			String query = commonQueryStore.getProperty("getExtractsMenu");
+			logger.debug("QUERY TO EXECUTE: " + query);
+
+			List<JsonNode> resultList = namedParameterJdbcTemplate.query(
+					query,
+					new MapSqlParameterSource()
+							.addValue("restaurantId", restaurantId),
+					new JsonNodeRowMapper(objectMapper));
+
+			if (CollectionUtils.isEmpty(resultList)) {
+				return Collections.emptyList();
+			} else {
+				return resultList;
+			}
+
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
+	}
+
+	public List<JsonNode> getFlowersMenu(Integer restaurantId) {
 		try {
 			jdbcTemplate.execute("SELECT @rate := (rate + 1) FROM posper_tax WHERE id = 1;");
 			String query = commonQueryStore.getProperty("getFlowersMenu");

@@ -267,6 +267,56 @@ ORDER BY tier_name DESC, 35g_price DESC, category_name, 'option';
         ]]>
     </entry>
 
+    <entry key="getExtractsMenu">
+        <![CDATA[
+SELECT
+  t1.id                                                                                              AS id,
+  t1.extract_cost_id                                                                                 AS extract_cost_id,
+  t1.category_name                                                                                   AS category_name,
+  t1.attribute                                                                                       AS attribute,
+  t1.opt                                                                                             AS 'option',
+  if(ce.long_description IS NULL, 'THC -.-% Cannabinoids -.-% Terpenoids -.-%', ce.long_description) AS description,
+  t1.price                                                                                           AS price,
+  t1.sup                                                                                             AS sup
+FROM
+  (SELECT
+     ca2.id,
+     ce.long_description,
+     et.extract_cost_id
+   FROM posper_product pr, posper_category ca1, posper_category ca2, im_strain_extracts ex, im_strain_extract_type et,
+     im_strain_detail dt, im_strain_extract_details ed1,
+     im_strain_extract_details ed2 LEFT JOIN im_strain_certification ce
+       ON ed2.id = ce.extract_details_id
+   WHERE dt.location_id = :restaurantId AND dt.posper_product_id = pr.id AND pr.category_id = ca1.id AND ca1.parent_id = ca2.id AND dt.ATTR1 = 'ACTIVE' AND
+         ed1.id = ed2.parent_id AND ex.id = dt.im_strain_extract_id AND et.category_id = ca1.id AND
+         ex.extract_details_id = ed1.id AND ed2.ATTR1 = 'LAB') ce
+  LEFT JOIN (
+              SELECT
+                ca2.id,
+                et.extract_cost_id,
+                ca2.category_name,
+                att.name                                                 AS attribute,
+                op.name                                                  AS opt,
+                concat('$', floor(round(pr.priceSell * @rate * 2) / 2))  AS price,
+                if(round(round(pr.priceSell * @rate * 2) / 2 % 1 * 100) = 0, '',
+                   round(round(pr.priceSell * @rate * 2) / 2 % 1 * 100)) AS sup,
+                floor(round(pr.priceSell * @rate * 2) / 2)               AS priceOrder
+              FROM posper_product pr, posper_category ca1, posper_category ca2, im_strain_extract_type et, (SELECT *
+                                                                                                            FROM
+                                                                                                              im_strain_type
+                                                                                                            GROUP BY
+                                                                                                              name) t1,
+                im_strain_attributes att, im_strain_category_option co LEFT JOIN im_strain_option op
+                  ON co.option_id = op.id
+              WHERE t1.name = ca2.category_name AND att.id = t1.attribute AND co.category_id = ca2.id AND
+                    ca1.parent_id = ca2.id AND pr.category_id = ca1.id AND et.category_id = ca1.id AND
+                    pr.inStock = 1) t1
+    ON t1.id = ce.id AND t1.extract_cost_id = ce.extract_cost_id
+GROUP BY id, extract_cost_id
+ORDER BY priceOrder DESC, category_name, attribute, 'option', description;
+        ]]>
+    </entry>
+
     <entry key="empty">
         <![CDATA[
         ]]>

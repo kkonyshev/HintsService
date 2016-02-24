@@ -144,4 +144,15 @@ public interface CommonHandler {
             Integer userId,
             Integer restaurantId
     );
+
+    /**
+     *
+     * @param userId
+     * @param restaurantId
+     * @return
+     */
+    Response getExtractsMenu(
+            Integer userId,
+            Integer restaurantId
+    );
 }
