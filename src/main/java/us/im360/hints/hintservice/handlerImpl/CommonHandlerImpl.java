@@ -379,6 +379,29 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 
 		return buildResponse(responseBuilder);
 	}
+
+	@GET
+	@Path("shipment/details/extracts/userId/{userId}/restaurantId/{restaurantId}/shipmentId/{shipmentId}")
+	@Override
+	public Response getShipmentExtractsDetails(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("shipmentId") String shipmentId
+	) {
+		logger.debug("userId: {}, restaurantId: {}, shipmentId: {}", userId, restaurantId, shipmentId);
+		auditService.log(userId, new AuditInfo());
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		List<JsonNode> resultList = shipmentService.getExtractsShipmentDetails(restaurantId, shipmentId);
+
+		if (CollectionUtils.isNotEmpty(resultList)) {
+			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
 }
 
 

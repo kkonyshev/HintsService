@@ -200,4 +200,17 @@ public interface CommonHandler {
             String dateStart,
             String dateEnd
     );
+
+    /**
+     *
+     * @param userId
+     * @param restaurantId
+     * @param shipmentId
+     * @return
+     */
+    Response getShipmentExtractsDetails(
+            Integer userId,
+            Integer restaurantId,
+            String shipmentId
+    );
 }

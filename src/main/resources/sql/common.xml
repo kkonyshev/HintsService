@@ -337,7 +337,6 @@ ORDER BY sm.visibleId;
 
     <entry key="getFlowersShipmentDetails">
         <![CDATA[
-/*033adf93-9bb4-11e5-9140-4439c455558d*/
 SELECT
   t1.id             AS id,
   t1.category_name  AS category_name,
@@ -374,7 +373,6 @@ FROM
              WHERE ud.im_strain_units_id = ut.id AND ud.ATTR1 = 'LAB'
              GROUP BY ut.id) t2
     ON t1.id = t2.id;
-
         ]]>
     </entry>
 
@@ -396,6 +394,47 @@ GROUP BY sm.id
 ORDER BY sm.visibleId;
         ]]>
     </entry>
+
+    <entry key="getExtractsShipmentDetails">
+        <![CDATA[
+SELECT
+  t1.id             AS id,
+  t1.category_name  AS category_name,
+  t1.option_name    AS 'option',
+  t1.tier           AS tier,
+  t1.grams          AS grams,
+  t1.price_per_gram AS price_per_gram,
+  t1.price          AS price,
+  t2.sample_id      AS sample_id,
+  t2.visibleId      AS visible_id
+FROM
+  (SELECT
+     ut.id,
+     ca2.category_name,
+     op.name        AS option_name,
+     ti.tier,
+     ut.grams,
+     ut.price_per_gram,
+     ut.total_price AS price
+   FROM im_strain_extract_details ut, posper_category ca1, posper_category ca2, im_strain_extract_type ty,
+     im_strain_extract_cost ti, im_strain_category_option co LEFT JOIN im_strain_option op
+       ON op.id = co.option_id
+   WHERE ut.location_id = :restaurantId AND ty.category_id = ca1.id AND ty.extract_cost_id = ti.id AND co.category_id = ca2.id
+         AND ca1.parent_id = ca2.id AND ut.posper_category_id = ca1.id AND ut.extract_shipment_id = :shipmentId AND
+         ut.ATTR1 IS NULL) t1
+  LEFT JOIN (SELECT
+               ed1.id,
+               ed2.visibleId,
+               ce.sample_id
+             FROM im_strain_extract_details ed1, im_strain_extract_details ed2
+               LEFT JOIN im_strain_certification ce
+                 ON ce.extract_details_id = ed2.id
+             WHERE ed1.id = ed2.parent_id AND ed2.ATTR1 = 'LAB'
+             GROUP BY ed1.id) t2
+    ON t1.id = t2.id;
+        ]]>
+    </entry>
+
 
     <entry key="empty">
         <![CDATA[

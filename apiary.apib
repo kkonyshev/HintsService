@@ -509,3 +509,24 @@ IM360 API
 + Response 200 (application/json)
 
                 {"resultCode":"success","shipments":[{"id":"e44930ef-b31f-11e5-8802-b8aeed795ea3","visible_id":114,"vendor":"WATERS","date":"2016-01-04","price":5670.0,"grams":252.0,"price_per_gram":22.5},{"id":"d5b998c4-b437-11e5-8802-b8aeed795ea3","visible_id":116,"vendor":"WATERS","date":"2016-01-05","price":5357.5,"grams":253.0,"price_per_gram":21.175889328063242},{"id":"bc86dadf-b44f-11e5-8802-b8aeed795ea3","visible_id":117,"vendor":"WATERS","date":"2016-01-06","price":2340.0,"grams":117.0,"price_per_gram":20.0},{"id":"457222d5-b8a4-11e5-8802-b8aeed795ea3","visible_id":121,"vendor":"WATERS","date":"2016-01-11","price":3982.5,"grams":189.0,"price_per_gram":21.071428571428573},{"id":"85dd8d49-bfc3-11e5-8802-b8aeed795ea3","visible_id":122,"vendor":"WATERS","date":"2016-01-20","price":6792.5,"grams":379.0,"price_per_gram":17.9221635883905},{"id":"e2ed34ab-bfc3-11e5-8802-b8aeed795ea3","visible_id":123,"vendor":"FWC","date":"2016-01-20","price":5000.0,"grams":100.0,"price_per_gram":50.0},{"id":"993e0df9-bfc4-11e5-8802-b8aeed795ea3","visible_id":124,"vendor":"WATERS","date":"2016-01-20","price":120.0,"grams":6.0,"price_per_gram":20.0},{"id":"2b0f9d06-bfc5-11e5-8802-b8aeed795ea3","visible_id":125,"vendor":"WATERS","date":"2016-01-20","price":1957.5,"grams":87.0,"price_per_gram":22.5},{"id":"d5a405be-bfc5-11e5-8802-b8aeed795ea3","visible_id":126,"vendor":"WATERS","date":"2016-01-20","price":1867.5,"grams":83.0,"price_per_gram":22.5},{"id":"ef07f192-c13a-11e5-8802-b8aeed795ea3","visible_id":128,"vendor":"WATERS","date":"2016-01-22","price":4545.0,"grams":202.0,"price_per_gram":22.5},{"id":"727fae53-c13b-11e5-8802-b8aeed795ea3","visible_id":129,"vendor":"VENDOR","date":"2016-01-22","price":1700.0,"grams":68.0,"price_per_gram":25.0},{"id":"b14d983e-c13b-11e5-8802-b8aeed795ea3","visible_id":130,"vendor":"WATERS","date":"2016-01-22","price":275.0,"grams":11.0,"price_per_gram":25.0}]}
+
+
+### Get extracts shipment details for non-existing restaurantId [GET /HintsService/v1.0/rest/shipment/details/extracts/userId/{userId}/restaurantId/-1/shipmentId/{shipmentId}]
++ Parameters
+    + userId: `1` (number, required)
+    + shipmentId: `033adf93-9bb4-11e5-9140-4439c455558d` (string, required)
+
++ Response 200 (application/json)
+
+                {"resultCode":"fail"}
+
+
+### Get extracts shipment details [GET /HintsService/v1.0/rest/shipment/details/extracts/userId/{userId}/restaurantId/{restaurantId}/shipmentId/{shipmentId}]
++ Parameters
+    + userId: `1` (number, required)
+    + restaurantId: `1` (number, required)
+    + shipmentId: `fcb84e34-689b-11e5-ac36-4439c455558d` (string, required)
+
++ Response 200 (application/json)
+
+                {"resultCode":"success","details":[{"id":"00957c7e-689c-11e5-ac36-4439c455558d","category_name":"LARRY OG","option":"OIL","tier":45,"grams":59.0,"price_per_gram":22.5,"price":1327.5,"sample_id":"1509ex029","visible_id":"LARRYOGO15100117248-L"},{"id":"02171d0c-689c-11e5-ac36-4439c455558d","category_name":"COOKIE SAMPLER","option":"JELLY","tier":35,"grams":45.0,"price_per_gram":17.5,"price":787.5,"sample_id":"1509ex025","visible_id":"COOKIESAMPLERJ151001172410-L"},{"id":"03025f15-689c-11e5-ac36-4439c455558d","category_name":"COOKIE SAMPLER","option":"JELLY","tier":35,"grams":41.0,"price_per_gram":17.5,"price":717.5,"sample_id":"1509ex026","visible_id":"COOKIESAMPLERJ1510011724102-L"},{"id":"04d79442-689c-11e5-ac36-4439c455558d","category_name":"LARRY OG","option":"JELLY","tier":40,"grams":29.0,"price_per_gram":17.5,"price":507.5,"sample_id":"1509ex028","visible_id":"LARRYOGJ15100117259-L"},{"id":"0645a590-689c-11e5-ac36-4439c455558d","category_name":"LARRY OG","option":"OIL","tier":35,"grams":59.0,"price_per_gram":17.5,"price":1032.5,"sample_id":"1509ex030","visible_id":"LARRYOGO151001172510-L"},{"id":"077fd855-689c-11e5-ac36-4439c455558d","category_name":"WHITE CASHMERE","option":"JELLY","tier":35,"grams":47.0,"price_per_gram":17.5,"price":822.5,"sample_id":"1509ex031","visible_id":"WHITECASHMEREJ151001172510-L"},{"id":"fe24f363-689b-11e5-ac36-4439c455558d","category_name":"COOKIE SAMPLER","option":"OIL","tier":50,"grams":89.0,"price_per_gram":25.0,"price":2225.0,"sample_id":"1509ex027","visible_id":"COOKIESAMPLERO15100117247-L"}]}

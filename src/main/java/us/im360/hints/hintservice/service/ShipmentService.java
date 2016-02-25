@@ -90,4 +90,21 @@ public class ShipmentService {
 			return Collections.emptyList();
 		}
 	}
+
+	public List<JsonNode> getExtractsShipmentDetails(Integer restaurantId, String shipmentId) {
+		try {
+			String query = commonQueryStore.getProperty("getExtractsShipmentDetails");
+			logger.debug("QUERY TO EXECUTE: " + query);
+
+			return namedParameterJdbcTemplate.query(
+					query,
+					new MapSqlParameterSource()
+							.addValue("restaurantId", restaurantId)
+							.addValue("shipmentId", shipmentId),
+					new JsonNodeRowMapper(objectMapper));
+
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
+	}
 }
