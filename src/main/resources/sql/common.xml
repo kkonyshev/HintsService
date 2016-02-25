@@ -335,6 +335,49 @@ ORDER BY sm.visibleId;
         ]]>
     </entry>
 
+    <entry key="getFlowersShipmentDetails">
+        <![CDATA[
+/*033adf93-9bb4-11e5-9140-4439c455558d*/
+SELECT
+  t1.id             AS id,
+  t1.category_name  AS category_name,
+  t1.option_name    AS 'option',
+  t1.tier_name      AS tier,
+  t1.units          AS units,
+  t1.price_per_unit AS price_per_unit,
+  t1.price          AS price,
+  t2.sample_id      AS sample_id,
+  t2.visibleId      AS visible_id
+FROM
+  (SELECT
+     ut.id,
+     ca2.category_name,
+     op.name             AS option_name,
+     ti.tier_name,
+     ut.units,
+     ut.price / ut.units AS price_per_unit,
+     ut.price,
+     ut.shipment_id
+   FROM im_strain_units ut, posper_category ca1, posper_category ca2, im_strain_type ty,
+     im_strain_tier ti, im_strain_category_option co LEFT JOIN im_strain_option op
+       ON op.id = co.option_id
+   WHERE ut.location_id = :restaurantId AND ty.posper_category_id = ca1.id AND ty.im_strain_tier_id = ti.id AND
+         co.category_id = ca2.id
+         AND ca1.parent_id = ca2.id AND ut.posper_category_id = ca1.id AND ut.shipment_id = :shipmentId) t1
+  LEFT JOIN (SELECT
+               ut.id,
+               ud.visibleId,
+               ce.sample_id
+             FROM im_strain_units ut, im_strain_units_details ud
+               LEFT JOIN im_strain_certification ce
+                 ON ce.unit_details_id = ud.id
+             WHERE ud.im_strain_units_id = ut.id AND ud.ATTR1 = 'LAB'
+             GROUP BY ut.id) t2
+    ON t1.id = t2.id;
+
+        ]]>
+    </entry>
+
     <entry key="empty">
         <![CDATA[
         ]]>

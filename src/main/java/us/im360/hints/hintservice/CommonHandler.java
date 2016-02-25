@@ -171,4 +171,18 @@ public interface CommonHandler {
             String dateStart,
             String dateEnd
     );
+
+    /**
+     * Flowers shipment details
+     *
+     * @param userId
+     * @param restaurantId
+     * @param shipmentId
+     * @return
+     */
+    Response getShipmentFlowersDetails(
+            Integer userId,
+            Integer restaurantId,
+            String shipmentId
+    );
 }
