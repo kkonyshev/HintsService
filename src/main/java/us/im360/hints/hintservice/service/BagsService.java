@@ -39,8 +39,7 @@ public class BagsService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public List<JsonNode> getBags(Integer restaurantId, Integer status, String attr1)
-	{
+	public List<JsonNode> getBags(Integer restaurantId, Integer status, String attr1) {
 		logger.debug("restaurantId: {}", restaurantId);
 
 		try {
@@ -60,8 +59,7 @@ public class BagsService {
 		}
 	}
 
-	public List<JsonNode> getExtracts(Integer restaurantId, Integer status, String attr1)
-	{
+	public List<JsonNode> getExtracts(Integer restaurantId, Integer status, String attr1) {
 		logger.debug("restaurantId: {}, status: {}, attr1: {}", restaurantId, status, attr1);
 
 		try {

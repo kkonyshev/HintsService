@@ -486,3 +486,26 @@ IM360 API
 + Response 200 (application/json)
 
                 {"resultCode":"success","details":[{"id":"03c2947f-9bb4-11e5-9140-4439c455558d","category_name":"SILVER HAZE","option":"SOIL","tier":"40","units":2.0,"price_per_unit":3000.0,"price":6000.0,"sample_id":null,"visible_id":"SILVERHAZES15120516554-03"},{"id":"04119630-9bb4-11e5-9140-4439c455558d","category_name":"ANIMAL COOKIES","option":"SOIL","tier":"40","units":1.0,"price_per_unit":3000.0,"price":3000.0,"sample_id":null,"visible_id":"ANIMALCOOKIESS15120516554-02"},{"id":"0465a6ee-9bb4-11e5-9140-4439c455558d","category_name":"OG KUSH","option":"SOIL","tier":"40","units":2.0,"price_per_unit":3000.0,"price":6000.0,"sample_id":null,"visible_id":"OGKUSHS15120516554-03"},{"id":"04cba708-9bb4-11e5-9140-4439c455558d","category_name":"AFWRECK","option":"SOIL","tier":"35","units":2.0,"price_per_unit":2750.0,"price":5500.0,"sample_id":null,"visible_id":"AFWRECKS15120516555-03"},{"id":"050ddb46-9bb4-11e5-9140-4439c455558d","category_name":"SFV OG KUSH","option":"SOIL - ORGANIC","tier":"40","units":2.0,"price_per_unit":3000.0,"price":6000.0,"sample_id":null,"visible_id":"SFVOGKUSHS15120516554-03"}]}
+
+
+### Get extracts shipments for non-existing restaurantId [GET /HintsService/v1.0/rest/shipments/extracts/userId/{userId}/restaurantId/-1/dateStart/{dateStart}/dateEnd/{dateEnd}]
++ Parameters
+    + userId: `1` (number, required)
+    + dateStart: `2016-01-01` (string, required)
+    + dateEnd: `2016-01-26` (string, required)
+
++ Response 200 (application/json)
+
+                {"resultCode":"fail"}
+
+
+### Get extracts shipments [GET /HintsService/v1.0/rest/shipments/extracts/userId/{userId}/restaurantId/{restaurantId}/dateStart/{dateStart}/dateEnd/{dateEnd}]
++ Parameters
+    + userId: `1` (number, required)
+    + restaurantId: `1` (number, required)
+    + dateStart: `2016-01-01` (string, required)
+    + dateEnd: `2016-01-26` (string, required)
+
++ Response 200 (application/json)
+
+                {"resultCode":"success","shipments":[{"id":"e44930ef-b31f-11e5-8802-b8aeed795ea3","visible_id":114,"vendor":"WATERS","date":"2016-01-04","price":5670.0,"grams":252.0,"price_per_gram":22.5},{"id":"d5b998c4-b437-11e5-8802-b8aeed795ea3","visible_id":116,"vendor":"WATERS","date":"2016-01-05","price":5357.5,"grams":253.0,"price_per_gram":21.175889328063242},{"id":"bc86dadf-b44f-11e5-8802-b8aeed795ea3","visible_id":117,"vendor":"WATERS","date":"2016-01-06","price":2340.0,"grams":117.0,"price_per_gram":20.0},{"id":"457222d5-b8a4-11e5-8802-b8aeed795ea3","visible_id":121,"vendor":"WATERS","date":"2016-01-11","price":3982.5,"grams":189.0,"price_per_gram":21.071428571428573},{"id":"85dd8d49-bfc3-11e5-8802-b8aeed795ea3","visible_id":122,"vendor":"WATERS","date":"2016-01-20","price":6792.5,"grams":379.0,"price_per_gram":17.9221635883905},{"id":"e2ed34ab-bfc3-11e5-8802-b8aeed795ea3","visible_id":123,"vendor":"FWC","date":"2016-01-20","price":5000.0,"grams":100.0,"price_per_gram":50.0},{"id":"993e0df9-bfc4-11e5-8802-b8aeed795ea3","visible_id":124,"vendor":"WATERS","date":"2016-01-20","price":120.0,"grams":6.0,"price_per_gram":20.0},{"id":"2b0f9d06-bfc5-11e5-8802-b8aeed795ea3","visible_id":125,"vendor":"WATERS","date":"2016-01-20","price":1957.5,"grams":87.0,"price_per_gram":22.5},{"id":"d5a405be-bfc5-11e5-8802-b8aeed795ea3","visible_id":126,"vendor":"WATERS","date":"2016-01-20","price":1867.5,"grams":83.0,"price_per_gram":22.5},{"id":"ef07f192-c13a-11e5-8802-b8aeed795ea3","visible_id":128,"vendor":"WATERS","date":"2016-01-22","price":4545.0,"grams":202.0,"price_per_gram":22.5},{"id":"727fae53-c13b-11e5-8802-b8aeed795ea3","visible_id":129,"vendor":"VENDOR","date":"2016-01-22","price":1700.0,"grams":68.0,"price_per_gram":25.0},{"id":"b14d983e-c13b-11e5-8802-b8aeed795ea3","visible_id":130,"vendor":"WATERS","date":"2016-01-22","price":275.0,"grams":11.0,"price_per_gram":25.0}]}

@@ -72,4 +72,22 @@ public class ShipmentService {
 			return Collections.emptyList();
 		}
 	}
+
+	public List<JsonNode> getExtractsShipments(Integer restaurantId, String dateStart, String dateEnd) {
+		try {
+			String query = commonQueryStore.getProperty("getExtractsShipments");
+			logger.debug("QUERY TO EXECUTE: " + query);
+
+			return namedParameterJdbcTemplate.query(
+					query,
+					new MapSqlParameterSource()
+							.addValue("restaurantId", restaurantId)
+							.addValue("dateStart", dateStart)
+							.addValue("dateEnd", dateEnd),
+					new JsonNodeRowMapper(objectMapper));
+
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
+	}
 }

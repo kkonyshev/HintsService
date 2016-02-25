@@ -185,4 +185,19 @@ public interface CommonHandler {
             Integer restaurantId,
             String shipmentId
     );
+
+    /**
+     *
+     * @param userId
+     * @param restaurantId
+     * @param dateStart
+     * @param dateEnd
+     * @return
+     */
+    Response getShipmentsExtracts(
+            Integer userId,
+            Integer restaurantId,
+            String dateStart,
+            String dateEnd
+    );
 }
