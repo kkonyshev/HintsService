@@ -233,4 +233,22 @@ public interface CommonHandler {
             String attribute,
             String status
     );
+
+    /**
+     * Update strain attribute
+     *
+     * @param userId
+     * @param restaurantId
+     * @param prevStrain
+     * @param status
+     * @param attribute
+     * @return
+     */
+    Response updateStrainAttribute(
+            Integer userId,
+            Integer restaurantId,
+            String prevStrain,
+            String status,
+            String attribute
+    );
 }

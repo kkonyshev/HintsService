@@ -63,6 +63,15 @@ WHERE category_name = :prevStrain;
         ]]>
     </entry>
 
+    <entry key="updateStrainAttribute">
+        <![CDATA[
+UPDATE im_strain_attributes
+SET name = :attribute,
+  active = :status
+WHERE location_id = :restaurantId AND name = :prevAttribute;
+        ]]>
+    </entry>
+
     <entry key="empty">
         <![CDATA[
         ]]>

@@ -406,21 +406,46 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	}
 
 	@PUT
-	@Path("strain/update/userId/{userId}/restaurantId/{restaurantId}/prevStrain/{prevStrain}/strain/{strain}/attribute/{attribute}/status/{status}")
+	@Path("strain/update/userId/{userId}/restaurantId/{restaurantId}/status/{status}/prevStrain/{prevStrain}/strain/{strain}/attribute/{attribute}")
 	@Override
 	public Response updateStrain(
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("status") String status,
 			@PathParam("prevStrain") String prevStrain,
 			@PathParam("strain") String strain,
-			@PathParam("attribute") String attribute,
-			@PathParam("status") String status
+			@PathParam("attribute") String attribute
 	) {
 		logger.debug("userId: {}, restaurantId: {}, shipmentId: {}, shipmentId: {}, shipmentId: {}, shipmentId: {}", userId, restaurantId, prevStrain, strain, attribute, status);
 		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		boolean result = strainService.updateStrain(restaurantId, status, attribute, prevStrain, strain);
+		boolean result = strainService.updateStrain(restaurantId, status, prevStrain, strain, attribute);
+
+		if (BooleanUtils.isTrue(result)) {
+			responseBuilder.success();
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+	@PUT
+	@Path("strain/attribute/update/userId/{userId}/restaurantId/{restaurantId}/status/{status}/prevStrain/{prevStrain}/attribute/{attribute}")
+	@Override
+	public Response updateStrainAttribute(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("prevStrain") String prevStrain,
+			@PathParam("status") String status,
+			@PathParam("attribute") String attribute
+	) {
+		logger.debug("userId: {}, restaurantId: {}, prevStrain: {}, status: {}, attribute: {}", userId, restaurantId, prevStrain, status, attribute);
+		auditService.log(userId, new AuditInfo());
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		boolean result = strainService.updateStrainAttribute(restaurantId, status, prevStrain, attribute);
 
 		if (BooleanUtils.isTrue(result)) {
 			responseBuilder.success();

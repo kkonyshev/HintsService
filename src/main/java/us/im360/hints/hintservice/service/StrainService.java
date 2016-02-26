@@ -96,7 +96,7 @@ public class StrainService {
 	}
 
 
-	public boolean updateStrain(Integer restaurantId, String status, String attribute, String prevStrain, String strain) {
+	public boolean updateStrain(Integer restaurantId, String status, String prevStrain, String strain, String attribute) {
 		try {
 
 			String queryUpdateType = editorQueryStore.getProperty("updateStrainStatus");
@@ -182,8 +182,32 @@ public class StrainService {
 			);
 			logger.debug("ROWS UPDATED [updateStrainProsperCategory]: " + updateStrainProsperCategoryList);
 
+			return true;
 
-			//throw new IllegalStateException("test");
+		} catch (Exception e) {
+			logger.warn(e.getMessage(), e);
+			return false;
+		}
+	}
+
+	public boolean updateStrainAttribute(Integer restaurantId, String status, String prevAttribute, String attribute) {
+		try {
+
+			String updateStrainAttribute = editorQueryStore.getProperty("updateStrainAttribute");
+			logger.debug("QUERY TO EXECUTE: " + updateStrainAttribute);
+			int updateStrainProsperTicketLineList = namedParameterJdbcTemplate.update(
+					updateStrainAttribute,
+					new MapSqlParameterSource()
+							.addValue("restaurantId", restaurantId)
+							.addValue("status", status)
+							.addValue("attribute", attribute)
+							.addValue("prevAttribute", prevAttribute)
+			);
+			logger.debug("ROWS UPDATED [updateStrainProsperTicketLineList]: " + updateStrainProsperTicketLineList);
+
+			if (updateStrainProsperTicketLineList<1) {
+				throw new IllegalArgumentException("no undefined locationId: " + restaurantId);
+			}
 
 			return true;
 
