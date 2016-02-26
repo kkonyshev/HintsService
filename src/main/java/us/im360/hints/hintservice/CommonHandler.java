@@ -213,4 +213,24 @@ public interface CommonHandler {
             Integer restaurantId,
             String shipmentId
     );
+
+    /**
+     * Update strain method
+     *
+     * @param userId
+     * @param restaurantId
+     * @param prevStrain
+     * @param strain
+     * @param attribute
+     * @param status
+     * @return
+     */
+    Response updateStrain(
+            Integer userId,
+            Integer restaurantId,
+            String prevStrain,
+            String strain,
+            String attribute,
+            String status
+    );
 }

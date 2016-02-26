@@ -2,6 +2,7 @@ package us.im360.hints.hintservice.handlerImpl;
 
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.codehaus.jackson.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import us.im360.hints.hintservice.service.*;
 import us.im360.hints.hintservice.util.ResponseBuilder;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
@@ -396,6 +398,32 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 
 		if (CollectionUtils.isNotEmpty(resultList)) {
 			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+	@PUT
+	@Path("strain/update/userId/{userId}/restaurantId/{restaurantId}/prevStrain/{prevStrain}/strain/{strain}/attribute/{attribute}/status/{status}")
+	@Override
+	public Response updateStrain(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("prevStrain") String prevStrain,
+			@PathParam("strain") String strain,
+			@PathParam("attribute") String attribute,
+			@PathParam("status") String status
+	) {
+		logger.debug("userId: {}, restaurantId: {}, shipmentId: {}, shipmentId: {}, shipmentId: {}, shipmentId: {}", userId, restaurantId, prevStrain, strain, attribute, status);
+		auditService.log(userId, new AuditInfo());
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		boolean result = strainService.updateStrain(restaurantId, status, attribute, prevStrain, strain);
+
+		if (BooleanUtils.isTrue(result)) {
+			responseBuilder.success();
 		} else {
 			responseBuilder.fail();
 		}

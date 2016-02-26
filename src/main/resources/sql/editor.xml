@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+    <comment>Editor queries</comment>
+
+    <entry key="updateStrainStatus">
+        <![CDATA[
+UPDATE im_strain_type ty, im_strain_attributes att
+SET ty.attribute = att.id,
+  ty.active      = :status,
+  ty.version     = ty.version + 1,
+  ty.updated_at  = now()
+WHERE ty.location_id = :restaurantId AND ty.name = :prevStrain AND att.name = :attribute;
+        ]]>
+    </entry>
+
+    <entry key="updateStrainProsperProduct">
+        <![CDATA[
+UPDATE posper_product
+SET description = replace(description, :prevStrain, :strain), version = version + 1
+WHERE description = concat(:prevStrain, ' ', :grams);
+        ]]>
+    </entry>
+
+    <entry key="updateStrainProsperTicketLine">
+        <![CDATA[
+UPDATE posper_ticketline
+SET description = replace(description, :prevStrain, :strain), version = version + 1
+WHERE description = concat(:prevStrain, ' ', :grams);
+        ]]>
+    </entry>
+
+    <entry key="updateStrainType">
+        <![CDATA[
+UPDATE im_strain_type
+SET name = replace(name, :prevStrain, :strain), version = version + 1
+WHERE name = :prevStrain;
+        ]]>
+    </entry>
+
+    <entry key="updateStrainExtractsType">
+        <![CDATA[
+UPDATE im_strain_extract_type
+SET name = replace(name, :prevStrain, :strain)
+WHERE name = :prevStrain;
+        ]]>
+    </entry>
+
+    <entry key="updateStrainProsperCategoryLike">
+        <![CDATA[
+UPDATE posper_category
+SET category_name = replace(category_name, :prevStrain, :strain), version = version + 1
+WHERE category_name LIKE CONCAT(:prevStrain, ' TIER%');
+        ]]>
+    </entry>
+
+    <entry key="updateStrainProsperCategory">
+        <![CDATA[
+UPDATE posper_category
+SET category_name = replace(category_name, :prevStrain, :strain), version = version + 1
+WHERE category_name = :prevStrain;
+        ]]>
+    </entry>
+
+    <entry key="empty">
+        <![CDATA[
+        ]]>
+    </entry>
+</properties>
