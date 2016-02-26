@@ -15,7 +15,7 @@ import us.im360.hints.hintservice.service.*;
 import us.im360.hints.hintservice.util.ResponseBuilder;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
@@ -405,7 +405,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 		return buildResponse(responseBuilder);
 	}
 
-	@PUT
+	@POST
 	@Path("strain/update/userId/{userId}/restaurantId/{restaurantId}/status/{status}/prevStrain/{prevStrain}/strain/{strain}/attribute/{attribute}")
 	@Override
 	public Response updateStrain(
@@ -431,7 +431,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 		return buildResponse(responseBuilder);
 	}
 
-	@PUT
+	@POST
 	@Path("strain/attribute/update/userId/{userId}/restaurantId/{restaurantId}/status/{status}/prevStrain/{prevStrain}/attribute/{attribute}")
 	@Override
 	public Response updateStrainAttribute(

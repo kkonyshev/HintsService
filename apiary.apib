@@ -532,7 +532,7 @@ IM360 API
                 {"resultCode":"success","details":[{"id":"00957c7e-689c-11e5-ac36-4439c455558d","category_name":"LARRY OG","option":"OIL","tier":45,"grams":59.0,"price_per_gram":22.5,"price":1327.5,"sample_id":"1509ex029","visible_id":"LARRYOGO15100117248-L"},{"id":"02171d0c-689c-11e5-ac36-4439c455558d","category_name":"COOKIE SAMPLER","option":"JELLY","tier":35,"grams":45.0,"price_per_gram":17.5,"price":787.5,"sample_id":"1509ex025","visible_id":"COOKIESAMPLERJ151001172410-L"},{"id":"03025f15-689c-11e5-ac36-4439c455558d","category_name":"COOKIE SAMPLER","option":"JELLY","tier":35,"grams":41.0,"price_per_gram":17.5,"price":717.5,"sample_id":"1509ex026","visible_id":"COOKIESAMPLERJ1510011724102-L"},{"id":"04d79442-689c-11e5-ac36-4439c455558d","category_name":"LARRY OG","option":"JELLY","tier":40,"grams":29.0,"price_per_gram":17.5,"price":507.5,"sample_id":"1509ex028","visible_id":"LARRYOGJ15100117259-L"},{"id":"0645a590-689c-11e5-ac36-4439c455558d","category_name":"LARRY OG","option":"OIL","tier":35,"grams":59.0,"price_per_gram":17.5,"price":1032.5,"sample_id":"1509ex030","visible_id":"LARRYOGO151001172510-L"},{"id":"077fd855-689c-11e5-ac36-4439c455558d","category_name":"WHITE CASHMERE","option":"JELLY","tier":35,"grams":47.0,"price_per_gram":17.5,"price":822.5,"sample_id":"1509ex031","visible_id":"WHITECASHMEREJ151001172510-L"},{"id":"fe24f363-689b-11e5-ac36-4439c455558d","category_name":"COOKIE SAMPLER","option":"OIL","tier":50,"grams":89.0,"price_per_gram":25.0,"price":2225.0,"sample_id":"1509ex027","visible_id":"COOKIESAMPLERO15100117247-L"}]}
 
 
-### Update strain [PUT /HintsService/v1.0/rest/strain/update/userId/{userId}/restaurantId/{restaurantId}/status/{status}/prevStrain/{prevStrain}/strain/{strain}/attribute/{attribute}]
+### Update strain [POST /HintsService/v1.0/rest/strain/update/userId/{userId}/restaurantId/{restaurantId}/status/{status}/prevStrain/{prevStrain}/strain/{strain}/attribute/{attribute}]
 + Parameters
     + userId: `1` (number, required)
     + restaurantId: `-1` (number, required)
@@ -546,7 +546,7 @@ IM360 API
                 {"resultCode":"fail"}
 
 
-### Update strain attribute [PUT /HintsService/v1.0/rest/strain/attribute/update/userId/{userId}/restaurantId/{restaurantId}/status/{status}/prevStrain/{prevStrain}/attribute/{attribute}]
+### Update strain attribute [POST /HintsService/v1.0/rest/strain/attribute/update/userId/{userId}/restaurantId/{restaurantId}/status/{status}/prevStrain/{prevStrain}/attribute/{attribute}]
 + Parameters
     + userId: `1` (number, required)
     + restaurantId: `-1` (number, required)
