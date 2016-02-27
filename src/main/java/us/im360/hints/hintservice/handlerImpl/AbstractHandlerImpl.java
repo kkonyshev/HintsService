@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import us.im360.hints.hintservice.util.ResponseBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -32,9 +34,10 @@ public abstract class AbstractHandlerImpl  {
     public static final String ITEMS_FIELD_NAME = "items";
     public static final String SHIPMENTS_FIELD_NAME = "shipments";
 
+    private static final Logger logger = LoggerFactory.getLogger(AbstractHandlerImpl.class);
 
-
-        private static final Logger logger = LoggerFactory.getLogger(AbstractHandlerImpl.class);
+    @Context
+    protected HttpServletRequest req;
 
     @Autowired
     protected ObjectMapper objectMapper;

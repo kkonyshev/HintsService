@@ -19,6 +19,7 @@ public class AuditService {
     private static final Logger logger = LoggerFactory.getLogger(AuditService.class);
 
     public void log(Integer userId, AuditInfo auditInfo) {
-        logger.info("AUDIT| usedId: {}, auditInfo: {}", userId, auditInfo);
+        org.slf4j.MDC.put("SID", auditInfo.sid);
+        logger.info("auditInfo: {}", auditInfo);
     }
 }

@@ -71,10 +71,10 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	public Response getCloseReportOnDate(
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
-			@PathParam("closeDate") String closeDate
-	) {
+			@PathParam("closeDate") String closeDate)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}, closeDate: {}", userId, restaurantId, closeDate);
-		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 
@@ -98,8 +98,8 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("startDate") String startDate,
 			@PathParam("endDate") String endDate)
 	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}, startDate: {}, endDate: {}", userId, restaurantId, startDate, endDate);
-		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 
@@ -123,8 +123,8 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("startDate") String startDate,
 			@PathParam("endDate") String endDate)
 	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}, startDate: {}, endDate: {}, strainListComaSeparated: {}, tierListComaSeparated: {}", userId, restaurantId, startDate, endDate);
-		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 
@@ -146,11 +146,10 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("startDate") String startDate,
-			@PathParam("endDate") String endDate
-	)
+			@PathParam("endDate") String endDate)
 	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}, productId: {}, startDate: {}, endDate: {}", userId, restaurantId, startDate, endDate);
-		auditService.log(userId, new AuditInfo());
 
 		List<JsonNode> resultList = new ArrayList<>(2);
 		JsonNode cashRow = paymentService.getPaymentReport("CASH", startDate, endDate);
@@ -183,10 +182,10 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("date") String date,
 			@PathParam("timeStart") String timeStart,
 			@PathParam("timeEnd") String timeEnd,
-			@PathParam("userIdList") String userIdList
-	) {
+			@PathParam("userIdList") String userIdList)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}, date: {}, timeStart: {}, timeEnd: {}, userIdList: {}", userId, restaurantId, date, timeStart, timeEnd, userIdList);
-		auditService.log(userId, new AuditInfo());
 
 		List<String> userIds = Arrays.asList(userIdList.split(","));
 
@@ -209,10 +208,10 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	@Override
 	public Response getUnits(
 			@PathParam("userId") Integer userId,
-			@PathParam("restaurantId") Integer restaurantId
-	) {
+			@PathParam("restaurantId") Integer restaurantId)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}", userId, restaurantId);
-		auditService.log(userId, new AuditInfo());
 
 		List<JsonNode> resultList = unitsService.getUnits(restaurantId);
 
@@ -236,6 +235,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("startDate") String startDate,
 			@PathParam("endDate") String endDate)
 	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("restaurantId: {}, startDate: {}, endDate: {}, strainListComaSeparated: {}, tierListComaSeparated: {}", restaurantId, startDate, endDate);
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
@@ -259,10 +259,10 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("status") Integer status,
-			@PathParam("attr1") String attr1
-	) {
+			@PathParam("attr1") String attr1)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug(" userId: {}, restaurantId: {}, status: {}, attr1: {}", restaurantId, userId, status, attr1);
-		auditService.log(userId, new AuditInfo());
 
 		List<JsonNode> resultList = bagsService.getBags(restaurantId, status, attr1);
 
@@ -283,8 +283,9 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	public Response getBagsNullStatus(
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
-			@PathParam("status") Integer status
-	) {
+			@PathParam("status") Integer status)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		return getBags(userId, restaurantId, status, null);
 	}
 
@@ -294,8 +295,9 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	public Response getStockReport(
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
-			@PathParam("date") String date
-	) {
+			@PathParam("date") String date)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("restaurantId: {}, date: {}" + restaurantId, date);
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
@@ -317,10 +319,10 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("status") Integer status,
-			@PathParam("attr1") String attr1
-	) {
+			@PathParam("attr1") String attr1)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}, status: {}, attr1: {}", userId, restaurantId, status, attr1);
-		auditService.log(userId, new AuditInfo());
 
 		List<JsonNode> resultList = bagsService.getExtracts(restaurantId, status, attr1);
 
@@ -341,8 +343,9 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	public Response getExtractsNullStatus(
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
-			@PathParam("status") Integer status
-	) {
+			@PathParam("status") Integer status)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		return getExtracts(userId, restaurantId, status, null);
 	}
 
@@ -351,10 +354,10 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	@Override
 	public Response getInventory(
 			@PathParam("userId") Integer userId,
-			@PathParam("restaurantId") Integer restaurantId
-	) {
+			@PathParam("restaurantId") Integer restaurantId)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}", userId, restaurantId);
-		auditService.log(userId, new AuditInfo());
 
 		List<JsonNode> resultList = inventoryService.getInventory(restaurantId);
 
@@ -375,10 +378,10 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	public Response getInventoryList(
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
-			@PathParam("attr1") String attr1
-	) {
+			@PathParam("attr1") String attr1)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}", userId, restaurantId);
-		auditService.log(userId, new AuditInfo());
 
 		List<JsonNode> resultList = inventoryService.getInventoryList(restaurantId, attr1);
 

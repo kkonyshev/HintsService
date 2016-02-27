@@ -68,10 +68,10 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("groupId") Integer groupId,
-			@PathParam("active") Integer active
-	) {
+			@PathParam("active") Integer active)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}, groupId: {}, active: {}", userId, restaurantId, active);
-		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		List<JsonNode> resultList = userService.getUsers(restaurantId, groupId, active);
@@ -91,9 +91,10 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	public Response getProductStock(
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
-			@PathParam("productId") String productId) {
+			@PathParam("productId") String productId)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("restaurantId: {}, userId: {}, productId: {}", restaurantId, userId, productId);
-		auditService.log(userId, new AuditInfo());
 
 		JsonNode stock = productService.getProductStock(productId);
 
@@ -114,10 +115,10 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	public Response getStrains(
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
-			@PathParam("active") Integer active
-	) {
+			@PathParam("active") Integer active)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}, active: {}", userId, restaurantId, active);
-		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		List<JsonNode> resultList = strainService.getStrains(restaurantId, active);
@@ -137,10 +138,10 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	public Response getAttributes(
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
-			@PathParam("active") Integer active
-	) {
+			@PathParam("active") Integer active)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}, active: {}", userId, restaurantId, active);
-		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		List<JsonNode> resultList = attributeService.getAttributes(restaurantId, active);
@@ -160,10 +161,10 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	public Response getOptions(
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
-			@PathParam("active") Integer active
-	) {
+			@PathParam("active") Integer active)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}, active: {}", userId, restaurantId, active);
-		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		List<JsonNode> resultList = optionService.getOptions(restaurantId, active);
@@ -182,10 +183,10 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Override
 	public Response getTiersCost(
 			@PathParam("userId") Integer userId,
-			@PathParam("restaurantId") Integer restaurantId
-	) {
+			@PathParam("restaurantId") Integer restaurantId)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}", userId, restaurantId);
-		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		List<JsonNode> resultList = strainService.getTiersCost(restaurantId);
@@ -204,10 +205,10 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Override
 	public Response getExtractsCost(
 			@PathParam("userId") Integer userId,
-			@PathParam("restaurantId") Integer restaurantId
-	) {
+			@PathParam("restaurantId") Integer restaurantId)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}", userId, restaurantId);
-		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		List<JsonNode> resultList = strainService.getExtractsCost(restaurantId);
@@ -227,9 +228,10 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	public Response getTicketDetail(
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
-			@PathParam("ticketVisibleId") Integer ticketVisibleId) {
+			@PathParam("ticketVisibleId") Integer ticketVisibleId)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}, ticketVisibleId: {}", userId, restaurantId, ticketVisibleId);
-		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		List<JsonNode> resultList = ticketService.getTicketDetails(userId, restaurantId, ticketVisibleId);
@@ -250,10 +252,10 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("categoryId") String categoryId,
-			@PathParam("tier") Integer tier
-	) {
+			@PathParam("tier") Integer tier)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}, categoryId: {}, tier: {}", userId, restaurantId, categoryId, tier);
-		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		List<JsonNode> resultList = printService.getPrintInformation(restaurantId, categoryId, tier);
@@ -272,10 +274,10 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Override
 	public Response getFlowersMenu(
 			@PathParam("userId") Integer userId,
-			@PathParam("restaurantId") Integer restaurantId
-	) {
+			@PathParam("restaurantId") Integer restaurantId)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}", userId, restaurantId);
-		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		List<JsonNode> resultList = menuService.getFlowersMenu(restaurantId);
@@ -294,10 +296,10 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Override
 	public Response getExtractsMenu(
 			@PathParam("userId") Integer userId,
-			@PathParam("restaurantId") Integer restaurantId
-	) {
+			@PathParam("restaurantId") Integer restaurantId)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}", userId, restaurantId);
-		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		List<JsonNode> resultList = menuService.getExtractsMenu(restaurantId);
@@ -318,10 +320,10 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("dateStart") String dateStart,
-			@PathParam("dateEnd") String dateEnd
-	) {
+			@PathParam("dateEnd") String dateEnd)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}, dateStart: {}, dateEnd: {}", userId, restaurantId, dateStart, dateEnd);
-		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		List<JsonNode> resultList = shipmentService.getFlowersShipments(restaurantId, dateStart, dateEnd);
@@ -341,10 +343,10 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	public Response getShipmentFlowersDetails(
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
-			@PathParam("shipmentId") String shipmentId
-	) {
+			@PathParam("shipmentId") String shipmentId)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}, shipmentId: {}", userId, restaurantId, shipmentId);
-		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		List<JsonNode> resultList = shipmentService.getFlowersShipmentDetails(restaurantId, shipmentId);
@@ -365,10 +367,10 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("dateStart") String dateStart,
-			@PathParam("dateEnd") String dateEnd
-	) {
+			@PathParam("dateEnd") String dateEnd)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}, dateStart: {}, dateEnd: {}", userId, restaurantId, dateStart, dateEnd);
-		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		List<JsonNode> resultList = shipmentService.getExtractsShipments(restaurantId, dateStart, dateEnd);
@@ -388,10 +390,10 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	public Response getShipmentExtractsDetails(
 			@PathParam("userId") Integer userId,
 			@PathParam("restaurantId") Integer restaurantId,
-			@PathParam("shipmentId") String shipmentId
-	) {
+			@PathParam("shipmentId") String shipmentId)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}, shipmentId: {}", userId, restaurantId, shipmentId);
-		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		List<JsonNode> resultList = shipmentService.getExtractsShipmentDetails(restaurantId, shipmentId);
@@ -414,10 +416,10 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("status") String status,
 			@PathParam("prevStrain") String prevStrain,
 			@PathParam("strain") String strain,
-			@PathParam("attribute") String attribute
-	) {
+			@PathParam("attribute") String attribute)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}, shipmentId: {}, shipmentId: {}, shipmentId: {}, shipmentId: {}", userId, restaurantId, prevStrain, strain, attribute, status);
-		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		boolean result = strainService.updateStrain(restaurantId, status, prevStrain, strain, attribute);
@@ -439,10 +441,10 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("prevStrain") String prevStrain,
 			@PathParam("status") String status,
-			@PathParam("attribute") String attribute
-	) {
+			@PathParam("attribute") String attribute)
+	{
+		auditService.log(userId, new AuditInfo(req, userId));
 		logger.debug("userId: {}, restaurantId: {}, prevStrain: {}, status: {}, attribute: {}", userId, restaurantId, prevStrain, status, attribute);
-		auditService.log(userId, new AuditInfo());
 
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		boolean result = strainService.updateStrainAttribute(restaurantId, status, prevStrain, attribute);
