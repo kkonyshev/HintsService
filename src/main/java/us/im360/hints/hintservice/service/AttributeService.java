@@ -21,7 +21,7 @@ import java.util.Properties;
  *
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 21/02/16.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("UnusedDeclaration")
 @Service
 @Transactional
 public class AttributeService {
@@ -42,7 +42,7 @@ public class AttributeService {
 	{
 		try {
 			String profitReportQuery = commonQueryStore.getProperty("getAttributes");
-			logger.debug("QUERY TO EXECUTE: " + profitReportQuery);
+			logger.trace("QUERY TO EXECUTE: " + profitReportQuery);
 
 			return namedParameterJdbcTemplate.query(
 					profitReportQuery,
@@ -51,6 +51,7 @@ public class AttributeService {
 					new JsonNodeRowMapper(objectMapper));
 
 		} catch (Exception e) {
+			logger.warn(e.getMessage(), e);
 			return Collections.emptyList();
 		}
 	}

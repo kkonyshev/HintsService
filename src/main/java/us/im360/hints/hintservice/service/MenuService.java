@@ -23,7 +23,7 @@ import java.util.*;
  *
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 24/02/16.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("UnusedDeclaration")
 @Service
 @Transactional
 public class MenuService {
@@ -49,7 +49,7 @@ public class MenuService {
 		try {
 			jdbcTemplate.execute("SELECT @rate := (rate + 1) FROM posper_tax WHERE id = 1;");
 			String query = commonQueryStore.getProperty("getExtractsMenu");
-			logger.debug("QUERY TO EXECUTE: " + query);
+			logger.trace("QUERY TO EXECUTE: " + query);
 
 			List<JsonNode> resultList = namedParameterJdbcTemplate.query(
 					query,
@@ -64,6 +64,7 @@ public class MenuService {
 			}
 
 		} catch (Exception e) {
+			logger.warn(e.getMessage(), e);
 			return Collections.emptyList();
 		}
 	}
@@ -72,7 +73,7 @@ public class MenuService {
 		try {
 			jdbcTemplate.execute("SELECT @rate := (rate + 1) FROM posper_tax WHERE id = 1;");
 			String query = commonQueryStore.getProperty("getFlowersMenu");
-			logger.debug("QUERY TO EXECUTE: " + query);
+			logger.trace("QUERY TO EXECUTE: " + query);
 
 			List<JsonNode> resultList = namedParameterJdbcTemplate.query(
 					query,
@@ -87,6 +88,7 @@ public class MenuService {
 			}
 
 		} catch (Exception e) {
+			logger.warn(e.getMessage(), e);
 			return Collections.emptyList();
 		}
 	}

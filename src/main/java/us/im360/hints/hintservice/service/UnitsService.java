@@ -21,7 +21,7 @@ import java.util.Properties;
  *
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 19/02/16.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("UnusedDeclaration")
 @Service
 @Transactional
 public class UnitsService {
@@ -38,13 +38,10 @@ public class UnitsService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public List<JsonNode> getUnits(Integer restaurantId)
-	{
-		logger.debug("restaurantId: {}", restaurantId);
-
+	public List<JsonNode> getUnits(Integer restaurantId) {
 		try {
 			String query = reportQueryStore.getProperty("getUnits");
-			logger.debug("QUERY TO EXECUTE: " + query);
+			logger.trace("QUERY TO EXECUTE: " + query);
 
 			return namedParameterJdbcTemplate.query(
 					query,
@@ -53,6 +50,7 @@ public class UnitsService {
 					new JsonNodeRowMapper(objectMapper));
 
 		} catch (Exception e) {
+			logger.warn(e.getMessage(), e);
 			return Collections.emptyList();
 		}
 	}

@@ -21,7 +21,7 @@ import java.util.Properties;
  *
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 24/02/16.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("UnusedDeclaration")
 @Service
 @Transactional
 public class ShipmentService {
@@ -41,7 +41,7 @@ public class ShipmentService {
 	public List<JsonNode> getFlowersShipments(Integer restaurantId, String dateStart, String dateEnd) {
 		try {
 			String query = commonQueryStore.getProperty("getFlowersShipments");
-			logger.debug("QUERY TO EXECUTE: " + query);
+			logger.trace("QUERY TO EXECUTE: " + query);
 
 			return namedParameterJdbcTemplate.query(
 					query,
@@ -52,6 +52,7 @@ public class ShipmentService {
 					new JsonNodeRowMapper(objectMapper));
 
 		} catch (Exception e) {
+			logger.warn(e.getMessage(), e);
 			return Collections.emptyList();
 		}
 	}
@@ -59,7 +60,7 @@ public class ShipmentService {
 	public List<JsonNode> getFlowersShipmentDetails(Integer restaurantId, String shipmentId) {
 		try {
 			String query = commonQueryStore.getProperty("getFlowersShipmentDetails");
-			logger.debug("QUERY TO EXECUTE: " + query);
+			logger.trace("QUERY TO EXECUTE: " + query);
 
 			return namedParameterJdbcTemplate.query(
 					query,
@@ -69,6 +70,7 @@ public class ShipmentService {
 					new JsonNodeRowMapper(objectMapper));
 
 		} catch (Exception e) {
+			logger.warn(e.getMessage(), e);
 			return Collections.emptyList();
 		}
 	}
@@ -76,7 +78,7 @@ public class ShipmentService {
 	public List<JsonNode> getExtractsShipments(Integer restaurantId, String dateStart, String dateEnd) {
 		try {
 			String query = commonQueryStore.getProperty("getExtractsShipments");
-			logger.debug("QUERY TO EXECUTE: " + query);
+			logger.trace("QUERY TO EXECUTE: " + query);
 
 			return namedParameterJdbcTemplate.query(
 					query,
@@ -87,6 +89,7 @@ public class ShipmentService {
 					new JsonNodeRowMapper(objectMapper));
 
 		} catch (Exception e) {
+			logger.warn(e.getMessage(), e);
 			return Collections.emptyList();
 		}
 	}
@@ -94,7 +97,7 @@ public class ShipmentService {
 	public List<JsonNode> getExtractsShipmentDetails(Integer restaurantId, String shipmentId) {
 		try {
 			String query = commonQueryStore.getProperty("getExtractsShipmentDetails");
-			logger.debug("QUERY TO EXECUTE: " + query);
+			logger.trace("QUERY TO EXECUTE: " + query);
 
 			return namedParameterJdbcTemplate.query(
 					query,
@@ -104,6 +107,7 @@ public class ShipmentService {
 					new JsonNodeRowMapper(objectMapper));
 
 		} catch (Exception e) {
+			logger.warn(e.getMessage(), e);
 			return Collections.emptyList();
 		}
 	}

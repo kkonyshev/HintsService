@@ -19,7 +19,7 @@ import java.util.*;
  *
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 16/02/16.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("UnusedDeclaration")
 @Service
 @Transactional
 public class ProductService {
@@ -45,7 +45,7 @@ public class ProductService {
 
 		try {
 			String productStockGetByProductIdQuery = commonQueryStore.getProperty("productStock");
-			logger.debug("QUERY TO EXECUTE: " + productStockGetByProductIdQuery);
+			logger.trace("QUERY TO EXECUTE: " + productStockGetByProductIdQuery);
 
 			List<JsonNode> rowResult = namedParameterJdbcTemplate.query(
 					productStockGetByProductIdQuery,
@@ -64,11 +64,9 @@ public class ProductService {
 	}
 
 	public List<JsonNode> getStockReport(Integer restaurantId, String date) {
-		logger.debug("restaurantId: {}, date: {}", restaurantId, date);
-
 		try {
 			String query = reportQueryStore.getProperty("stockReport");
-			logger.debug("QUERY TO EXECUTE: " + query);
+			logger.trace("QUERY TO EXECUTE: " + query);
 
 			return namedParameterJdbcTemplate.query(
 					query,

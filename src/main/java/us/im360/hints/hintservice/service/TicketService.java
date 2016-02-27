@@ -22,7 +22,7 @@ import java.util.*;
  * <p>
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 18/02/16.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("UnusedDeclaration")
 @Service
 @Transactional
 public class TicketService {
@@ -48,12 +48,11 @@ public class TicketService {
             String date,
             String timeStart,
             String timeEnd,
-            Collection<String> userIds) {
-        logger.debug("restaurantId: {}", restaurantId);
-
+            Collection<String> userIds)
+    {
         try {
             String ticketListQuery = reportQueryStore.getProperty("ticketList");
-            logger.debug("QUERY TO EXECUTE: " + ticketListQuery);
+            logger.trace("QUERY TO EXECUTE: " + ticketListQuery);
 
             List<JsonNode> rowResult = namedParameterJdbcTemplate.query(
                     ticketListQuery,
@@ -106,7 +105,7 @@ public class TicketService {
 
 
         String ticketDetailsQuery = commonQueryStore.getProperty("ticketDetails");
-        logger.debug("QUERY TO EXECUTE: " + ticketDetailsQuery);
+        logger.trace("QUERY TO EXECUTE: " + ticketDetailsQuery);
 
         List<JsonNode> rowResult = namedParameterJdbcTemplate.query(
                 ticketDetailsQuery,

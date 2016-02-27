@@ -21,7 +21,7 @@ import java.util.Properties;
  *
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 16/02/16.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("UnusedDeclaration")
 @Service
 @Transactional
 public class CashReportService {
@@ -40,12 +40,9 @@ public class CashReportService {
     private ObjectMapper objectMapper;
 
     public List<JsonNode> getCloseReport(Integer restaurantId, String closeDate) {
-
-        logger.debug("restaurantId: {}, closeDate: {}", restaurantId, closeDate);
-
         try {
             String cashCloseReportQuery = reportQueryStore.getProperty("cashCloseReport");
-            logger.debug("QUERY TO EXECUTE: " + cashCloseReportQuery);
+            logger.trace("QUERY TO EXECUTE: " + cashCloseReportQuery);
 
             return namedParameterJdbcTemplate.query(
                     cashCloseReportQuery,
@@ -55,6 +52,7 @@ public class CashReportService {
                     new JsonNodeRowMapper(objectMapper));
 
         } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
             return Collections.emptyList();
         }
     }

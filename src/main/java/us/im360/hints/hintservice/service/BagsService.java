@@ -22,7 +22,7 @@ import java.util.Properties;
  *
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 21/02/16.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("UnusedDeclaration")
 @Service
 @Transactional
 public class BagsService {
@@ -40,11 +40,9 @@ public class BagsService {
 	private ObjectMapper objectMapper;
 
 	public List<JsonNode> getBags(Integer restaurantId, Integer status, String attr1) {
-		logger.debug("restaurantId: {}", restaurantId);
-
 		try {
 			String query = reportQueryStore.getProperty("getBags");
-			logger.debug("QUERY TO EXECUTE: " + query);
+			logger.trace("QUERY TO EXECUTE: " + query);
 
 			return namedParameterJdbcTemplate.query(
 					query,
@@ -55,16 +53,15 @@ public class BagsService {
 					new JsonNodeRowMapper(objectMapper));
 
 		} catch (Exception e) {
+			logger.warn(e.getMessage(), e);
 			return Collections.emptyList();
 		}
 	}
 
 	public List<JsonNode> getExtracts(Integer restaurantId, Integer status, String attr1) {
-		logger.debug("restaurantId: {}, status: {}, attr1: {}", restaurantId, status, attr1);
-
 		try {
 			String query = reportQueryStore.getProperty("getExtracts");
-			logger.debug("QUERY TO EXECUTE: " + query);
+			logger.trace("QUERY TO EXECUTE: " + query);
 
 			return namedParameterJdbcTemplate.query(
 					query,
@@ -75,6 +72,7 @@ public class BagsService {
 					new JsonNodeRowMapper(objectMapper));
 
 		} catch (Exception e) {
+			logger.warn(e.getMessage(), e);
 			return Collections.emptyList();
 		}
 	}

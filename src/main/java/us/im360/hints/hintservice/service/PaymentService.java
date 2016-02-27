@@ -23,7 +23,7 @@ import java.util.Properties;
  *
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 16/02/16.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("UnusedDeclaration")
 @Service
 @Transactional
 public class PaymentService {
@@ -46,7 +46,7 @@ public class PaymentService {
 
 		try {
 			String paymentReportQuery = reportQueryStore.getProperty("paymentReport");
-			logger.debug("QUERY TO EXECUTE: " + paymentReportQuery);
+			logger.trace("QUERY TO EXECUTE: " + paymentReportQuery);
 
 			List<JsonNode> rowResult = namedParameterJdbcTemplate.query(
 					paymentReportQuery,

@@ -11,7 +11,7 @@ import us.im360.hints.hintservice.model.AuditInfo;
  *
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 18/02/16.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("UnusedDeclaration")
 @Service
 @Transactional
 public class AuditService {
@@ -20,6 +20,7 @@ public class AuditService {
 
     public void log(Integer userId, AuditInfo auditInfo) {
         org.slf4j.MDC.put("SID", auditInfo.sid);
+        org.slf4j.MDC.put("RID", auditInfo.rid);
         logger.info("auditInfo: {}", auditInfo);
     }
 }

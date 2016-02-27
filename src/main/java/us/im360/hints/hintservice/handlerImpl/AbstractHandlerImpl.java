@@ -6,6 +6,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import us.im360.hints.hintservice.model.AuditInfo;
+import us.im360.hints.hintservice.service.AuditService;
 import us.im360.hints.hintservice.util.ResponseBuilder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +42,15 @@ public abstract class AbstractHandlerImpl  {
     protected HttpServletRequest req;
 
     @Autowired
+    @SuppressWarnings("UnusedDeclaration")
+    private AuditService auditService;
+
+    @Autowired
     protected ObjectMapper objectMapper;
+
+    protected void audit(Integer userId) {
+        auditService.log(userId, new AuditInfo(req, userId));
+    }
 
     /**
      * Helper method for building response object

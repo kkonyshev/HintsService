@@ -22,7 +22,7 @@ import java.util.*;
  *
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 21/02/16.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("UnusedDeclaration")
 @Service
 @Transactional
 public class InventoryService {
@@ -40,11 +40,9 @@ public class InventoryService {
     private ObjectMapper objectMapper;
 
     public List<JsonNode> getInventory(Integer restaurantId) {
-        logger.debug("restaurantId: {}", restaurantId);
-
         try {
             String query = reportQueryStore.getProperty("getInventory");
-            logger.debug("QUERY TO EXECUTE: " + query);
+            logger.trace("QUERY TO EXECUTE: " + query);
 
             List<JsonNode> rowResult = namedParameterJdbcTemplate.query(
                     query,
@@ -93,11 +91,9 @@ public class InventoryService {
     }
 
     public List<JsonNode> getInventoryList(Integer restaurantId, String attr1) {
-        logger.debug("restaurantId: {}, attr1: {}", restaurantId, attr1);
-
         try {
             String query = reportQueryStore.getProperty("getInventoryList");
-            logger.debug("QUERY TO EXECUTE: " + query);
+            logger.trace("QUERY TO EXECUTE: " + query);
 
             List<JsonNode> rowResult = namedParameterJdbcTemplate.query(
                     query,

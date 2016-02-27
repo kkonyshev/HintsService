@@ -23,7 +23,7 @@ import java.util.Properties;
  *
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 21/02/16.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("UnusedDeclaration")
 @Service
 @Transactional
 public class StrainService {
@@ -47,7 +47,7 @@ public class StrainService {
 	public List<JsonNode> getStrains(Integer restaurantId, Integer active) {
 		try {
 			String profitReportQuery = commonQueryStore.getProperty("getStrains");
-			logger.debug("QUERY TO EXECUTE: " + profitReportQuery);
+			logger.trace("QUERY TO EXECUTE: " + profitReportQuery);
 
 			return namedParameterJdbcTemplate.query(
 					profitReportQuery,
@@ -64,7 +64,7 @@ public class StrainService {
 	public List<JsonNode> getTiersCost(Integer restaurantId) {
 		try {
 			String query = commonQueryStore.getProperty("getTiersCost");
-			logger.debug("QUERY TO EXECUTE: " + query);
+			logger.trace("QUERY TO EXECUTE: " + query);
 
 			return namedParameterJdbcTemplate.query(
 					query,
@@ -81,7 +81,7 @@ public class StrainService {
 	public List<JsonNode> getExtractsCost(Integer restaurantId) {
 		try {
 			String query = commonQueryStore.getProperty("getExtractsCost");
-			logger.debug("QUERY TO EXECUTE: " + query);
+			logger.trace("QUERY TO EXECUTE: " + query);
 
 			return namedParameterJdbcTemplate.query(
 					query,
@@ -100,7 +100,7 @@ public class StrainService {
 		try {
 
 			String queryUpdateType = editorQueryStore.getProperty("updateStrainStatus");
-			logger.debug("QUERY TO EXECUTE: " + queryUpdateType);
+			logger.trace("QUERY TO EXECUTE: " + queryUpdateType);
 			int updateTypeResult = namedParameterJdbcTemplate.update(
 					queryUpdateType,
 					new MapSqlParameterSource()
@@ -113,7 +113,7 @@ public class StrainService {
 			logger.debug("ROWS UPDATED [updateStrainType]: " + updateTypeResult);
 
 			if (updateTypeResult<1) {
-				throw new IllegalArgumentException("no undefined locationId: " + restaurantId);
+				throw new IllegalArgumentException("undefined locationId: " + restaurantId);
 			}
 
 			SqlParameterSource[] batchParamsGrams = new SqlParameterSource[4];
@@ -130,7 +130,7 @@ public class StrainService {
 			}
 
 			String updateStrainProsperProduct = editorQueryStore.getProperty("updateStrainProsperProduct");
-			logger.debug("QUERY TO EXECUTE: " + updateStrainProsperProduct);
+			logger.trace("QUERY TO EXECUTE: " + updateStrainProsperProduct);
 			int[] updateStrainResultList = namedParameterJdbcTemplate.batchUpdate(
 					updateStrainProsperProduct,
 					batchParamsGrams
@@ -139,7 +139,7 @@ public class StrainService {
 
 
 			String updateStrainProsperTicketLine = editorQueryStore.getProperty("updateStrainProsperTicketLine");
-			logger.debug("QUERY TO EXECUTE: " + updateStrainProsperTicketLine);
+			logger.trace("QUERY TO EXECUTE: " + updateStrainProsperTicketLine);
 			int[] updateStrainProsperTicketLineList = namedParameterJdbcTemplate.batchUpdate(
 					updateStrainProsperTicketLine,
 					batchParamsGrams
@@ -148,7 +148,7 @@ public class StrainService {
 
 
 			String updateStrainType = editorQueryStore.getProperty("updateStrainType");
-			logger.debug("QUERY TO EXECUTE: " + updateStrainType);
+			logger.trace("QUERY TO EXECUTE: " + updateStrainType);
 			int updateStrainTypeList = namedParameterJdbcTemplate.update(
 					updateStrainType,
 					params
@@ -157,7 +157,7 @@ public class StrainService {
 
 
 			String updateStrainExtractsType = editorQueryStore.getProperty("updateStrainExtractsType");
-			logger.debug("QUERY TO EXECUTE: " + updateStrainExtractsType);
+			logger.trace("QUERY TO EXECUTE: " + updateStrainExtractsType);
 			int updateStrainExtractsTypeList = namedParameterJdbcTemplate.update(
 					updateStrainExtractsType,
 					params
@@ -166,7 +166,7 @@ public class StrainService {
 
 
 			String updateStrainProsperCategoryLike = editorQueryStore.getProperty("updateStrainProsperCategoryLike");
-			logger.debug("QUERY TO EXECUTE: " + updateStrainProsperCategoryLike);
+			logger.trace("QUERY TO EXECUTE: " + updateStrainProsperCategoryLike);
 			int updateStrainProsperCategoryLikeList = namedParameterJdbcTemplate.update(
 					updateStrainProsperCategoryLike,
 					params
@@ -175,7 +175,7 @@ public class StrainService {
 
 
 			String updateStrainProsperCategory = editorQueryStore.getProperty("updateStrainProsperCategory");
-			logger.debug("QUERY TO EXECUTE: " + updateStrainProsperCategory);
+			logger.trace("QUERY TO EXECUTE: " + updateStrainProsperCategory);
 			int updateStrainProsperCategoryList = namedParameterJdbcTemplate.update(
 					updateStrainProsperCategory,
 					params
@@ -185,7 +185,8 @@ public class StrainService {
 			return true;
 
 		} catch (Exception e) {
-			logger.warn(e.getMessage(), e);
+			logger.info(e.getMessage());
+			logger.debug(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -194,7 +195,7 @@ public class StrainService {
 		try {
 
 			String updateStrainAttribute = editorQueryStore.getProperty("updateStrainAttribute");
-			logger.debug("QUERY TO EXECUTE: " + updateStrainAttribute);
+			logger.trace("QUERY TO EXECUTE: " + updateStrainAttribute);
 			int updateStrainProsperTicketLineList = namedParameterJdbcTemplate.update(
 					updateStrainAttribute,
 					new MapSqlParameterSource()
@@ -206,13 +207,14 @@ public class StrainService {
 			logger.debug("ROWS UPDATED [updateStrainProsperTicketLineList]: " + updateStrainProsperTicketLineList);
 
 			if (updateStrainProsperTicketLineList<1) {
-				throw new IllegalArgumentException("no undefined locationId: " + restaurantId);
+				throw new IllegalArgumentException("undefined locationId: " + restaurantId);
 			}
 
 			return true;
 
 		} catch (Exception e) {
-			logger.warn(e.getMessage(), e);
+			logger.info(e.getMessage());
+			logger.debug(e.getMessage(), e);
 			return false;
 		}
 	}
