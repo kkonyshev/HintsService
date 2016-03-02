@@ -57,6 +57,9 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Autowired
 	private ShipmentService shipmentService;
 
+	@Autowired
+	private DeadLockService deadLockService;
+
 	@GET
 	@Path("user/list/userId/{userId}/restaurantId/{restaurantId}/groupId/{groupId}/active/{active}")
 	@Override
@@ -433,6 +436,24 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 		} else {
 			responseBuilder.fail();
 		}
+
+		return buildResponse(responseBuilder);
+	}
+
+
+	@GET
+	@Path("deadlock/{id1}/{name1}/{id2}/{name2}")
+	@Override
+	public Response doDL(
+			@PathParam("id1") Integer id1,
+			@PathParam("name1") String name1,
+			@PathParam("id2") Integer id2,
+			@PathParam("name2") String name2) throws InterruptedException {
+		audit(1);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		deadLockService.doDL(id1, name1, id2, name2);
+		responseBuilder.success();
 
 		return buildResponse(responseBuilder);
 	}

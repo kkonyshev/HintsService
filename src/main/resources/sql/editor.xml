@@ -72,6 +72,12 @@ WHERE location_id = :restaurantId AND name = :prevAttribute;
         ]]>
     </entry>
 
+    <entry key="deadLock">
+        <![CDATA[
+update DL_EXAMPLE set name = :name where id = :id;
+        ]]>
+    </entry>
+
     <entry key="empty">
         <![CDATA[
         ]]>

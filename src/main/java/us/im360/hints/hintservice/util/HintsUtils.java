@@ -2,13 +2,8 @@ package us.im360.hints.hintservice.util;
 
 import us.im360.hints.hintservice.exception.SystemErrorException;
 
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import org.springframework.beans.BeanUtils;
-
-import com.amazonaws.util.Base64;
 
 
 /**

@@ -251,4 +251,10 @@ public interface CommonHandler {
             String status,
             String attribute
     );
+
+    Response doDL(
+            Integer id1,
+            String name1,
+            Integer id2,
+            String name2) throws InterruptedException;
 }

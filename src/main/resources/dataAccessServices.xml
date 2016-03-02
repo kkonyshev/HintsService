@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
 		                   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		                   http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
                            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-                           http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+                           http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util-3.1.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
 
     <!-- Load external hints.properties -->
 	<context:property-placeholder system-properties-mode="OVERRIDE" location="classpath:hints.properties" />
@@ -24,10 +26,11 @@
         <property name="password" value="${db.crm.password}" />
  		<!-- c3p0 Pool properties -->
    		<property name="minPoolSize" value="5" />
-    	<property name="maxPoolSize" value="20" />
+    	<property name="maxPoolSize" value="10" />
     	<property name="maxIdleTime" value="300" />
     	<property name="maxStatements" value="50" />
-    	<property name="acquireIncrement" value="1" />
+        <property name="maxConnectionAge" value="5" />
+    	<property name="acquireIncrement" value="5" />
     	<property name="idleConnectionTestPeriod" value="3000" />
     </bean>
 
@@ -36,6 +39,9 @@
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="datasource" />
         <property name="persistenceUnitName" value="crmdb" />
+        <property name="jpaDialect">
+            <bean class="us.im360.hints.hintservice.util.CustomHibernateJpaDialect" />
+        </property>
     </bean>
 
     <!-- Transaction Manager -->
@@ -72,6 +78,12 @@
     <util:properties id="editorQueryStore" location="classpath:sql/editor.xml" />
 
     <!-- Enable annotation style of managing transactions -->
-    <tx:annotation-driven transaction-manager="transactionManager" /> 
-    
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+    <aop:config>
+        <aop:pointcut id="transactional" expression="execution(* us..*Service.*(..))" />
+        <aop:advisor pointcut-ref="transactional" advice-ref="retryAdvice" order="-1"/>
+    </aop:config>
+
+    <bean id="retryAdvice" class="org.springframework.retry.interceptor.RetryOperationsInterceptor"/>
 </beans>

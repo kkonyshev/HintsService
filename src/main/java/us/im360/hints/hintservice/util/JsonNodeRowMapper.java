@@ -12,6 +12,10 @@ import org.codehaus.jackson.node.ObjectNode;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.JdbcUtils;
 
+/**
+ *
+ * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 16/02/16.
+ */
 public class JsonNodeRowMapper implements RowMapper<JsonNode> {
 
     private final ObjectMapper mapper;

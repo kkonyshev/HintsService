@@ -1,0 +1,209 @@
+23:46:39 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f Executing prepared SQL query
+23:46:39 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f Executing prepared SQL statement [select id, name from DL_EXAMPLE]
+23:46:39 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache ----> CACHE HIT
+23:46:39 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f checkoutStatement: com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 4; checked out: 1; num connections: 2; num keys: 4
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 Closing JPA EntityManager [org.hibernate.ejb.EntityManagerImpl@7e59c5bc] after transaction
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 Closing JPA EntityManager
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 Releasing JDBC connection
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 checkinAll(): com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 4; checked out: 1; num connections: 2; num keys: 4
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 com.mchange.v2.async.ThreadPoolAsynchronousRunner@3da97091: Adding task to queue -- com.mchange.v2.resourcepool.BasicResourcePool$1RefurbishCheckinResourceTask@17eef227
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 trace com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f [managed: 3, unused: 1, excluded: 0] (e.g. com.mchange.v2.c3p0.impl.NewPooledConnection@979d09e)
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 Released JDBC connection
+23:46:39 DEBUG:   checkinAll(): com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 4; checked out: 1; num connections: 2; num keys: 4
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 Returning cached instance of singleton bean 'transactionManager'
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 Creating new transaction with name [us.im360.hints.hintservice.service.AuditService.end]: PROPAGATION_REQUIRED,ISOLATION_DEFAULT; ''
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 Opened new EntityManager [org.hibernate.ejb.EntityManagerImpl@4c4eaf6f] for JPA transaction
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 Obtaining JDBC connection
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 EXPIRED old resource: com.mchange.v2.c3p0.impl.NewPooledConnection@44e5cbe1 ---> absolute_age: 13973; max_absolute_age: 5000 [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 com.mchange.v2.async.ThreadPoolAsynchronousRunner@3da97091: Adding task to queue -- com.mchange.v2.resourcepool.BasicResourcePool$1DestroyResourceTask@2896d509
+23:46:39 DEBUG:   Preparing to destroy resource: com.mchange.v2.c3p0.impl.NewPooledConnection@44e5cbe1
+23:46:39 DEBUG:   Preparing to destroy PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@44e5cbe1
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 trace com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f [managed: 2, unused: 1, excluded: 0] (e.g. com.mchange.v2.c3p0.impl.NewPooledConnection@979d09e)
+23:46:39 DEBUG:   ENTER METHOD: closeAll( com.mysql.jdbc.JDBC4Connection@2b86ec5e )! -- num_connections: 2
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 incremented pending_acquires: 3
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 Starting acquisition series. Incremented pending_acquires [3],  attempts_remaining: 30
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 com.mchange.v2.async.ThreadPoolAsynchronousRunner@3da97091: Adding task to queue -- com.mchange.v2.resourcepool.BasicResourcePool$ScatteredAcquireTask@475638ae
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 trace com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f [managed: 2, unused: 0, excluded: 0] (e.g. com.mchange.v2.c3p0.impl.NewPooledConnection@979d09e)
+23:46:39 DEBUG:   closeAll(): com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 2; checked out: 1; num connections: 1; num keys: 2
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 Obtained JDBC connection
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 begin
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 initial autocommit status: true
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 disabling autocommit
+23:46:39 DEBUG:   com.mchange.v2.c3p0.impl.NewPooledConnection@44e5cbe1 closed by a client.
+java.lang.Exception: DEBUG -- CLOSE BY CLIENT STACK TRACE
+	at com.mchange.v2.c3p0.impl.NewPooledConnection.close(NewPooledConnection.java:646)
+	at com.mchange.v2.c3p0.impl.NewPooledConnection.closeMaybeCheckedOut(NewPooledConnection.java:259)
+	at com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool$1PooledConnectionResourcePoolManager.destroyResource(C3P0PooledConnectionPool.java:619)
+	at com.mchange.v2.resourcepool.BasicResourcePool$1DestroyResourceTask.run(BasicResourcePool.java:1024)
+	at com.mchange.v2.async.ThreadPoolAsynchronousRunner$PoolThread.run(ThreadPoolAsynchronousRunner.java:648)
+23:46:39 DEBUG:   Successfully destroyed PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@44e5cbe1
+23:46:39 DEBUG:   Successfully destroyed resource: com.mchange.v2.c3p0.impl.NewPooledConnection@44e5cbe1
+23:46:39 DEBUG:   Checking for expired resources - Wed Mar 02 23:46:39 NOVT 2016 [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:39 DEBUG:   BEGIN check for expired resources.  [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:39 DEBUG:   FINISHED check for expired resources.  [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 Exposing JPA transaction as JDBC transaction [org.springframework.orm.jpa.vendor.HibernateJpaDialect$HibernateConnectionHandle@1ec573e8]
+23:46:39 INFO: 62D3224169DF3E08220F4C49A8937DCD 26009 end call processing
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 Initiating transaction commit
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 Committing JPA transaction on EntityManager [org.hibernate.ejb.EntityManagerImpl@4c4eaf6f]
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 committing
+23:46:39 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f checkinStatement(): com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 2; checked out: 0; num connections: 1; num keys: 2
+23:46:39 INFO: 0FE2A32F2333274803453B08E2D49C72 0122f DB sate: [{"id":1,"name":"nameT21"}, {"id":2,"name":"nameT22"}]
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 committed JDBC Connection
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 re-enabling autocommit
+23:46:39 DEBUG:   checkinAll(): com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 2; checked out: 0; num connections: 1; num keys: 2
+23:46:39 DEBUG:   com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool$1PooledConnectionResourcePoolManager@50e79cc1.acquireResource() returning.
+23:46:39 DEBUG:   trace com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f [managed: 3, unused: 1, excluded: 0] (e.g. com.mchange.v2.c3p0.impl.NewPooledConnection@979d09e)
+23:46:39 DEBUG:   decremented pending_acquires: 2
+23:46:39 DEBUG:   Acquisition series terminated successfully. Decremented pending_acquires [2],  attempts_remaining: 30
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 Closing JPA EntityManager [org.hibernate.ejb.EntityManagerImpl@4c4eaf6f] after transaction
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 Closing JPA EntityManager
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 Releasing JDBC connection
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 checkinAll(): com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 2; checked out: 0; num connections: 1; num keys: 2
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 com.mchange.v2.async.ThreadPoolAsynchronousRunner@3da97091: Adding task to queue -- com.mchange.v2.resourcepool.BasicResourcePool$1RefurbishCheckinResourceTask@e5c3a4
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 trace com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f [managed: 3, unused: 1, excluded: 0] (e.g. com.mchange.v2.c3p0.impl.NewPooledConnection@979d09e)
+23:46:39 DEBUG: 62D3224169DF3E08220F4C49A8937DCD 26009 Released JDBC connection
+23:46:39 DEBUG:   checkinAll(): com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 2; checked out: 0; num connections: 1; num keys: 2
+23:46:40 DEBUG:   Checking for expired resources - Wed Mar 02 23:46:40 NOVT 2016 [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:40 DEBUG:   BEGIN check for expired resources.  [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:40 DEBUG:   FINISHED check for expired resources.  [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:41 DEBUG:   checkinAll(): com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 2; checked out: 0; num connections: 1; num keys: 2
+23:46:41 DEBUG:   com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool$1PooledConnectionResourcePoolManager@50e79cc1.acquireResource() returning.
+23:46:41 DEBUG:   trace com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f [managed: 4, unused: 3, excluded: 0] (e.g. com.mchange.v2.c3p0.impl.NewPooledConnection@979d09e)
+23:46:41 DEBUG:   decremented pending_acquires: 1
+23:46:41 DEBUG:   Acquisition series terminated successfully. Decremented pending_acquires [1],  attempts_remaining: 30
+23:46:41 DEBUG:   com.mchange.v2.async.ThreadPoolAsynchronousRunner$DeadlockDetector@173ad3ef -- Running DeadlockDetector[Exiting. No pending tasks.]
+23:46:41 DEBUG:   Checking for expired resources - Wed Mar 02 23:46:41 NOVT 2016 [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:41 DEBUG:   BEGIN check for expired resources.  [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:41 DEBUG:   FINISHED check for expired resources.  [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:42 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f Executing prepared SQL query
+23:46:42 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f Executing prepared SQL statement [select id, name from DL_EXAMPLE]
+23:46:42 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache ----> CACHE HIT
+23:46:42 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f checkoutStatement: com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 2; checked out: 1; num connections: 1; num keys: 2
+23:46:42 DEBUG:   checkinAll(): com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 2; checked out: 1; num connections: 1; num keys: 2
+23:46:42 DEBUG:   com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool$1PooledConnectionResourcePoolManager@50e79cc1.acquireResource() returning.
+23:46:42 DEBUG:   trace com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f [managed: 5, unused: 4, excluded: 0] (e.g. com.mchange.v2.c3p0.impl.NewPooledConnection@979d09e)
+23:46:42 DEBUG:   decremented pending_acquires: 0
+23:46:42 DEBUG:   Acquisition series terminated successfully. Decremented pending_acquires [0],  attempts_remaining: 30
+23:46:43 DEBUG:   Checking for expired resources - Wed Mar 02 23:46:43 NOVT 2016 [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:43 DEBUG:   BEGIN check for expired resources.  [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:43 DEBUG:   EXPIRED old resource: com.mchange.v2.c3p0.impl.NewPooledConnection@132954f4 ---> absolute_age: 5409; max_absolute_age: 5000 [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:43 DEBUG:   Removing expired resource: com.mchange.v2.c3p0.impl.NewPooledConnection@132954f4 [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:43 DEBUG:   com.mchange.v2.async.ThreadPoolAsynchronousRunner@3da97091: Adding task to queue -- com.mchange.v2.resourcepool.BasicResourcePool$1DestroyResourceTask@7d9c96f3
+23:46:43 DEBUG:   trace com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f [managed: 4, unused: 3, excluded: 0] (e.g. com.mchange.v2.c3p0.impl.NewPooledConnection@979d09e)
+23:46:43 DEBUG:   Preparing to destroy resource: com.mchange.v2.c3p0.impl.NewPooledConnection@132954f4
+23:46:43 DEBUG:   trace com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f [managed: 4, unused: 3, excluded: 0] (e.g. com.mchange.v2.c3p0.impl.NewPooledConnection@979d09e)
+23:46:43 DEBUG:   Preparing to destroy PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@132954f4
+23:46:43 DEBUG:   FINISHED check for expired resources.  [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:43 DEBUG:   ENTER METHOD: closeAll( com.mysql.jdbc.JDBC4Connection@1d547433 )! -- num_connections: 1
+23:46:43 DEBUG:   incremented pending_acquires: 1
+23:46:43 DEBUG:   Starting acquisition series. Incremented pending_acquires [1],  attempts_remaining: 30
+23:46:43 DEBUG:   closeAll(): com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 2; checked out: 1; num connections: 1; num keys: 2
+23:46:43 DEBUG:   com.mchange.v2.async.ThreadPoolAsynchronousRunner@3da97091: Adding task to queue -- com.mchange.v2.resourcepool.BasicResourcePool$ScatteredAcquireTask@6dcb6074
+23:46:43 DEBUG:   com.mchange.v2.c3p0.impl.NewPooledConnection@132954f4 closed by a client.
+java.lang.Exception: DEBUG -- CLOSE BY CLIENT STACK TRACE
+	at com.mchange.v2.c3p0.impl.NewPooledConnection.close(NewPooledConnection.java:646)
+	at com.mchange.v2.c3p0.impl.NewPooledConnection.closeMaybeCheckedOut(NewPooledConnection.java:259)
+	at com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool$1PooledConnectionResourcePoolManager.destroyResource(C3P0PooledConnectionPool.java:619)
+	at com.mchange.v2.resourcepool.BasicResourcePool$1DestroyResourceTask.run(BasicResourcePool.java:1024)
+	at com.mchange.v2.async.ThreadPoolAsynchronousRunner$PoolThread.run(ThreadPoolAsynchronousRunner.java:648)
+23:46:43 DEBUG:   Successfully destroyed PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@132954f4
+23:46:43 DEBUG:   Successfully destroyed resource: com.mchange.v2.c3p0.impl.NewPooledConnection@132954f4
+23:46:43 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f checkinStatement(): com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 2; checked out: 0; num connections: 1; num keys: 2
+23:46:43 INFO: 0FE2A32F2333274803453B08E2D49C72 0122f DB sate: [{"id":1,"name":"nameT21"}, {"id":2,"name":"nameT22"}]
+23:46:43 INFO: 0FE2A32F2333274803453B08E2D49C72 0122f id: 1, name: nameT21
+23:46:43 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f Executing prepared SQL update
+23:46:43 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f Executing prepared SQL statement [
+
+update DL_EXAMPLE set name = ? where id = ?;
+
+    ]
+23:46:43 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache ----> CACHE HIT
+23:46:43 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f checkoutStatement: com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 2; checked out: 1; num connections: 1; num keys: 2
+23:46:43 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f SQL update affected 1 rows
+23:46:43 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f checkinStatement(): com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 2; checked out: 0; num connections: 1; num keys: 2
+23:46:43 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f Executing prepared SQL query
+23:46:43 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f Executing prepared SQL statement [select id, name from DL_EXAMPLE]
+23:46:43 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache ----> CACHE HIT
+23:46:43 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f checkoutStatement: com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 2; checked out: 1; num connections: 1; num keys: 2
+23:46:44 DEBUG: 0FE2A32F2333274803453B08E2D49C72 0122f checkinStatement(): com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 2; checked out: 0; num connections: 1; num keys: 2
+23:46:44 INFO: 0FE2A32F2333274803453B08E2D49C72 0122f DB sate: [{"id":1,"name":"nameT21"}, {"id":2,"name":"nameT22"}]
+23:46:44 DEBUG:   Checking for expired resources - Wed Mar 02 23:46:44 NOVT 2016 [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:44 DEBUG:   BEGIN check for expired resources.  [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:44 DEBUG:   FINISHED check for expired resources.  [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:45 DEBUG:   Checking for expired resources - Wed Mar 02 23:46:45 NOVT 2016 [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:45 DEBUG:   BEGIN check for expired resources.  [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:45 DEBUG:   EXPIRED old resource: com.mchange.v2.c3p0.impl.NewPooledConnection@787b820d ---> absolute_age: 5876; max_absolute_age: 5000 [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:45 DEBUG:   Removing expired resource: com.mchange.v2.c3p0.impl.NewPooledConnection@787b820d [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:45 DEBUG:   com.mchange.v2.async.ThreadPoolAsynchronousRunner@3da97091: Adding task to queue -- com.mchange.v2.resourcepool.BasicResourcePool$1DestroyResourceTask@35cbff1b
+23:46:45 DEBUG:   trace com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f [managed: 3, unused: 2, excluded: 0] (e.g. com.mchange.v2.c3p0.impl.NewPooledConnection@979d09e)
+23:46:45 DEBUG:   Preparing to destroy resource: com.mchange.v2.c3p0.impl.NewPooledConnection@787b820d
+23:46:45 DEBUG:   trace com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f [managed: 3, unused: 2, excluded: 0] (e.g. com.mchange.v2.c3p0.impl.NewPooledConnection@979d09e)
+23:46:45 DEBUG:   Preparing to destroy PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@787b820d
+23:46:45 DEBUG:   FINISHED check for expired resources.  [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:45 DEBUG:   ENTER METHOD: closeAll( com.mysql.jdbc.JDBC4Connection@3627f8e9 )! -- num_connections: 1
+23:46:45 DEBUG:   incremented pending_acquires: 2
+23:46:45 DEBUG:   Starting acquisition series. Incremented pending_acquires [2],  attempts_remaining: 30
+23:46:45 DEBUG:   closeAll(): com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 2; checked out: 0; num connections: 1; num keys: 2
+23:46:45 DEBUG:   com.mchange.v2.async.ThreadPoolAsynchronousRunner@3da97091: Adding task to queue -- com.mchange.v2.resourcepool.BasicResourcePool$ScatteredAcquireTask@6b3d51a0
+23:46:45 DEBUG:   com.mchange.v2.c3p0.impl.NewPooledConnection@787b820d closed by a client.
+java.lang.Exception: DEBUG -- CLOSE BY CLIENT STACK TRACE
+	at com.mchange.v2.c3p0.impl.NewPooledConnection.close(NewPooledConnection.java:646)
+	at com.mchange.v2.c3p0.impl.NewPooledConnection.closeMaybeCheckedOut(NewPooledConnection.java:259)
+	at com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool$1PooledConnectionResourcePoolManager.destroyResource(C3P0PooledConnectionPool.java:619)
+	at com.mchange.v2.resourcepool.BasicResourcePool$1DestroyResourceTask.run(BasicResourcePool.java:1024)
+	at com.mchange.v2.async.ThreadPoolAsynchronousRunner$PoolThread.run(ThreadPoolAsynchronousRunner.java:648)
+23:46:45 DEBUG:   Successfully destroyed PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@787b820d
+23:46:45 DEBUG:   Successfully destroyed resource: com.mchange.v2.c3p0.impl.NewPooledConnection@787b820d
+23:46:45 DEBUG:   checkinAll(): com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 2; checked out: 0; num connections: 1; num keys: 2
+23:46:45 DEBUG:   com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool$1PooledConnectionResourcePoolManager@50e79cc1.acquireResource() returning.
+23:46:45 DEBUG:   trace com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f [managed: 4, unused: 3, excluded: 0] (e.g. com.mchange.v2.c3p0.impl.NewPooledConnection@979d09e)
+23:46:45 DEBUG:   decremented pending_acquires: 1
+23:46:45 DEBUG:   Acquisition series terminated successfully. Decremented pending_acquires [1],  attempts_remaining: 30
+23:46:46 DEBUG:   Checking for expired resources - Wed Mar 02 23:46:46 NOVT 2016 [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:46 DEBUG:   BEGIN check for expired resources.  [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:46 DEBUG:   EXPIRED old resource: com.mchange.v2.c3p0.impl.NewPooledConnection@5b1520b6 ---> absolute_age: 5502; max_absolute_age: 5000 [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:46 DEBUG:   Removing expired resource: com.mchange.v2.c3p0.impl.NewPooledConnection@5b1520b6 [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:46 DEBUG:   com.mchange.v2.async.ThreadPoolAsynchronousRunner@3da97091: Adding task to queue -- com.mchange.v2.resourcepool.BasicResourcePool$1DestroyResourceTask@728f693a
+23:46:46 DEBUG:   trace com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f [managed: 3, unused: 2, excluded: 0] (e.g. com.mchange.v2.c3p0.impl.NewPooledConnection@979d09e)
+23:46:46 DEBUG:   trace com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f [managed: 3, unused: 2, excluded: 0] (e.g. com.mchange.v2.c3p0.impl.NewPooledConnection@979d09e)
+23:46:46 DEBUG:   FINISHED check for expired resources.  [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:46 DEBUG:   incremented pending_acquires: 2
+23:46:46 DEBUG:   Starting acquisition series. Incremented pending_acquires [2],  attempts_remaining: 30
+23:46:46 DEBUG:   com.mchange.v2.async.ThreadPoolAsynchronousRunner@3da97091: Adding task to queue -- com.mchange.v2.resourcepool.BasicResourcePool$ScatteredAcquireTask@44716fdf
+23:46:46 DEBUG:   Preparing to destroy resource: com.mchange.v2.c3p0.impl.NewPooledConnection@5b1520b6
+23:46:46 DEBUG:   Preparing to destroy PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@5b1520b6
+23:46:46 DEBUG:   ENTER METHOD: closeAll( com.mysql.jdbc.JDBC4Connection@29ce9c35 )! -- num_connections: 1
+23:46:46 DEBUG:   closeAll(): com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 2; checked out: 0; num connections: 1; num keys: 2
+23:46:46 DEBUG:   com.mchange.v2.c3p0.impl.NewPooledConnection@5b1520b6 closed by a client.
+java.lang.Exception: DEBUG -- CLOSE BY CLIENT STACK TRACE
+	at com.mchange.v2.c3p0.impl.NewPooledConnection.close(NewPooledConnection.java:646)
+	at com.mchange.v2.c3p0.impl.NewPooledConnection.closeMaybeCheckedOut(NewPooledConnection.java:259)
+	at com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool$1PooledConnectionResourcePoolManager.destroyResource(C3P0PooledConnectionPool.java:619)
+	at com.mchange.v2.resourcepool.BasicResourcePool$1DestroyResourceTask.run(BasicResourcePool.java:1024)
+	at com.mchange.v2.async.ThreadPoolAsynchronousRunner$PoolThread.run(ThreadPoolAsynchronousRunner.java:648)
+23:46:46 DEBUG:   Successfully destroyed PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@5b1520b6
+23:46:46 DEBUG:   Successfully destroyed resource: com.mchange.v2.c3p0.impl.NewPooledConnection@5b1520b6
+23:46:48 DEBUG:   Checking for expired resources - Wed Mar 02 23:46:48 NOVT 2016 [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:48 DEBUG:   BEGIN check for expired resources.  [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:48 DEBUG:   EXPIRED old resource: com.mchange.v2.c3p0.impl.NewPooledConnection@213de1e7 ---> absolute_age: 5283; max_absolute_age: 5000 [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:48 DEBUG:   Removing expired resource: com.mchange.v2.c3p0.impl.NewPooledConnection@213de1e7 [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:48 DEBUG:   com.mchange.v2.async.ThreadPoolAsynchronousRunner@3da97091: Adding task to queue -- com.mchange.v2.resourcepool.BasicResourcePool$1DestroyResourceTask@2e28736d
+23:46:48 DEBUG:   trace com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f [managed: 2, unused: 1, excluded: 0] (e.g. com.mchange.v2.c3p0.impl.NewPooledConnection@979d09e)
+23:46:48 DEBUG:   trace com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f [managed: 2, unused: 1, excluded: 0] (e.g. com.mchange.v2.c3p0.impl.NewPooledConnection@979d09e)
+23:46:48 DEBUG:   FINISHED check for expired resources.  [com.mchange.v2.resourcepool.BasicResourcePool@77c02c4f]
+23:46:48 DEBUG:   Preparing to destroy resource: com.mchange.v2.c3p0.impl.NewPooledConnection@213de1e7
+23:46:48 DEBUG:   incremented pending_acquires: 3
+23:46:48 DEBUG:   Preparing to destroy PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@213de1e7
+23:46:48 DEBUG:   Starting acquisition series. Incremented pending_acquires [3],  attempts_remaining: 30
+23:46:48 DEBUG:   ENTER METHOD: closeAll( com.mysql.jdbc.JDBC4Connection@342f1efe )! -- num_connections: 1
+23:46:48 DEBUG:   com.mchange.v2.async.ThreadPoolAsynchronousRunner@3da97091: Adding task to queue -- com.mchange.v2.resourcepool.BasicResourcePool$ScatteredAcquireTask@2f999759
+23:46:48 DEBUG:   closeAll(): com.mchange.v2.c3p0.stmt.GlobalMaxOnlyStatementCache stats -- total size: 2; checked out: 0; num connections: 1; num keys: 2
+23:46:48 DEBUG:   com.mchange.v2.c3p0.impl.NewPooledConnection@213de1e7 closed by a client.
+java.lang.Exception: DEBUG -- CLOSE BY CLIENT STACK TRACE
+	at com.mchange.v2.c3p0.impl.NewPooledConnection.close(NewPooledConnection.java:646)
+	at com.mchange.v2.c3p0.impl.NewPooledConnection.closeMaybeCheckedOut(NewPooledConnection.java:259)
+	at com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool$1PooledConnectionResourcePoolManager.destroyResource(C3P0PooledConnectionPool.java:619)
+	at com.mchange.v2.resourcepool.BasicResourcePool$1DestroyResourceTask.run(BasicResourcePool.java:1024)
+	at com.mchange.v2.async.ThreadPoolAsynchronousRunner$PoolThread.run(ThreadPoolAsynchronousRunner.java:648)
+23:46:48 DEBUG:   Successfully destroyed PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@213de1e7
+23:46:48 DEBUG:   Successfully destroyed resource: com.mchange.v2.c3p0.impl.NewPooledConnection@213de1e7
