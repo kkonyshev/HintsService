@@ -18,9 +18,13 @@ public class AuditService {
 
     private static final Logger logger = LoggerFactory.getLogger(AuditService.class);
 
-    public void log(Integer userId, AuditInfo auditInfo) {
+    public void start(Integer userId, AuditInfo auditInfo) {
         org.slf4j.MDC.put("SID", auditInfo.sid);
         org.slf4j.MDC.put("RID", auditInfo.rid);
         logger.info("auditInfo: {}", auditInfo);
+    }
+
+    public void end() {
+        logger.info("end call processing");
     }
 }

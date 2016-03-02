@@ -49,7 +49,7 @@ public abstract class AbstractHandlerImpl  {
     protected ObjectMapper objectMapper;
 
     protected void audit(Integer userId) {
-        auditService.log(userId, new AuditInfo(req, userId));
+        auditService.start(userId, new AuditInfo(req, userId));
     }
 
     /**
@@ -73,6 +73,8 @@ public abstract class AbstractHandlerImpl  {
         } catch (Exception e) {
             logger.error("Exception", e);
             return Response.serverError().build();
+        } finally {
+            auditService.end();
         }
     }
 }
