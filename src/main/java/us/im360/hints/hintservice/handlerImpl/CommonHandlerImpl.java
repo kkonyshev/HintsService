@@ -58,6 +58,9 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	private ShipmentService shipmentService;
 
 	@Autowired
+	private CashService cashService;
+
+	@Autowired
 	private DeadLockService deadLockService;
 
 	@GET
@@ -440,6 +443,32 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 		return buildResponse(responseBuilder);
 	}
 
+	@POST
+	@Path("cash/drop/insert/userId/{userId}/restaurantId/{restaurantId}/terminal/{terminal}/cashRegisterId/{cashRegisterId}/cashCount/{cashCount}")
+	@Override
+	public Response insertCashDrop(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("terminal") String terminal,
+			@PathParam("cashRegisterId") String cashRegisterId,
+			@PathParam("cashCount") Double cashCount)
+	{
+		audit(userId);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		boolean result = cashService.cashDropInsert(terminal, cashRegisterId, cashCount, userId, restaurantId);
+
+		if (BooleanUtils.isTrue(result)) {
+			responseBuilder.success();
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+
+	/**/
 
 	@GET
 	@Path("deadlock/{id1}/{name1}/{id2}/{name2}")

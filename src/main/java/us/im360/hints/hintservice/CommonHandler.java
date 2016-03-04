@@ -252,6 +252,23 @@ public interface CommonHandler {
             String attribute
     );
 
+    /**
+     *
+     * @param userId
+     * @param restaurantId
+     * @param terminal
+     * @param cashRegisterId
+     * @param cashCount
+     * @return
+     */
+    Response insertCashDrop(
+            Integer userId,
+            Integer restaurantId,
+            String terminal,
+            String cashRegisterId,
+            Double cashCount);
+
+    /**/
     Response doDL(
             Integer id1,
             String name1,
