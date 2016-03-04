@@ -72,6 +72,13 @@ WHERE location_id = :restaurantId AND name = :prevAttribute;
         ]]>
     </entry>
 
+    <entry key="cashDropInsert">
+        <![CDATA[
+INSERT INTO `im_cash_drop` (terminal, cashregister_id, cash_drop, user_id, datetime, location_id)
+VALUES (:terminal, :cashRegisterId, :cashCount, :userId, now(), :restaurantId);
+        ]]>
+    </entry>
+
     <entry key="empty">
         <![CDATA[
         ]]>
