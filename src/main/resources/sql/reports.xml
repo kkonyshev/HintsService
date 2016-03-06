@@ -29,7 +29,7 @@ FROM
    FROM posper_ticketline tl, posper_ticket ti, posper_product pr, posper_category ca1, posper_category ca2,
      im_strain_type ty, im_strain_tier tier, im_strain_category_option co LEFT JOIN im_strain_option op
        ON op.id = co.option_id
-   WHERE tier.location_id = :restaurantId AND date(ti.dateClose) >= :startDate AND date(ti.dateClose) <= :endDate
+   WHERE tier.restaurant_id = :restaurantId AND date(ti.dateClose) >= :startDate AND date(ti.dateClose) <= :endDate
          AND co.category_id = ca2.id AND ca1.parent_id = ca2.id AND tl.ticket_ticketline = ti.id AND
          tl.product_id = pr.id
          AND pr.category_id = ca1.id AND ty.posper_category_id = ca1.id AND ty.im_strain_tier_id = tier.id
@@ -77,7 +77,7 @@ FROM
      ''                                                       AS tier_name,
      sum(-1 * st.units * dt.cost_per_gram * dt.grams_per_jar) AS cost,
      sum(-1 * st.units * dt.grams_per_jar)                    AS grams,
-     dt.location_id                                           AS restaurantId
+     dt.restaurant_id                                           AS restaurantId
    FROM im_strain_detail dt, posper_stockdiary st, posper_product pr, posper_category ca
    WHERE dt.id = st.im_strain_detail_id AND st.product_id = pr.id AND pr.category_id = ca.id
          AND pr.id IN ('shake35', 'crumb35') AND st.reason IN (-6, 6, -8, 8) AND date(st.date) >= :startDate AND
@@ -118,7 +118,7 @@ FROM
      ti.tier                                                  AS tier_name,
      sum(-1 * st.units * dt.cost_per_gram * dt.grams_per_jar) AS cost,
      sum(-1 * st.units * dt.grams_per_jar)                    AS grams,
-     dt.location_id                                           AS restaurantId
+     dt.restaurant_id                                           AS restaurantId
    FROM im_strain_detail dt, posper_stockdiary st, posper_product pr, posper_category ca, im_strain_extract_type ty,
      im_strain_extract_cost ti
    WHERE
@@ -437,7 +437,7 @@ FROM im_strain_detail dt, im_strain_type ty, im_strain_tier ti, posper_product p
   posper_category ca2, im_strain_category_option co LEFT JOIN im_strain_option op
     ON op.id = co.option_id
 WHERE
-  dt.location_id = :restaurantId AND ca1.parent_id = ca2.id AND co.category_id = ca2.id AND dt.posper_product_id = pr.id
+  dt.restaurant_id = :restaurantId AND ca1.parent_id = ca2.id AND co.category_id = ca2.id AND dt.posper_product_id = pr.id
   AND pr.category_id = ca1.id
   AND ty.posper_category_id = ca1.id AND ty.im_strain_tier_id = ti.id AND ty.active = 1 AND dt.ATTR1 = 'LOST'
   AND date(dt.start_date) >= :startDate AND date(dt.start_date) <= :endDate
@@ -461,7 +461,7 @@ FROM (SELECT
         sum(dt.total_cost)                                     AS total_cost,
         sum(dt.total_cost) / sum(dt.total_grams)               AS cost_per_gram
       FROM im_strain_detail dt
-      WHERE dt.location_id = :restaurantId AND dt.ATTR1 = 'LOST' AND dt.posper_product_id IN ('shake35', 'crumb35')
+      WHERE dt.restaurant_id = :restaurantId AND dt.ATTR1 = 'LOST' AND dt.posper_product_id IN ('shake35', 'crumb35')
             AND date(dt.start_date) >= :startDate AND date(dt.start_date) <= :endDate) t2
 WHERE t2.total_grams IS NOT NULL
 UNION ALL
@@ -479,7 +479,7 @@ FROM im_strain_detail dt, im_strain_extract_type ty, im_strain_extract_cost ti, 
   posper_category ca2, im_strain_category_option co LEFT JOIN im_strain_option op
     ON op.id = co.option_id
 WHERE
-  dt.location_id = :restaurantId AND ca1.parent_id = ca2.id AND co.category_id = ca2.id AND dt.posper_product_id = pr.id
+  dt.restaurant_id = :restaurantId AND ca1.parent_id = ca2.id AND co.category_id = ca2.id AND dt.posper_product_id = pr.id
   AND pr.category_id = ca1.id
   AND ty.category_id = ca1.id AND ty.extract_cost_id = ti.id AND ty.active = 1 AND dt.ATTR1 = 'LOST'
   AND date(dt.start_date) >= :startDate AND date(dt.start_date) <= :endDate
@@ -709,7 +709,7 @@ FROM
       FROM im_strain_detail dt, posper_product pr, posper_category ca1, posper_category ca2, im_strain_type ty,
         im_strain_tier ti, im_strain_category_option co LEFT JOIN im_strain_option op
           ON op.id = co.option_id
-      WHERE dt.location_id = :restaurantId AND co.category_id = ca2.id AND dt.posper_product_id = pr.id AND
+      WHERE dt.restaurant_id = :restaurantId AND co.category_id = ca2.id AND dt.posper_product_id = pr.id AND
             pr.category_id = ca1.id AND
             ty.posper_category_id = ca1.id
             AND ca1.parent_id = ca2.id AND ty.im_strain_tier_id = ti.id AND ty.active = 1 AND dt.ATTR1 != 'RETURNED') t1
@@ -735,7 +735,7 @@ FROM (SELECT
         sum(dt.quantity - dt.jars_sold)                                                        AS quantity,
         sum(dt.cost_per_gram * (dt.quantity - dt.jars_sold)) / sum(dt.quantity - dt.jars_sold) AS cost_per_gram
       FROM im_strain_detail dt, posper_product pr, posper_category ca
-      WHERE dt.location_id = :restaurantId AND dt.posper_product_id = pr.id AND dt.ATTR1 = 'ACTIVE' AND
+      WHERE dt.restaurant_id = :restaurantId AND dt.posper_product_id = pr.id AND dt.ATTR1 = 'ACTIVE' AND
             dt.posper_product_id IN ('crumb35', 'shake35') AND
             pr.category_id = ca.id
       GROUP BY name) t1
@@ -765,7 +765,7 @@ FROM (SELECT
       FROM im_strain_detail dt, im_strain_extracts ex, posper_product pr, posper_category ca1, posper_category ca2,
         im_strain_extract_type et, im_strain_extract_cost ec, im_strain_category_option co LEFT JOIN im_strain_option op
           ON co.option_id = op.id
-      WHERE dt.location_id = :restaurantId AND dt.im_strain_extract_id = ex.id AND dt.ATTR1 = 'ACTIVE' AND
+      WHERE dt.restaurant_id = :restaurantId AND dt.im_strain_extract_id = ex.id AND dt.ATTR1 = 'ACTIVE' AND
             dt.posper_product_id = pr.id AND
             pr.category_id = ca1.id
             AND ca1.parent_id = ca2.id AND ex.extract_type_id = et.id AND et.extract_cost_id = ec.id AND
@@ -800,7 +800,7 @@ FROM (SELECT
               sum(dt.jars_sold * dt.grams_per_jar)                 AS grams_sold,
               sum((dt.quantity - dt.jars_sold) * dt.grams_per_jar) AS grams_inventory
             FROM im_strain_detail dt, im_strain_inventory iv
-            WHERE dt.location_id = :restaurantId AND dt.im_strain_inventory_id = iv.id AND dt.ATTR1 NOT IN ('LOST')
+            WHERE dt.restaurant_id = :restaurantId AND dt.im_strain_inventory_id = iv.id AND dt.ATTR1 NOT IN ('LOST')
             GROUP BY iv.id) t1,
         (SELECT
            iv.id,

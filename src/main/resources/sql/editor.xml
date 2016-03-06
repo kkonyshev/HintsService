@@ -11,7 +11,7 @@ SET ty.attribute = att.id,
   ty.active      = :status,
   ty.version     = ty.version + 1,
   ty.updated_at  = now()
-WHERE ty.location_id = :restaurantId AND ty.name = :prevStrain AND att.name = :attribute;
+WHERE ty.restaurant_id = :restaurantId AND ty.name = :prevStrain AND att.name = :attribute;
         ]]>
     </entry>
 
