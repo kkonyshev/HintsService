@@ -3,6 +3,7 @@ package us.im360.hints.hintservice.handlerImpl;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,29 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 
 		if (resultList!=null && !resultList.isEmpty()) {
 			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+		} else {
+			responseBuilder.fail();
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+	@GET
+	@Path("cash/close/userId/{userId}/restaurantId/{restaurantId}/cashRegisterId/{cashRegisterId}")
+	@Override
+	public Response getCashClose(
+			@PathParam("userId") Integer userId,
+			@PathParam("restaurantId") Integer restaurantId,
+			@PathParam("cashRegisterId") String cashRegisterId)
+	{
+		audit(userId);
+
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+
+		ObjectNode resultList = cashReportService.getCashClose(restaurantId, cashRegisterId);
+
+		if (resultList!=null) {
+			responseBuilder.success().withPlainNode(resultList);
 		} else {
 			responseBuilder.fail();
 		}

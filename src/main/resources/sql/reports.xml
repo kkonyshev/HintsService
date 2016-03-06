@@ -832,6 +832,119 @@ ORDER BY t4.name, t4.tier_name DESC, t4.visibleId;
         ]]>
     </entry>
 
+    <entry key="getCashRegisterInfo">
+        <![CDATA[
+SELECT
+  host,
+  DATE_FORMAT(dateOpen, '%Y-%m-%d')  AS dateStart,
+  DATE_FORMAT(dateClose, '%Y-%m-%d') AS dateEnd
+FROM posper_cashregister cr
+WHERE cr.id = :cashRegisterId
+LIMIT 1;
+        ]]>
+    </entry>
+
+    <entry key="getCashlessInfo">
+        <![CDATA[
+SELECT
+  sum(cash) + sum(cashless_atm)                           AS total,
+  sum(cash)                                               AS cash,
+  sum(cashless_atm)                                       AS cashless_atm,
+  sum(cash) - (sum(cash) / (1 + ta.rate))                 AS cash_tax,
+  sum(cashless_atm) - (sum(cashless_atm) / (1 + ta.rate)) AS cashless_atm_tax
+FROM posper_tax ta, (SELECT
+                       t4.id,
+                       t4.visibleId,
+                       t4.date,
+                       t4.time,
+                       t5.cash + t5.cashless_atm AS total,
+                       t5.cash,
+                       t5.cashless_atm,
+                       t4.name,
+                       t5.usage_tax
+                     FROM (SELECT
+                             ti.id,
+                             ti.visibleId,
+                             date(ti.dateClose) AS date,
+                             time(ti.dateClose) AS time,
+                             upper(us.name)     AS name
+                           FROM posper_ticket ti, posper_user us
+                           WHERE ti.restaurant_id = :restaurantId AND ti.dateClose IS NOT NULL AND us.id = ti.userid
+                                 AND ti.dateClose >= :dateStart AND ti.dateClose <= :dateEnd AND
+                                 ti.host = :host) t4 JOIN
+                       (SELECT
+                          t1.id,
+                          t1.visibleId,
+                          total - cashless_atm AS cash,
+                          cashless_atm,
+                          usage_tax
+                        FROM
+                          (SELECT
+                             ti.id,
+                             ti.visibleId,
+                             sum(tl.priceSell * tl.amount * (1 + ta.rate)) AS total,
+                             sum(orig_tax)                                 AS usage_tax
+                           FROM posper_tax ta, posper_ticket ti LEFT JOIN posper_ticketline tl
+                               ON tl.ticket_ticketline = ti.id
+                           WHERE ti.dateClose IS NOT NULL AND ta.id = 1 AND ti.dateClose >= :dateStart AND
+                                 ti.dateClose <= :dateEnd AND ti.host = :host
+                           GROUP BY ti.visibleId) t1 JOIN
+                          (SELECT
+                             id,
+                             visibleId,
+                             if(sum(cash) IS NULL, 0, sum(cash)) + if(sum(refund) IS NULL, 0, sum(refund)) AS cash,
+                             if(sum(cashless_atm) IS NULL, 0, sum(
+                                 cashless_atm))                                                            AS cashless_atm
+                           FROM (
+                                  SELECT
+                                    ti.id,
+                                    ti.visibleId,
+                                    CASE WHEN pa.method = 'cash'
+                                      THEN pa.amount END AS cash,
+                                    CASE WHEN pa.method = 'cheque'
+                                      THEN pa.amount END AS cashless_atm,
+                                    CASE WHEN pa.method = 'cashrefund'
+                                      THEN pa.amount END AS refund
+                                  FROM posper_ticket ti, posper_payment pa
+                                  WHERE ti.dateClose IS NOT NULL AND pa.ticket_id = ti.id
+                                        AND ti.dateClose >= :dateStart AND ti.dateClose <= :dateEnd AND
+                                        ti.host = :host) t2
+                           GROUP BY visibleId) t3
+                            ON t1.visibleId = t3.visibleId) t5
+                         ON t4.visibleId = t5.visibleId
+                     ORDER BY t4.time) t6
+WHERE ta.id = 1;
+        ]]>
+    </entry>
+
+    <entry key="getUserNameByCashRegister">
+        <![CDATA[
+SELECT upper(us.name) AS name
+FROM posper_ticket ti LEFT JOIN posper_user us
+    ON ti.userid = us.id
+WHERE ti.restaurant_id = :restaurantId AND ti.dateClose >= :dateStart AND ti.dateClose <= :dateEnd AND ti.host = :host
+GROUP BY userid
+ORDER BY count(*) DESC
+LIMIT 1;
+        ]]>
+    </entry>
+
+    <entry key="getCashDrop">
+        <![CDATA[
+SELECT sum(cash_drop) AS cash_drop
+FROM im_cash_drop
+WHERE location_id = :restaurantId AND cashregister_id = :cashRegisterId;
+        ]]>
+    </entry>
+
+    <entry key="getCashlessCount">
+        <![CDATA[
+SELECT cashless_atm_count
+FROM im_cashless_atm_count
+WHERE location_id = :restaurantId AND terminal = :host AND date = date(:dateEnd);
+        ]]>
+    </entry>
+
     <entry key="empty">
         <![CDATA[
         ]]>

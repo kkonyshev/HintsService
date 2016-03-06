@@ -23,6 +23,19 @@ public interface ReportHandler {
     );
 
     /**
+     * Cash close report
+     *
+     * @param userId
+     * @param restaurantId
+     * @param cashRegisterId
+     * @return
+     */
+    Response getCashClose(
+            Integer userId,
+            Integer restaurantId,
+            String cashRegisterId);
+
+    /**
      * Profit report
      *
      * @param restaurantId
