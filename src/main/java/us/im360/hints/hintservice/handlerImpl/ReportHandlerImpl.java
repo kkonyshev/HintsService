@@ -3,6 +3,7 @@ package us.im360.hints.hintservice.handlerImpl;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +17,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Cash report service handler implementation
@@ -71,17 +70,18 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("closeDate") String closeDate)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-
-		List<JsonNode> resultList = cashReportService.getCloseReport(restaurantId, closeDate);
-
-		if (resultList!=null && !resultList.isEmpty()) {
-			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = cashReportService.getCloseReport(restaurantId, closeDate);
+			if (resultList!=null && !resultList.isEmpty()) {
+				responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -94,17 +94,18 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("cashRegisterId") String cashRegisterId)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-
-		ObjectNode resultList = cashReportService.getCashClose(restaurantId, cashRegisterId);
-
-		if (resultList!=null) {
-			responseBuilder.success().withPlainNode(resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			ObjectNode resultList = cashReportService.getCashClose(restaurantId, cashRegisterId);
+			if (resultList != null) {
+				responseBuilder.success().withPlainNode(resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -118,17 +119,18 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("endDate") String endDate)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-
-		List<JsonNode> resultList = profitReportService.getProfitReport(restaurantId, startDate, endDate);
-
-		if (resultList!=null && !resultList.isEmpty()) {
-			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = profitReportService.getProfitReport(restaurantId, startDate, endDate);
+			if (resultList != null && !resultList.isEmpty()) {
+				responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -142,15 +144,17 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("endDate") String endDate)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-
-		List<JsonNode> resultList = lossReportService.getProfitReport(restaurantId, startDate, endDate);
-
-		if (resultList!=null && !resultList.isEmpty()) {
-			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = lossReportService.getProfitReport(restaurantId, startDate, endDate);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
 
 		return buildResponse(responseBuilder);
@@ -166,24 +170,33 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("endDate") String endDate)
 	{
 		audit(userId);
-
-		List<JsonNode> resultList = new ArrayList<>(2);
-		JsonNode cashRow = paymentService.getPaymentReport("CASH", startDate, endDate);
-		JsonNode cashlessRow = paymentService.getPaymentReport("CASHLESS_ATM", startDate, endDate);
-
-		if (cashRow!=null) {
-			resultList.add(cashRow);
-		}
-		if (cashlessRow!=null) {
-			resultList.add(cashlessRow);
-		}
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		List<JsonNode> resultList = new ArrayList<>(2);
+		try {
+			List<JsonNode> cashRowSet = paymentService.getPaymentReport("CASH", startDate, endDate);
+			if (CollectionUtils.isNotEmpty(cashRowSet)) {
+				JsonNode cashJsonNode = cashRowSet.iterator().next();
+				if (cashJsonNode.get("cash")!=null) {
+					resultList.add(cashJsonNode);
+				}
+			}
 
-		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+			List<JsonNode> cashlessRowSet = paymentService.getPaymentReport("CASHLESS_ATM", startDate, endDate);
+			if (CollectionUtils.isNotEmpty(cashlessRowSet)) {
+				JsonNode cashlessJsonNode = cashlessRowSet.iterator().next();
+				if (cashlessJsonNode.get("cash") != null) {
+					resultList.add(cashlessJsonNode);
+				}
+			}
+
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
 
 		return buildResponse(responseBuilder);
@@ -201,19 +214,38 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("userIdList") String userIdList)
 	{
 		audit(userId);
-
-		List<String> userIds = Arrays.asList(userIdList.split(","));
-
-		List<JsonNode> resultList = ticketService.getTicketList(restaurantId, date, timeStart, timeEnd, userIds);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		List<String> userIds = Arrays.asList(userIdList.split(","));
+		try {
+			List<JsonNode> resultList = ticketService.getTicketList(restaurantId, date, timeStart, timeEnd, userIds);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				for (JsonNode node: resultList) {
+					ObjectNode nodeObj = (ObjectNode) node;
 
-		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+					ObjectNode paymentCashNode = objectMapper.createObjectNode();
+					paymentCashNode.put("type", "CASH");
+					paymentCashNode.put("amount", node.get("cash"));
+					nodeObj.remove("cash");
+
+					ObjectNode paymentCashlessNode = objectMapper.createObjectNode();
+					paymentCashlessNode.put("type", "CASHLESS_ATM");
+					paymentCashlessNode.put("amount", node.get("cashless_atm"));
+					nodeObj.remove("cashless_atm");
+
+					ArrayNode arr = new ArrayNode(objectMapper.getNodeFactory());
+					arr.add(paymentCashNode);
+					arr.add(paymentCashlessNode);
+
+					nodeObj.put("payments", arr);
+				}
+				responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -226,17 +258,18 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("restaurantId") Integer restaurantId)
 	{
 		audit(userId);
-
-		List<JsonNode> resultList = unitsService.getUnits(restaurantId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-
-		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = unitsService.getUnits(restaurantId);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -250,17 +283,18 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("endDate") String endDate)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-
-		List<JsonNode> resultList = salesReportService.getSalesReport(restaurantId, startDate, endDate);
-
-		if (resultList!=null && !resultList.isEmpty()) {
-			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = salesReportService.getSalesReport(restaurantId, startDate, endDate);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -275,15 +309,17 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("attr1") String attr1)
 	{
 		audit(userId);
-
-		List<JsonNode> resultList = bagsService.getBags(restaurantId, status, attr1);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-
-		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(BAGS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = bagsService.getBags(restaurantId, status, attr1);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(BAGS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
 
 		return buildResponse(responseBuilder);
@@ -310,14 +346,17 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("date") String date)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		List<JsonNode> resultList = productService.getStockReport(restaurantId, date);
-
-		if (resultList!=null && !resultList.isEmpty()) {
-			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = productService.getStockReport(restaurantId, date);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
 
 		return buildResponse(responseBuilder);
@@ -333,17 +372,18 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("attr1") String attr1)
 	{
 		audit(userId);
-
-		List<JsonNode> resultList = bagsService.getExtracts(restaurantId, status, attr1);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-
-		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(EXTRACTS_BAGS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = bagsService.getExtracts(restaurantId, status, attr1);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(EXTRACTS_BAGS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -367,17 +407,41 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("restaurantId") Integer restaurantId)
 	{
 		audit(userId);
-
-		List<JsonNode> resultList = inventoryService.getInventory(restaurantId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		try {
+			List<JsonNode> rowResult = inventoryService.getInventory(restaurantId);
+			if (CollectionUtils.isNotEmpty(rowResult)) {
+				Map<String, ArrayNode> strainIdToDetailMap = new HashMap<>(rowResult.size() * 2);
+				Set<JsonNode> uniqueStrainSet = new HashSet<>(rowResult.size());
+				for (JsonNode node : rowResult) {
+					ObjectNode nodeObj = (ObjectNode) node;
 
-		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(INVENTORY_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+					ObjectNode detailItem = objectMapper.createObjectNode();
+					detailItem.put("grams_per_jar", nodeObj.remove("grams_per_jar"));
+					detailItem.put("quantity", nodeObj.remove("quantity"));
+
+					String strainId = nodeObj.get("id").getTextValue();
+					ArrayNode innerList = strainIdToDetailMap.get(strainId);
+					if (innerList == null) {
+						innerList = new ArrayNode(objectMapper.getNodeFactory());
+						strainIdToDetailMap.put(strainId, innerList);
+					}
+					innerList.add(detailItem);
+					uniqueStrainSet.add(node);
+				}
+				for (JsonNode strainNode : uniqueStrainSet) {
+					ObjectNode nodeObj = (ObjectNode) strainNode;
+					ArrayNode detailsArr = strainIdToDetailMap.remove(strainNode.get("id").getTextValue());
+					nodeObj.put("details", detailsArr);
+				}
+				responseBuilder.success().withArray(INVENTORY_FIELD_NAME, rowResult);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -390,17 +454,18 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			@PathParam("attr1") String attr1)
 	{
 		audit(userId);
-
-		List<JsonNode> resultList = inventoryService.getInventoryList(restaurantId, attr1);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-
-		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(INVENTORY_LIST_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = inventoryService.getInventoryList(restaurantId, attr1);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(INVENTORY_LIST_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 }

@@ -9,10 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import us.im360.hints.hintservice.util.JsonNodeRowMapper;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -23,7 +21,6 @@ import java.util.Properties;
  */
 @SuppressWarnings("UnusedDeclaration")
 @Service
-@Transactional
 public class UnitsService {
 
 	private static final Logger logger = LoggerFactory.getLogger(UnitsService.class);
@@ -39,20 +36,14 @@ public class UnitsService {
 	private ObjectMapper objectMapper;
 
 	public List<JsonNode> getUnits(Integer restaurantId) {
-		try {
-			String query = reportQueryStore.getProperty("getUnits");
-			logger.trace("QUERY TO EXECUTE: " + query);
-
-			return namedParameterJdbcTemplate.query(
-					query,
-					new MapSqlParameterSource()
-							.addValue("restaurantId", restaurantId),
-					new JsonNodeRowMapper(objectMapper));
-
-		} catch (Exception e) {
-			logger.warn(e.getMessage(), e);
-			return Collections.emptyList();
-		}
+		String query = reportQueryStore.getProperty("getUnits");
+		logger.trace("QUERY TO EXECUTE: " + query);
+		return namedParameterJdbcTemplate.query(
+				query,
+				new MapSqlParameterSource()
+						.addValue("restaurantId", restaurantId),
+				new JsonNodeRowMapper(objectMapper)
+		);
 	}
 	
 

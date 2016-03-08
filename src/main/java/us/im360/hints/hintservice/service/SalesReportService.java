@@ -9,10 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import us.im360.hints.hintservice.util.JsonNodeRowMapper;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -23,7 +21,6 @@ import java.util.Properties;
  */
 @SuppressWarnings("UnusedDeclaration")
 @Service
-@Transactional
 public class SalesReportService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SalesReportService.class);
@@ -39,20 +36,14 @@ public class SalesReportService {
 	private ObjectMapper objectMapper;
 
 	public List<JsonNode> getSalesReport(Integer restaurantId, String startDate, String endDate) {
-		try {
-			String profitReportQuery = reportQueryStore.getProperty("salesReport");
-			logger.trace("QUERY TO EXECUTE: " + profitReportQuery);
-
-			return namedParameterJdbcTemplate.query(profitReportQuery,
-					new MapSqlParameterSource()
-							.addValue("startDate", startDate)
-							.addValue("endDate", endDate),
-							new JsonNodeRowMapper(objectMapper));
-
-		} catch (Exception e) {
-			logger.warn(e.getMessage(), e);
-			return Collections.emptyList();
-		}
+		String profitReportQuery = reportQueryStore.getProperty("salesReport");
+		logger.trace("QUERY TO EXECUTE: " + profitReportQuery);
+		return namedParameterJdbcTemplate.query(profitReportQuery,
+				new MapSqlParameterSource()
+						.addValue("startDate", startDate)
+						.addValue("endDate", endDate),
+				new JsonNodeRowMapper(objectMapper)
+		);
 	}
 	
 

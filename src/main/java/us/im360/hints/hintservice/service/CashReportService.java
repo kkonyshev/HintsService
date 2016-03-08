@@ -12,10 +12,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import us.im360.hints.hintservice.util.JsonNodeRowMapper;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -26,7 +24,6 @@ import java.util.Properties;
  */
 @SuppressWarnings("UnusedDeclaration")
 @Service
-@Transactional
 public class CashReportService {
 
     private static final Logger logger = LoggerFactory.getLogger(CashReportService.class);
@@ -42,106 +39,79 @@ public class CashReportService {
     private ObjectMapper objectMapper;
 
     public List<JsonNode> getCloseReport(Integer restaurantId, String closeDate) {
-        try {
-            String cashCloseReportQuery = reportQueryStore.getProperty("cashCloseReport");
-            logger.trace("QUERY TO EXECUTE: " + cashCloseReportQuery);
-
-            return namedParameterJdbcTemplate.query(
-                    cashCloseReportQuery,
-                    new MapSqlParameterSource()
-                            .addValue("closeDate", closeDate)
-                            .addValue("restaurantId", restaurantId),
-                    new JsonNodeRowMapper(objectMapper));
-
-        } catch (Exception e) {
-            logger.warn(e.getMessage(), e);
-            return Collections.emptyList();
-        }
+        String cashCloseReportQuery = reportQueryStore.getProperty("cashCloseReport");
+        logger.trace("QUERY TO EXECUTE: " + cashCloseReportQuery);
+        return namedParameterJdbcTemplate.query(
+                cashCloseReportQuery,
+                new MapSqlParameterSource()
+                        .addValue("closeDate", closeDate)
+                        .addValue("restaurantId", restaurantId),
+                new JsonNodeRowMapper(objectMapper));
     }
 
     public ObjectNode getCashClose(Integer restaurantId, String cashRegisterId) {
+        ObjectNode resultRow = objectMapper.createObjectNode();
 
-        String dateStart;
-        String dateEnd;
-        String host;
+        //cash register dates and host
+        JsonNode getCashRegisterInfoRow =
+                fetchSingleRowSelect(
+                        "getCashRegisterInfo",
+                        new MapSqlParameterSource().addValue("cashRegisterId", cashRegisterId)
+                );
 
-        try {
-            ObjectNode resultRow = objectMapper.createObjectNode();
+        String dateStart = getCashRegisterInfoRow.get("dateStart").asText();
+        String dateEnd = getCashRegisterInfoRow.get("dateEnd").asText();
+        String host = getCashRegisterInfoRow.get("host").asText();
 
-            //cash register dates and host
+        // cashless atm info
+        JsonNode getCashlessInfoRow =
+                fetchSingleRowSelect(
+                        "getCashlessInfo",
+                        new MapSqlParameterSource()
+                                .addValue("restaurantId", restaurantId)
+                                .addValue("dateStart", dateStart)
+                                .addValue("dateEnd", dateEnd)
+                                .addValue("host", host)
+                );
 
-            JsonNode getCashRegisterInfoRow =
-                    fetchSingleRowSelect(
-                            "getCashRegisterInfo",
-                            new MapSqlParameterSource().addValue("cashRegisterId", cashRegisterId)
-                    );
+        // cashier name
+        JsonNode getUserNameByCashRegisterRow = fetchSingleRowSelect(
+                "getUserNameByCashRegister",
+                new MapSqlParameterSource()
+                        .addValue("restaurantId", restaurantId)
+                        .addValue("dateStart", dateStart)
+                        .addValue("dateEnd", dateEnd)
+                        .addValue("host", host)
+        );
 
-            dateStart = getCashRegisterInfoRow.get("dateStart").asText();
-            dateEnd = getCashRegisterInfoRow.get("dateEnd").asText();
-            host = getCashRegisterInfoRow.get("host").asText();
+        // cash drop
+        JsonNode getCashDropRow = fetchSingleRowSelect(
+                "getCashDrop",
+                new MapSqlParameterSource()
+                        .addValue("restaurantId", restaurantId)
+                        .addValue("host", host)
+        );
 
-            //// cashless atm info
+        // cashless count
+        JsonNode getCashlessCountRow = fetchSingleRowSelect(
+                "getCashlessCount",
+                new MapSqlParameterSource()
+                        .addValue("restaurantId", restaurantId)
+                        .addValue("dateEnd", dateEnd)
+                        .addValue("host", host)
+        );
 
-            JsonNode getCashlessInfoRow =
-                    fetchSingleRowSelect(
-                            "getCashlessInfo",
-                            new MapSqlParameterSource()
-                                    .addValue("restaurantId", restaurantId)
-                                    .addValue("dateStart", dateStart)
-                                    .addValue("dateEnd", dateEnd)
-                                    .addValue("host", host)
-                    );
+        // compose result
+        resultRow.put("total",              getCashlessInfoRow.get("total"));
+        resultRow.put("cash",               getCashlessInfoRow.get("cash"));
+        resultRow.put("cashless_atm",       getCashlessInfoRow.get("cashless_atm"));
+        resultRow.put("cash_tax",           getCashlessInfoRow.get("cash_tax"));
+        resultRow.put("cashless_atm_tax",   getCashlessInfoRow.get("cashless_atm_tax"));
+        resultRow.put("name",               getUserNameByCashRegisterRow.get("name"));
+        resultRow.put("cash_drop",          getCashDropRow.get("cash_drop"));
+        resultRow.put("cashless_atm_count", getCashlessCountRow.get("cashless_atm_count"));
 
-            //// cashier name
-
-            JsonNode getUserNameByCashRegisterRow = fetchSingleRowSelect(
-                    "getUserNameByCashRegister",
-                    new MapSqlParameterSource()
-                            .addValue("restaurantId", restaurantId)
-                            .addValue("dateStart", dateStart)
-                            .addValue("dateEnd", dateEnd)
-                            .addValue("host", host)
-            );
-
-            //// cash drop
-
-            JsonNode getCashDropRow = fetchSingleRowSelect(
-                    "getCashDrop",
-                    new MapSqlParameterSource()
-                            .addValue("restaurantId", restaurantId)
-                            .addValue("host", host)
-            );
-
-            //// cashless count
-
-            JsonNode getCashlessCountRow = fetchSingleRowSelect(
-                    "getCashlessCount",
-                    new MapSqlParameterSource()
-                            .addValue("restaurantId", restaurantId)
-                            .addValue("dateEnd", dateEnd)
-                            .addValue("host", host)
-            );
-
-            //// compose result
-
-            resultRow.put("total",              getCashlessInfoRow.get("total"));
-            resultRow.put("cash",               getCashlessInfoRow.get("cash"));
-            resultRow.put("cashless_atm",       getCashlessInfoRow.get("cashless_atm"));
-            resultRow.put("cash_tax",           getCashlessInfoRow.get("cash_tax"));
-            resultRow.put("cashless_atm_tax",   getCashlessInfoRow.get("cashless_atm_tax"));
-
-            resultRow.put("name",               getUserNameByCashRegisterRow.get("name"));
-
-            resultRow.put("cash_drop",          getCashDropRow.get("cash_drop"));
-
-            resultRow.put("cashless_atm_count", getCashlessCountRow.get("cashless_atm_count"));
-
-            return resultRow;
-
-        } catch (Exception e) {
-            logger.warn(e.getMessage(), e);
-            return null;
-        }
+        return resultRow;
     }
 
     private JsonNode fetchSingleRowSelect(String queryName, SqlParameterSource queryParams) {
@@ -155,10 +125,10 @@ public class CashReportService {
                 queryParams,
                 new JsonNodeRowMapper(objectMapper));
 
-        logger.debug("queryResultList: " + queryResultList);
+        logger.trace("queryResultList: " + queryResultList);
 
         if (CollectionUtils.isEmpty(queryResultList)) {
-            throw new IllegalArgumentException(queryName + " result in empty");
+            throw new IllegalArgumentException(queryName + " result is empty");
         } else {
             resultRow = queryResultList.iterator().next();
         }

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Properties;
 
@@ -19,7 +18,6 @@ import java.util.Properties;
  */
 @SuppressWarnings("UnusedDeclaration")
 @Service
-@Transactional
 public class CashService {
 
     private static final Logger logger = LoggerFactory.getLogger(CashService.class);
@@ -31,33 +29,21 @@ public class CashService {
     @Autowired
     protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-
     @Autowired
     private ObjectMapper objectMapper;
 
-    public boolean cashDropInsert(String terminal, String cashRegisterId, Double cashCount, Integer userId, Integer restaurantId) {
-        try {
-            String query = editorQueryStore.getProperty("cashDropInsert");
-            logger.trace("QUERY TO EXECUTE: " + query);
-
-            int rows = namedParameterJdbcTemplate.update(
-                    query,
-                    new MapSqlParameterSource()
-                            .addValue("terminal", terminal)
-                            .addValue("cashRegisterId", cashRegisterId)
-                            .addValue("cashCount", cashCount)
-                            .addValue("userId", userId)
-                            .addValue("restaurantId", restaurantId)
-            );
-
-            if (rows>0) {
-                return true;
-            }
-
-        } catch (Exception e) {
-            logger.warn(e.getMessage(), e);
-        }
-        return false;
+    public int insertCashDrop(String terminal, String cashRegisterId, Double cashCount, Integer userId, Integer restaurantId) {
+        String query = editorQueryStore.getProperty("cashDropInsert");
+        logger.trace("QUERY TO EXECUTE: " + query);
+        return namedParameterJdbcTemplate.update(
+                query,
+                new MapSqlParameterSource()
+                        .addValue("terminal", terminal)
+                        .addValue("cashRegisterId", cashRegisterId)
+                        .addValue("cashCount", cashCount)
+                        .addValue("userId", userId)
+                        .addValue("restaurantId", restaurantId)
+        );
     }
 
 

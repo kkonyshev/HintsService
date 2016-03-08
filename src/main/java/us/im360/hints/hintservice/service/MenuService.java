@@ -1,6 +1,5 @@
 package us.im360.hints.hintservice.service;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
@@ -13,10 +12,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import us.im360.hints.hintservice.util.JsonNodeRowMapper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Menu service implementation
@@ -25,7 +25,6 @@ import java.util.*;
  */
 @SuppressWarnings("UnusedDeclaration")
 @Service
-@Transactional
 public class MenuService {
 
 	private static final Logger logger = LoggerFactory.getLogger(MenuService.class);
@@ -46,54 +45,36 @@ public class MenuService {
 	private ObjectMapper objectMapper;
 
 	public List<JsonNode> getExtractsMenu(Integer restaurantId) {
-		try {
-			jdbcTemplate.execute("SELECT @rate := (rate + 1) FROM posper_tax WHERE id = 1;");
-			String query = commonQueryStore.getProperty("getExtractsMenu");
-			logger.trace("QUERY TO EXECUTE: " + query);
-
-			List<JsonNode> resultList = namedParameterJdbcTemplate.query(
-					query,
-					new MapSqlParameterSource()
-							.addValue("restaurantId", restaurantId),
-					new JsonNodeRowMapper(objectMapper));
-
-			if (CollectionUtils.isEmpty(resultList)) {
-				return Collections.emptyList();
-			} else {
-				return resultList;
-			}
-
-		} catch (Exception e) {
-			logger.warn(e.getMessage(), e);
-			return Collections.emptyList();
-		}
+		jdbcTemplate.execute("SELECT @rate := (rate + 1) FROM posper_tax WHERE id = 1;");
+		String query = commonQueryStore.getProperty("getExtractsMenu");
+		logger.trace("QUERY TO EXECUTE: " + query);
+		List<JsonNode> resultList = namedParameterJdbcTemplate.query(
+				query,
+				new MapSqlParameterSource().addValue("restaurantId", restaurantId),
+				new JsonNodeRowMapper(objectMapper)
+		);
+		return resultList;
 	}
 
 	public List<JsonNode> getFlowersMenu(Integer restaurantId) {
-		try {
-			jdbcTemplate.execute("SELECT @rate := (rate + 1) FROM posper_tax WHERE id = 1;");
-			String query = commonQueryStore.getProperty("getFlowersMenu");
-			logger.trace("QUERY TO EXECUTE: " + query);
-
-			List<JsonNode> resultList = namedParameterJdbcTemplate.query(
-					query,
-					new MapSqlParameterSource()
-							.addValue("restaurantId", restaurantId),
-					new JsonNodeRowMapper(objectMapper));
-
-			if (CollectionUtils.isEmpty(resultList)) {
-				return Collections.emptyList();
-			} else {
-				return buildFlowersMenuOut(resultList);
-			}
-
-		} catch (Exception e) {
-			logger.warn(e.getMessage(), e);
-			return Collections.emptyList();
-		}
+		jdbcTemplate.execute("SELECT @rate := (rate + 1) FROM posper_tax WHERE id = 1;");
+		String query = commonQueryStore.getProperty("getFlowersMenu");
+		logger.trace("QUERY TO EXECUTE: " + query);
+		List<JsonNode> resultList = namedParameterJdbcTemplate.query(
+				query,
+				new MapSqlParameterSource().addValue("restaurantId", restaurantId),
+				new JsonNodeRowMapper(objectMapper)
+		);
+		return resultList;
 	}
 
-	private ArrayList<JsonNode> buildFlowersMenuOut(List<JsonNode> inputList) {
+	/**
+	 * helper method
+	 * TODO
+	 * @param inputList
+	 * @return
+     */
+	public ArrayList<JsonNode> buildFlowersMenuOut(List<JsonNode> inputList) {
 		for (JsonNode node : inputList) {
 			ObjectNode nodeObj = (ObjectNode) node;
 
@@ -103,7 +84,6 @@ public class MenuService {
 			}
 			nodeObj.put("details", details);
 		}
-
 		return new ArrayList<>(inputList);
 	}
 
@@ -125,29 +105,4 @@ public class MenuService {
 
 		return sizeNode;
 	}
-
-
-
-/*
-                for (JsonNode node : rowResult) {
-                    ObjectNode nodeObj = (ObjectNode) node;
-
-                    ObjectNode paymentCashNode = objectMapper.createObjectNode();
-                    paymentCashNode.put("type", "CASH");
-                    paymentCashNode.put("amount", node.get("cash"));
-                    nodeObj.remove("cash");
-
-                    ObjectNode paymentCashlessNode = objectMapper.createObjectNode();
-                    paymentCashlessNode.put("type", "CASHLESS_ATM");
-                    paymentCashlessNode.put("amount", node.get("cashless_atm"));
-                    nodeObj.remove("cashless_atm");
-
-                    ArrayNode arr = new ArrayNode(objectMapper.getNodeFactory());
-                    arr.add(paymentCashNode);
-                    arr.add(paymentCashlessNode);
-
-                    nodeObj.put("payments", arr);
-                }
- */
-
 }

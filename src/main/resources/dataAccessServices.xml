@@ -80,10 +80,32 @@
     <!-- Enable annotation style of managing transactions -->
     <tx:annotation-driven transaction-manager="transactionManager" />
 
+    <!-- transactions retry advising -->
+
     <aop:config>
-        <aop:pointcut id="transactional" expression="execution(* us..*Service.*(..))" />
+        <aop:pointcut id="transactional" expression="bean(*Service)" />
         <aop:advisor pointcut-ref="transactional" advice-ref="retryAdvice" order="-1"/>
+        <aop:advisor pointcut-ref="transactional" advice-ref="txAdvice" order="10"/>
     </aop:config>
 
-    <bean id="retryAdvice" class="org.springframework.retry.interceptor.RetryOperationsInterceptor"/>
+    <bean id="simpleReturnPolicy" class="org.springframework.retry.policy.SimpleRetryPolicy">
+        <property name="maxAttempts" value="${db.transaction.retry.count}"/>
+    </bean>
+
+    <bean id="simpleRetryTemplate" class="org.springframework.retry.support.RetryTemplate">
+        <property name="retryPolicy" ref="simpleReturnPolicy"/>
+    </bean>
+
+    <bean id="retryAdvice" class="org.springframework.retry.interceptor.RetryOperationsInterceptor">
+        <property name="retryOperations" ref="simpleRetryTemplate"/>
+    </bean>
+
+    <tx:advice id="txAdvice">
+    <tx:attributes>
+        <tx:method name="get*"    read-only="true"  isolation="READ_COMMITTED" timeout="10"/>
+        <tx:method name="update*" read-only="false" isolation="READ_COMMITTED" timeout="10"/>
+        <tx:method name="insert*" read-only="false" isolation="READ_COMMITTED" timeout="10"/>
+        <tx:method name="*" timeout="30"/>
+    </tx:attributes>
+    </tx:advice>
 </beans>

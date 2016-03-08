@@ -2,7 +2,6 @@ package us.im360.hints.hintservice.handlerImpl;
 
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.BooleanUtils;
 import org.codehaus.jackson.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +17,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -70,16 +70,18 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("active") Integer active)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		List<JsonNode> resultList = userService.getUsers(restaurantId, groupId, active);
-
-		if (resultList != null && !resultList.isEmpty()) {
-			responseBuilder.success().withArray(USERS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = userService.getUsers(restaurantId, groupId, active);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(USERS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -92,17 +94,19 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("productId") String productId)
 	{
 		audit(userId);
-
-		JsonNode stock = productService.getProductStock(productId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-
-		if (stock != null) {
-			responseBuilder.success().withPlainNode(stock);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> stockList = productService.getProductStock(productId);
+			if (CollectionUtils.isNotEmpty(stockList)) {
+				JsonNode stock = stockList.iterator().next();
+				responseBuilder.success().withPlainNode(stock);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -115,16 +119,18 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("active") Integer active)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		List<JsonNode> resultList = strainService.getStrains(restaurantId, active);
-
-		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(STRAINS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = strainService.getStrains(restaurantId, active);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(STRAINS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -137,16 +143,18 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("active") Integer active)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		List<JsonNode> resultList = attributeService.getAttributes(restaurantId, active);
-
-		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(ATTRIBUTES_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = attributeService.getAttributes(restaurantId, active);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(ATTRIBUTES_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -159,16 +167,18 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("active") Integer active)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		List<JsonNode> resultList = optionService.getOptions(restaurantId, active);
-
-		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(OPTIONS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = optionService.getOptions(restaurantId, active);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(OPTIONS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -180,16 +190,18 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("restaurantId") Integer restaurantId)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		List<JsonNode> resultList = strainService.getTiersCost(restaurantId);
-
-		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(TIERS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = strainService.getTiersCost(restaurantId);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(TIERS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -201,16 +213,18 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("restaurantId") Integer restaurantId)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		List<JsonNode> resultList = strainService.getExtractsCost(restaurantId);
-
-		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(TIERS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = strainService.getExtractsCost(restaurantId);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(TIERS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -223,16 +237,18 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("ticketVisibleId") Integer ticketVisibleId)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		List<JsonNode> resultList = ticketService.getTicketDetails(userId, restaurantId, ticketVisibleId);
-
-		if (resultList != null && !resultList.isEmpty()) {
-			responseBuilder.success().withArray(PRODUCTS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = ticketService.getTicketDetails(userId, restaurantId, ticketVisibleId);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(PRODUCTS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -246,16 +262,18 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("tier") Integer tier)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		List<JsonNode> resultList = printService.getPrintInformation(restaurantId, categoryId, tier);
-
-		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = printService.getPrintInformation(restaurantId, categoryId, tier);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -267,16 +285,19 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("restaurantId") Integer restaurantId)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		List<JsonNode> resultList = menuService.getFlowersMenu(restaurantId);
-
-		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(ITEMS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = menuService.getFlowersMenu(restaurantId);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				ArrayList<JsonNode> flowersList = menuService.buildFlowersMenuOut(resultList);
+				responseBuilder.success().withArray(ITEMS_FIELD_NAME, flowersList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -288,16 +309,18 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("restaurantId") Integer restaurantId)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		List<JsonNode> resultList = menuService.getExtractsMenu(restaurantId);
-
-		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(ITEMS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = menuService.getExtractsMenu(restaurantId);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(ITEMS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -311,16 +334,18 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("dateEnd") String dateEnd)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		List<JsonNode> resultList = shipmentService.getFlowersShipments(restaurantId, dateStart, dateEnd);
-
-		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(SHIPMENTS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = shipmentService.getFlowersShipments(restaurantId, dateStart, dateEnd);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(SHIPMENTS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -333,16 +358,18 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("shipmentId") String shipmentId)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		List<JsonNode> resultList = shipmentService.getFlowersShipmentDetails(restaurantId, shipmentId);
-
-		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = shipmentService.getFlowersShipmentDetails(restaurantId, shipmentId);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -356,16 +383,18 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("dateEnd") String dateEnd)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		List<JsonNode> resultList = shipmentService.getExtractsShipments(restaurantId, dateStart, dateEnd);
-
-		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(SHIPMENTS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+		try {
+			List<JsonNode> resultList = shipmentService.getExtractsShipments(restaurantId, dateStart, dateEnd);
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(SHIPMENTS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -378,16 +407,19 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("shipmentId") String shipmentId)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		List<JsonNode> resultList = shipmentService.getExtractsShipmentDetails(restaurantId, shipmentId);
+		try {
+			List<JsonNode> resultList = shipmentService.getExtractsShipmentDetails(restaurantId, shipmentId);
 
-		if (CollectionUtils.isNotEmpty(resultList)) {
-			responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
-		} else {
-			responseBuilder.fail();
+			if (CollectionUtils.isNotEmpty(resultList)) {
+				responseBuilder.success().withArray(DETAILS_FIELD_NAME, resultList);
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -403,16 +435,14 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("attribute") String attribute)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		boolean result = strainService.updateStrain(restaurantId, status, prevStrain, strain, attribute);
-
-		if (BooleanUtils.isTrue(result)) {
+		try {
+			int rows = strainService.updateStrain(restaurantId, status, prevStrain, strain, attribute);
 			responseBuilder.success();
-		} else {
-			responseBuilder.fail();
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -427,16 +457,18 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("attribute") String attribute)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		boolean result = strainService.updateStrainAttribute(restaurantId, status, prevStrain, attribute);
-
-		if (BooleanUtils.isTrue(result)) {
-			responseBuilder.success();
-		} else {
-			responseBuilder.fail();
+		try {
+			int rowCount = strainService.updateStrainAttribute(restaurantId, status, prevStrain, attribute);
+			if (rowCount > 1) {
+				responseBuilder.success();
+			} else {
+				throw new IllegalArgumentException("undefined locationId: " + restaurantId);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
-
 		return buildResponse(responseBuilder);
 	}
 
@@ -451,14 +483,17 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 			@PathParam("cashCount") Double cashCount)
 	{
 		audit(userId);
-
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
-		boolean result = cashService.cashDropInsert(terminal, cashRegisterId, cashCount, userId, restaurantId);
-
-		if (BooleanUtils.isTrue(result)) {
-			responseBuilder.success();
-		} else {
-			responseBuilder.fail();
+		try {
+			int rowUpdated = cashService.insertCashDrop(terminal, cashRegisterId, cashCount, userId, restaurantId);
+			if (rowUpdated<1) {
+				responseBuilder.success();
+			} else {
+				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
+			}
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
 		}
 
 		return buildResponse(responseBuilder);

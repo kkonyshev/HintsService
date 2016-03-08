@@ -9,10 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import us.im360.hints.hintservice.util.JsonNodeRowMapper;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -23,7 +21,6 @@ import java.util.Properties;
  */
 @SuppressWarnings("UnusedDeclaration")
 @Service
-@Transactional
 public class UserService {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
@@ -38,23 +35,16 @@ public class UserService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public List<JsonNode> getUsers(Integer restaurantId, Integer groupId, Integer active)
-	{
-		try {
-			String profitReportQuery = commonQueryStore.getProperty("getUsers");
-			logger.trace("QUERY TO EXECUTE: " + profitReportQuery);
-
-			return namedParameterJdbcTemplate.query(
-					profitReportQuery,
-					new MapSqlParameterSource()
-							.addValue("groupId", groupId)
-							.addValue("active", active),
-					new JsonNodeRowMapper(objectMapper));
-
-		} catch (Exception e) {
-			logger.warn(e.getMessage(), e);
-			return Collections.emptyList();
-		}
+	public List<JsonNode> getUsers(Integer restaurantId, Integer groupId, Integer active) {
+		String query = commonQueryStore.getProperty("getUsers");
+		logger.trace("QUERY TO EXECUTE: " + query);
+		return namedParameterJdbcTemplate.query(
+				query,
+				new MapSqlParameterSource()
+						.addValue("groupId", groupId)
+						.addValue("active", active),
+				new JsonNodeRowMapper(objectMapper)
+		);
 	}
 	
 

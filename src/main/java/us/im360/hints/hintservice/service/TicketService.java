@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import us.im360.hints.hintservice.util.JsonNodeRowMapper;
 
@@ -24,7 +25,6 @@ import java.util.*;
  */
 @SuppressWarnings("UnusedDeclaration")
 @Service
-@Transactional
 public class TicketService {
 
     private static final Logger logger = LoggerFactory.getLogger(TicketService.class);
@@ -43,79 +43,31 @@ public class TicketService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public List<JsonNode> getTicketList(
-            Integer restaurantId,
-            String date,
-            String timeStart,
-            String timeEnd,
-            Collection<String> userIds)
-    {
-        try {
-            String ticketListQuery = reportQueryStore.getProperty("ticketList");
-            logger.trace("QUERY TO EXECUTE: " + ticketListQuery);
-
-            List<JsonNode> rowResult = namedParameterJdbcTemplate.query(
-                    ticketListQuery,
-                    new MapSqlParameterSource()
-                            .addValue("date", date)
-                            .addValue("timeStart", timeStart)
-                            .addValue("timeEnd", timeEnd)
-                            .addValue("userIds", userIds),
-                    new JsonNodeRowMapper(objectMapper));
-
-            logger.debug("result set: {}", rowResult);
-
-            if (CollectionUtils.isEmpty(rowResult)) {
-                return Collections.emptyList();
-            } else {
-                for (JsonNode node : rowResult) {
-                    ObjectNode nodeObj = (ObjectNode) node;
-
-                    ObjectNode paymentCashNode = objectMapper.createObjectNode();
-                    paymentCashNode.put("type", "CASH");
-                    paymentCashNode.put("amount", node.get("cash"));
-                    nodeObj.remove("cash");
-
-                    ObjectNode paymentCashlessNode = objectMapper.createObjectNode();
-                    paymentCashlessNode.put("type", "CASHLESS_ATM");
-                    paymentCashlessNode.put("amount", node.get("cashless_atm"));
-                    nodeObj.remove("cashless_atm");
-
-                    ArrayNode arr = new ArrayNode(objectMapper.getNodeFactory());
-                    arr.add(paymentCashNode);
-                    arr.add(paymentCashlessNode);
-
-                    nodeObj.put("payments", arr);
-                }
-
-                return rowResult;
-            }
-
-        } catch (Exception e) {
-            logger.warn(e.getMessage(), e);
-            return null;
-        }
-    }
-
-    public List<JsonNode> getTicketDetails(
-            Integer userId,
-            Integer restaurantId,
-            Integer ticketVisibleId) {
-        logger.debug("userId: {}", userId);
-
-
-        String ticketDetailsQuery = commonQueryStore.getProperty("ticketDetails");
-        logger.trace("QUERY TO EXECUTE: " + ticketDetailsQuery);
-
+    public List<JsonNode> getTicketList(Integer restaurantId, String date, String timeStart, String timeEnd, Collection<String> userIds) {
+        String query = reportQueryStore.getProperty("ticketList");
+        logger.trace("QUERY TO EXECUTE: " + query);
         List<JsonNode> rowResult = namedParameterJdbcTemplate.query(
-                ticketDetailsQuery,
+                query,
                 new MapSqlParameterSource()
-                        .addValue("ticketVisibleId", ticketVisibleId),
+                        .addValue("date", date)
+                        .addValue("timeStart", timeStart)
+                        .addValue("timeEnd", timeEnd)
+                        .addValue("userIds", userIds),
                 new JsonNodeRowMapper(objectMapper));
 
         logger.debug("result set: {}", rowResult);
-
         return rowResult;
     }
 
+    public List<JsonNode> getTicketDetails(Integer userId, Integer restaurantId, Integer ticketVisibleId) {
+        String query = commonQueryStore.getProperty("ticketDetails");
+        logger.trace("QUERY TO EXECUTE: " + query);
+        List<JsonNode> rowResult = namedParameterJdbcTemplate.query(
+                query,
+                new MapSqlParameterSource()
+                        .addValue("ticketVisibleId", ticketVisibleId),
+                new JsonNodeRowMapper(objectMapper));
+        logger.debug("result set: {}", rowResult);
+        return rowResult;
+    }
 }

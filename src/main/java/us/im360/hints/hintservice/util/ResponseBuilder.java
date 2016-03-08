@@ -8,10 +8,10 @@ import org.codehaus.jackson.node.ObjectNode;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 public class ResponseBuilder {
     public static final String RESULT_CODE_FIELD = "resultCode";
+    public static final String RESLT_REASON = "resultReason";
     public static final String RESULT_SUCCESS = "success";
     public static final String RESULT_FAIL = "fail";
 
@@ -34,6 +34,12 @@ public class ResponseBuilder {
 
     public ResponseBuilder fail() {
         this.objectNode.put(RESULT_CODE_FIELD, RESULT_FAIL);
+        return this;
+    }
+
+    public ResponseBuilder fail(String resultReason) {
+        this.objectNode.put(RESULT_CODE_FIELD, RESULT_FAIL);
+        this.objectNode.put(RESLT_REASON, resultReason);
         return this;
     }
 

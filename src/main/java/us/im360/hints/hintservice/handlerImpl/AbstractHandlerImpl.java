@@ -36,6 +36,8 @@ public abstract class AbstractHandlerImpl  {
     public static final String ITEMS_FIELD_NAME = "items";
     public static final String SHIPMENTS_FIELD_NAME = "shipments";
 
+    public static final String EMPTY_RESULT_EXCEPTION_MSG = "empty result";
+
     private static final Logger logger = LoggerFactory.getLogger(AbstractHandlerImpl.class);
 
     @Context
