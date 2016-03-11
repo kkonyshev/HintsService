@@ -7,15 +7,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 import us.im360.hints.hintservice.CommonHandler;
 import us.im360.hints.hintservice.InitHandler;
+import us.im360.hints.hintservice.dto.FlowerInventoryReqDto;
 import us.im360.hints.hintservice.service.*;
 import us.im360.hints.hintservice.util.ResponseBuilder;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +59,9 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 
 	@Autowired
 	private CashService cashService;
+
+	@Autowired
+	private FlowerService flowerService;
 
 	@GET
 	@Path("user/list/userId/{userId}/restaurantId/{restaurantId}/groupId/{groupId}/active/{active}")
@@ -499,6 +502,24 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 		return buildResponse(responseBuilder);
 	}
 
+	@POST
+	@Path("inventory/flower")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Override
+	public Response addInventoryFlower(FlowerInventoryReqDto flowerInventory)
+	{
+		audit(flowerInventory.userId);
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		try {
+			flowerService.addInventoryFlower(flowerInventory);
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
+		}
+
+		return buildResponse(responseBuilder);
+	}
 }
 
 
