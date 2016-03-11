@@ -513,6 +513,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		try {
 			flowerService.addInventoryFlower(flowerInventory);
+			responseBuilder.success();
 		} catch (Exception e) {
 			logger.warn(e.getMessage());
 			responseBuilder.fail(e.getMessage());

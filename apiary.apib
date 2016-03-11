@@ -580,3 +580,32 @@ IM360 API
 + Response 200 (application/json)
 
                 {"resultCode":"fail"}
+
+
+### Add inventory flower [POST /HintsService/v1.0/rest/inventory/flower]
++ Request (application/json)
+
+                {
+                  "userId": 2,
+                  "restaurantId": 1,
+                  "unitDetailId": "12e17fd6-a51e-11e5-9ce5-b8aeed795ea3",
+                  "cost": 1.0,
+                  "weighTech": "weighTech",
+                  "date": "2016-03-11",
+                  "totalWeight": 2.0,
+                  "bagWeight": 3.0,
+                  "startWeight": 4.0,
+                  "endWeight": 5.0,
+                  "loss": 6.0,
+                  "costPerGram": 1.1,
+                  "jars": [
+                    {
+                      "grams": 7,
+                      "quantity": 1
+                    }
+                  ]
+                }
+
++ Response 200 (application/json)
+
+                {"resultCode":"success"}
