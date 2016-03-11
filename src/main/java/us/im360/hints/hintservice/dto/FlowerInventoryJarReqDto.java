@@ -6,6 +6,6 @@ package us.im360.hints.hintservice.dto;
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 11/03/16.
  */
 public class FlowerInventoryJarReqDto {
-    public Object quantity;
-    public Object grams;
+    public Double quantity;
+    public Double grams;
 }

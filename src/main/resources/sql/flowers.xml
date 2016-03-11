@@ -61,7 +61,8 @@ WHERE id = :unitDetailId;
     <entry key="insertStrainUnitStockDiary">
         <![CDATA[
 INSERT INTO im_strain_units_stockdiary
-(`id`, `posper_category_id`, `reason`, `units`, `datetime`, `reference_table`, `reference_id`, `reference_table2`, `reference_id2`)
+(`id`, `posper_category_id`, `reason`, `units`, `datetime`, `reference_table`
+     , `reference_id`, `reference_table2`, `reference_id2`, `location_id`)
 VALUES
   (uuid(),
    :parentProsperCategoryId /*calculated sql*/,
@@ -71,7 +72,8 @@ VALUES
    'im_strain_units_details',
    :unitDetailId,
    'im_strain_inventory',
-   :inventoryUUID /*calculated java*/
+   :inventoryUUID /*calculated java*/,
+   :restaurantId
   );
         ]]>
     </entry>
@@ -81,11 +83,12 @@ VALUES
 
     <entry key="cycle-00-getParentProductId">
         <![CDATA[
-SELECT pr.id /*jarProductId*/
+SELECT pr.id AS jarProductId /*jarProductId*/
   FROM im_strain_type ty, posper_product pr, im_strain_tier ti
   WHERE pr.category_id = ty.posper_category_id
     AND ty.im_strain_tier_id = ti.id
     AND ty.posper_category_id = :parentProsperCategoryId /*calculated sql*/
+    AND ty.restaurant_id = :restaurantId
     AND pr.weight = :grams;
         ]]>
     </entry>
@@ -94,7 +97,7 @@ SELECT pr.id /*jarProductId*/
     <entry key="cycle-01-insertJarStrainDetails">
         <![CDATA[
 INSERT INTO im_strain_detail
-(`id`, `total_grams`, `grams_per_jar`, `quantity`, `jars_sold`, `total_cost`, `cost_per_gram`, `ATTR1`, `im_strain_inventory_id`, `posper_product_id`, `version`)
+(`id`, `total_grams`, `grams_per_jar`, `quantity`, `jars_sold`, `total_cost`, `cost_per_gram`, `ATTR1`, `im_strain_inventory_id`, `posper_product_id`, `version`, `restaurant_id`)
   SELECT
     :jarDetailsUUID /*java*/,
     :quantity * pr.weight,
@@ -106,17 +109,18 @@ INSERT INTO im_strain_detail
     if(:quantity = 0, 'FINISHED', 'ACTIVE'),
     :inventoryUUID,
     :jarProductId,
-    '0'
+    '0',
+    :restaurantId
   FROM posper_product pr
   WHERE pr.id = :jarProductId /*sql*/;
         ]]>
     </entry>
 
-    <entry key="cycle-01-jarStockDairy">
+    <entry key="cycle-01-insertJarStockDairy">
         <![CDATA[
     INSERT INTO posper_stockdiary
-    (`id`, `version`, `price`, `reason`, `units`, `location_id`, `product_id`, `priceSell`, `modifiers`, `im_strain_detail_id`)
-    VALUES (:jarStockDairyMD5id /*java*/, '0', '0', '101', :quantity, '100', :jarProductId, '0', '0', :jarDetailsUUID);
+    (`id`, `version`, `price`, `reason`, `units`, `location_id`, `product_id`, `priceSell`, `modifiers`, `im_strain_detail_id`, `restaurant_id`)
+    VALUES (:jarStockDairyMD5id /*java*/, '0', '0', '101', :quantity, '100', :jarProductId, '0', '0', :jarDetailsUUID, :restaurantId);
         ]]>
     </entry>
 

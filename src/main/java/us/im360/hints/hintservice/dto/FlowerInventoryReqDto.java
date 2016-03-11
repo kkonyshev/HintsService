@@ -25,10 +25,9 @@ public class FlowerInventoryReqDto {
     public Double endWeight;
     public Double loss;
 
-    public Double grams;
     public List<FlowerInventoryJarReqDto> jars;
+    public Double costPerGram;
 
-    public Object costPerGram;
     public Object shake;
     public Object crumb;
 }
