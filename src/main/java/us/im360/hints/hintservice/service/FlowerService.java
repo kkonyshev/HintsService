@@ -39,7 +39,7 @@ public class FlowerService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public List<JsonNode> addInventoryFlower(FlowerInventoryReqDto req) {
+	public void addInventoryFlower(FlowerInventoryReqDto req) {
 		logger.info("calling FlowerService");
 
 		//1
@@ -57,7 +57,7 @@ public class FlowerService {
 		insertStrainUnitStockDairy(inventoryUUID, parentProsperCategoryId, req);
 
 		//4 cycle
-		for (FlowerInventoryJarReqDto jar: req.jars) {
+		for (FlowerInventoryJarReqDto jar : req.jars) {
 			logger.info("Processing jar grams/quantity: {}/{}", jar.grams, jar.quantity);
 
 			//4.1
@@ -70,13 +70,39 @@ public class FlowerService {
 
 			String jarStockDairyMD5id = HintsUtils.md5Gen();
 			//4.3
-			insertProsperStockDairy(jarStockDairyMD5id, jarParentProductId, jarDetailsUUID, jar, req.restaurantId);
+			insertProsperStockDairyJar(jarStockDairyMD5id, jarParentProductId, jarDetailsUUID, jar, req.restaurantId);
 
 			//4.4
-			insertJarAudit(jarStockDairyMD5id, req.userId);
+			insertPortalAudit(jarStockDairyMD5id, req.userId);
+
+			//4.5
+			updateJarProsperProduct(jarParentProductId,jar);
 		}
 
-		return null;
+
+		Double costPerGram = req.costPerGram;
+		String restaurantId = req.restaurantId;
+		Integer userId = req.userId;
+
+		//shake
+		processStrain(inventoryUUID, "shake", req.shake, costPerGram, restaurantId, userId);
+		//crumb
+		processStrain(inventoryUUID, "crumb", req.crumb, costPerGram, restaurantId, userId);
+	}
+
+	private void processStrain(String inventoryUUID, String productDescription, Double shake, Double costPerGram, String restaurantId, Integer userId) {
+		//5
+		String prosperProductId = getProsperProductByDescription(productDescription);
+		//6
+		String strainMiscUUID = UUID.randomUUID().toString();
+		insertStrainMisc(strainMiscUUID, prosperProductId, inventoryUUID, productDescription, shake, costPerGram);
+		//7
+		String md5Gen = HintsUtils.md5Gen();
+		insertProsperStockDairy(md5Gen, costPerGram, shake, prosperProductId, strainMiscUUID, restaurantId);
+		//8
+		insertPortalAudit(md5Gen, userId);
+		//9
+		updateProsperProduct(prosperProductId, shake);
 	}
 
 	private String getProsperCategoryIdByUnitDetailId(FlowerInventoryReqDto req) {
@@ -85,19 +111,18 @@ public class FlowerService {
 
 		MapSqlParameterSource params = new MapSqlParameterSource()
 				.addValue("unitDetailId", req.unitDetailId)
-				.addValue("restaurantId", req.restaurantId)
-				;
+				.addValue("restaurantId", req.restaurantId);
 		logger.info("QUERY PARAMS. unitDetailId: {}, restaurantId: {}", req.unitDetailId, req.restaurantId);
 
 		List<JsonNode> queryGetProsperCategoryResultList =
 				namedParameterJdbcTemplate.query(
-					queryGetProsperCategory,
+						queryGetProsperCategory,
 						params,
-					new JsonNodeRowMapper(objectMapper)
+						new JsonNodeRowMapper(objectMapper)
 				);
 
 		JsonNode singleResult = queryGetProsperCategoryResultList.iterator().next();
-		if (singleResult==null) {
+		if (singleResult == null) {
 			throw new IllegalArgumentException("No prosper category found for unitDetailId " + req.unitDetailId);
 		}
 
@@ -128,7 +153,7 @@ public class FlowerService {
 		int rowsCount = namedParameterJdbcTemplate.update(queryInsertStrainInventory, params);
 		logger.info("rowsCount: {}", rowsCount);
 
-		if (rowsCount!=1) {
+		if (rowsCount != 1) {
 			throw new IllegalArgumentException("Wrong number of rows inserted into im_strain_inventory: " + rowsCount);
 		}
 	}
@@ -143,7 +168,7 @@ public class FlowerService {
 		int rowsCount = namedParameterJdbcTemplate.update(queryUpdateStrainUnitDetails, params);
 		logger.info("rowsCount: {}", rowsCount);
 
-		if (rowsCount!=1) {
+		if (rowsCount != 1) {
 			throw new IllegalArgumentException("Wrong number of rows updated on im_strain_units_details: " + rowsCount);
 		}
 	}
@@ -162,7 +187,7 @@ public class FlowerService {
 		int rowsCount = namedParameterJdbcTemplate.update(queryInsertStrainUnitStockDiary, params);
 		logger.info("rowsCount: {}", rowsCount);
 
-		if (rowsCount!=1) {
+		if (rowsCount != 1) {
 			throw new IllegalArgumentException("Wrong number of rows inserted into im_strain_inventory: " + rowsCount);
 		}
 	}
@@ -175,8 +200,7 @@ public class FlowerService {
 		MapSqlParameterSource params = new MapSqlParameterSource()
 				.addValue("parentProsperCategoryId", parentProsperCategoryId)
 				.addValue("grams", jar.grams)
-				.addValue("restaurantId", restaurantId)
-				;
+				.addValue("restaurantId", restaurantId);
 		logger.info("QUERY PARAMS. parentProsperCategoryId: {}, grams: {}, restaurantId: {}", parentProsperCategoryId, jar.grams, restaurantId);
 
 		List<JsonNode> queryGetParentProductIdList =
@@ -187,7 +211,7 @@ public class FlowerService {
 				);
 
 		JsonNode singleResult = queryGetParentProductIdList.iterator().next();
-		if (singleResult==null) {
+		if (singleResult == null) {
 			throw new IllegalArgumentException("No parent category found for jar grams/quantity/restaurantId" + jar.grams + "/" + jar.quantity + "/" + restaurantId);
 		}
 
@@ -210,12 +234,12 @@ public class FlowerService {
 		int rowsCount = namedParameterJdbcTemplate.update(queryInsertJarStrainDetails, params);
 		logger.info("rowsCount: {}", rowsCount);
 
-		if (rowsCount!=1) {
+		if (rowsCount != 1) {
 			throw new IllegalArgumentException("Wrong number of rows updated on im_strain_detail: " + rowsCount);
 		}
 	}
 
-	private void insertProsperStockDairy(String jarStockDairyMD5id, String jarProductId, String jarDetailsUUID, FlowerInventoryJarReqDto jar, String restaurantId) {
+	private void insertProsperStockDairyJar(String jarStockDairyMD5id, String jarProductId, String jarDetailsUUID, FlowerInventoryJarReqDto jar, String restaurantId) {
 		String queryInsertJarStockDairy = flowersQueryStore.getProperty("cycle-01-insertJarStockDairy");
 		logger.info("QUERY TO EXECUTE: {}", queryInsertJarStockDairy);
 
@@ -230,29 +254,29 @@ public class FlowerService {
 		int rowsCount = namedParameterJdbcTemplate.update(queryInsertJarStockDairy, params);
 		logger.info("rowsCount: {}", rowsCount);
 
-		if (rowsCount!=1) {
+		if (rowsCount != 1) {
 			throw new IllegalArgumentException("Wrong number of rows inserted into posper_stockdiary: " + rowsCount);
 		}
 	}
 
-	private void insertJarAudit(String jarStockDairyMD5id, Integer userId) {
-		String queryInsertJarAudit = flowersQueryStore.getProperty("cycle-01-jarAudit");
-		logger.info("QUERY TO EXECUTE: {}", queryInsertJarAudit);
+	private void insertPortalAudit(String jarStockDairyMD5id, Integer userId) {
+		String queryInsertPortalAudit = flowersQueryStore.getProperty("insertPortalAudit");
+		logger.info("QUERY TO EXECUTE: {}", queryInsertPortalAudit);
 
 		MapSqlParameterSource params = new MapSqlParameterSource()
-				.addValue("jarStockDairyMD5id", jarStockDairyMD5id)
+				.addValue("md5Id", jarStockDairyMD5id)
 				.addValue("userId", userId);
-		logger.info("QUERY PARAMS. jarStockDairyMD5id: {}, userId: {}", jarStockDairyMD5id, userId);
+		logger.info("QUERY PARAMS. md5Id: {}, userId: {}", jarStockDairyMD5id, userId);
 
-		int rowsCount = namedParameterJdbcTemplate.update(queryInsertJarAudit, params);
+		int rowsCount = namedParameterJdbcTemplate.update(queryInsertPortalAudit, params);
 		logger.info("rowsCount: {}", rowsCount);
 
-		if (rowsCount!=1) {
+		if (rowsCount != 1) {
 			throw new IllegalArgumentException("Wrong number of rows inserted into portal_audit: " + rowsCount);
 		}
 	}
 
-	private void updateProsperProduct(String jarProductId, FlowerInventoryJarReqDto jar) {
+	private void updateJarProsperProduct(String jarProductId, FlowerInventoryJarReqDto jar) {
 		String queryUpdateProsperProduct = flowersQueryStore.getProperty("cycle-01-prosperProduct");
 		logger.info("QUERY TO EXECUTE: {}", queryUpdateProsperProduct);
 
@@ -264,7 +288,91 @@ public class FlowerService {
 		int rowsCount = namedParameterJdbcTemplate.update(queryUpdateProsperProduct, params);
 		logger.info("rowsCount: {}", rowsCount);
 
-		if (rowsCount!=1) {
+		if (rowsCount != 1) {
+			throw new IllegalArgumentException("Wrong number of rows updated in posper_product: " + rowsCount);
+		}
+	}
+
+	//5
+	private String getProsperProductByDescription(String description) {
+		String queryGetProsperProductByDescription = flowersQueryStore.getProperty("getProsperProductByDescription");
+		logger.info("QUERY TO EXECUTE: {}", queryGetProsperProductByDescription);
+
+		MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("description", description);
+		logger.info("QUERY PARAMS. description: {}", description);
+
+		List<JsonNode> queryGetParentProductIdList =
+				namedParameterJdbcTemplate.query(
+						queryGetProsperProductByDescription,
+						params,
+						new JsonNodeRowMapper(objectMapper)
+				);
+
+		JsonNode singleResult = queryGetParentProductIdList.iterator().next();
+		if (singleResult == null) {
+			throw new IllegalArgumentException("No prosper product found by description: " + description);
+		}
+
+		return singleResult.get("prosperProductId").asText();
+	}
+
+	//6
+	private void insertStrainMisc(String strainMiscUUID, String prosperProductId, String inventoryUUID, String name, Double totalGrams, Double costPerGram) {
+		String queryInsertStrainMisc = flowersQueryStore.getProperty("insertStrainMisc");
+		logger.info("QUERY TO EXECUTE: {}", queryInsertStrainMisc);
+
+		MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("strainMiscUUID", strainMiscUUID)
+				.addValue("prosperProductId", prosperProductId)
+				.addValue("inventoryUUID", inventoryUUID)
+				.addValue("name", name)
+				.addValue("totalGrams", totalGrams)
+				.addValue("costPerGram", costPerGram);
+		logger.info("QUERY PARAMS: {}", params);
+
+		int rowsCount = namedParameterJdbcTemplate.update(queryInsertStrainMisc, params);
+		logger.info("rowsCount: {}", rowsCount);
+
+		if (rowsCount != 1) {
+			throw new IllegalArgumentException("Wrong number of rows inserted into im_strain_misc: " + rowsCount);
+		}
+	}
+
+	private void insertProsperStockDairy(String md5Id, Double costPerGram, Double units, String prosperProductId, String strainMiscUUID, String restaurantId) {
+		String queryInsertProsperStockDairy = flowersQueryStore.getProperty("insertProsperStockDairy");
+		logger.info("QUERY TO EXECUTE: {}", queryInsertProsperStockDairy);
+
+		MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("md5id", md5Id)
+				.addValue("costPerGram", costPerGram)
+				.addValue("units", units)
+				.addValue("productId", prosperProductId)
+				.addValue("strainMiscUUID", strainMiscUUID)
+				.addValue("restaurantId", restaurantId);
+		logger.info("QUERY PARAMS: {}", params);
+
+		int rowsCount = namedParameterJdbcTemplate.update(queryInsertProsperStockDairy, params);
+		logger.info("rowsCount: {}", rowsCount);
+
+		if (rowsCount != 1) {
+			throw new IllegalArgumentException("Wrong number of rows inserted into posper_stockdiary: " + rowsCount);
+		}
+	}
+
+	private void updateProsperProduct(String prosperProductId, Double units) {
+		String queryUpdateProsperProduct = flowersQueryStore.getProperty("updateProsperProduct");
+		logger.info("QUERY TO EXECUTE: {}", queryUpdateProsperProduct);
+
+		MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("units", units)
+				.addValue("prosperProductId", prosperProductId);
+		logger.info("QUERY PARAMS. units: {}, prosperProductId: {}", units, prosperProductId);
+
+		int rowsCount = namedParameterJdbcTemplate.update(queryUpdateProsperProduct, params);
+		logger.info("rowsCount: {}", rowsCount);
+
+		if (rowsCount != 1) {
 			throw new IllegalArgumentException("Wrong number of rows updated in posper_product: " + rowsCount);
 		}
 	}

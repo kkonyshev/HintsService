@@ -125,15 +125,6 @@ INSERT INTO im_strain_detail
     </entry>
 
 
-    <entry key="cycle-01-jarAudit">
-        <![CDATA[
-    INSERT INTO portal_audit
-    (`action`, `user_id`, `reference_table`, `reference_id`)
-    VALUES ('Inventory Weighing Sheet', :userId, 'posper_stockdiary', :jarStockDairyMD5id);
-        ]]>
-    </entry>
-
-
     <entry key="cycle-01-prosperProduct">
         <![CDATA[
     UPDATE LOW_PRIORITY posper_product
@@ -148,33 +139,32 @@ INSERT INTO im_strain_detail
 
     <!-- shake -->
 
-    <entry key="selectShakeProsperProductIdForStrainMisc">
+    <entry key="getProsperProductByDescription">
         <![CDATA[
-SELECT pr.id
+SELECT pr.id AS prosperProductId
 FROM posper_product pr
-WHERE pr.description = 'shake';
+WHERE pr.description = :description /*'shake', 'crumb'*/;
         ]]>
     </entry>
 
     <entry key="insertStrainMisc">
         <![CDATA[
-$md5id = md5(openssl_random_pseudo_bytes(16));
 INSERT INTO im_strain_misc
 (`id`, `name`, `total_grams`, `grams_packaged`, `grams_sold`, `total_price`, `total_cost`, `cost_per_gram`, `im_strain_inventory_id`, `posper_product_id`, `version`)
   SELECT
-    :miscShakeUUID /*java*/,
-    'SHAKE',
-    :shake,
+    :strainMiscUUID /*java*/,
+    :name /*'SHAKE'*/,
+    :totalGrams /*:shake*/,
     0,
     0,
     0,
-    :shake * :costPerGram,
+    :totalGrams /*:shake*/ * :costPerGram,
     :costPerGram,
-    :inventory_uuid,
+    :inventoryUUID,
     pr.id,
     '0'
   FROM posper_product pr
-  WHERE pr.id = :shakeProsperProductId /*sql*/;
+  WHERE pr.id = :prosperProductId /*sql*/;
         ]]>
     </entry>
 
@@ -182,8 +172,8 @@ INSERT INTO im_strain_misc
     <entry key="insertProsperStockDairy">
         <![CDATA[
 INSERT INTO posper_stockdiary
-(`id`, `version`, `price`, `reason`, `units`, `location_id`, `product_id`, `priceSell`, `modifiers`, `im_strain_misc_id`)
-VALUES (:shakeProsperProductMD5id /*java*/, '0', :costPerGram, '101', :shake, '100', :shakeProsperProductId /*sql*/, '0', '0', :miscShakeUUID/*java*/);
+(`id`, `version`, `price`, `reason`, `units`, `location_id`, `product_id`, `priceSell`, `modifiers`, `im_strain_misc_id` , `restaurant_id`)
+VALUES (:md5id /*java*/, '0', :costPerGram, '101', :units/*:shake*/, '100', :productId /*sql*/, '0', '0', :strainMiscUUID/*java*/, :restaurantId);
         ]]>
     </entry>
 
@@ -192,81 +182,18 @@ VALUES (:shakeProsperProductMD5id /*java*/, '0', :costPerGram, '101', :shake, '1
         <![CDATA[
 INSERT INTO portal_audit
 (`action`, `user_id`, `reference_table`, `reference_id`)
-VALUES ('Inventory Weighing Sheet', :userId, 'posper_stockdiary', :shakeProsperProductMD5id /*java*/);
+VALUES ('Inventory Weighing Sheet', :userId, 'posper_stockdiary', :md5Id /*java*/);
         ]]>
     </entry>
 
 
-    <entry key="updateShakeProsperProduct">
+    <entry key="updateProsperProduct">
         <![CDATA[
 UPDATE LOW_PRIORITY posper_product
-SET units = units + :shake,
+SET units = units + :units/*:shake*/,
   inStock = if(units > '0', 1, 0),
   version = version + 1
-WHERE id = :shakeProsperProductMD5id /*java*/;
-        ]]>
-    </entry>
-
-
-    <!-- crumb -->
-
-    <entry key="selectCrumbProsperProductIdForStrainMisc">
-        <![CDATA[
-SELECT pr.id /*:crumbProsperProductId*/
-FROM posper_product pr
-WHERE pr.description = 'crumb';
-        ]]>
-    </entry>
-
-
-    <entry key="insertCrumbStrainMisc">
-        <![CDATA[
-/*$md5id = md5(openssl_random_pseudo_bytes(16));*/
-INSERT INTO im_strain_misc
-(`id`, `name`, `total_grams`, `grams_packaged`, `grams_sold`, `total_price`, `total_cost`, `cost_per_gram`, `im_strain_inventory_id`, `posper_product_id`, `version`)
-  SELECT
-    :miscCrumbUUID /*java*/,
-    'CRUMB',
-    :crumb,
-    0,
-    0,
-    0,
-    :crumb * :costPerGram,
-    :costPerGram,
-    @inventory_uuid,
-    pr.id,
-    '0'
-  FROM posper_product pr
-  WHERE pr.id = :crumbProsperProductId /*sql*/;
-        ]]>
-    </entry>
-
-
-    <entry key="insertCrumbProsperStockDairy">
-        <![CDATA[
-INSERT INTO posper_stockdiary
-(`id`, `version`, `price`, `reason`, `units`, `location_id`, `product_id`, `priceSell`, `modifiers`, `im_strain_misc_id`)
-VALUES (:md5idCrumb, '0', :costPerGram, '101', :crumb, '100', :crumbProsperProductId, '0', '0', :miscCrumbUUID /*java*/);
-        ]]>
-    </entry>
-
-
-    <entry key="insertCrumbAuditPortal">
-        <![CDATA[
-INSERT INTO portal_audit
-(`action`, `user_id`, `reference_table`, `reference_id`)
-VALUES ('Inventory Weighing Sheet', :userId, 'posper_stockdiary', :md5idCrumb);
-        ]]>
-    </entry>
-
-
-    <entry key="updateCrumbProsperProduct">
-        <![CDATA[
-UPDATE LOW_PRIORITY posper_product
-SET units = units + :crumb,
-  inStock = if(units > '0', 1, 0),
-  version = version + 1
-WHERE id = :crumbProductId;
+WHERE id = :prosperProductId /*:prosperProductId java*/;
         ]]>
     </entry>
 

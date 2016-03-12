@@ -28,6 +28,6 @@ public class FlowerInventoryReqDto {
     public List<FlowerInventoryJarReqDto> jars;
     public Double costPerGram;
 
-    public Object shake;
-    public Object crumb;
+    public Double shake;
+    public Double crumb;
 }
