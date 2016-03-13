@@ -611,3 +611,23 @@ IM360 API
 + Response 200 (application/json)
 
                 {"resultCode":"success"}
+
+
+### Add inventory misc [POST /HintsService/v1.0/rest/inventory/misc]
++ Request (application/json)
+
+            {
+                "userId": 2,
+                "restaurantId": 2,
+                "jars": [
+                    {
+                        "product": "SHAKE",
+                        "quantity": 10,
+                        "loss": 2.123445
+                    }
+                ]
+            }
+
++ Response 200 (application/json)
+
+                {"resultCode":"success"}

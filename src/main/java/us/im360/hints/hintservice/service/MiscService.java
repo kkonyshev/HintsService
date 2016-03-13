@@ -67,20 +67,18 @@ public class MiscService {
 			updateProsperProduct(jar.product, jar.quantity);
 
 			//6
-			//TODO huge package procedure
+			processJar2(req, jar);
 
 			//7
 			String prosperStockDairyMD5Id2 = HintsUtils.md5Gen();
 			insertProsperStockDairy2(prosperStockDairyMD5Id2, jar.product, jar.loss, jar.quantity, req.restaurantId);
 
 			//8
-			insertStockDairyAudit2(prosperStockDairyMD5Id, req.userId);
+			insertStockDairyAudit2(prosperStockDairyMD5Id2, req.userId);
 
 			//9
 			updateProsperProduct2(jar.product, jar.quantity, jar.loss);
 		}
-
-		throw new IllegalStateException("testing");
 	}
 
 	private void processJar(MiscInventoryReqDto req, MiscInventoryJarReqDto jar) {
@@ -236,6 +234,131 @@ public class MiscService {
 
 		if (rowsCount != 1) {
 			throw new IllegalArgumentException("Wrong number of rows updated on posper_product: " + rowsCount);
+		}
+	}
+
+
+	private void processJar2(MiscInventoryReqDto req, MiscInventoryJarReqDto jar) {
+		logger.info("Processing jar product/quantity/loss: {}/{}/{}", jar.product, jar.quantity, jar.loss);
+
+		BigDecimal count = new BigDecimal(jar.quantity).multiply(BigDecimal.valueOf(3.5)).setScale(2, BigDecimal.ROUND_HALF_UP);
+		BigDecimal loss = BigDecimal.ZERO;
+		BigDecimal initial = BigDecimal.ZERO;
+
+		while (count.compareTo(BigDecimal.ZERO)>0) {
+
+			JsonNode innerResult2 = getStrainMiscData2(jar.product, req.restaurantId);
+			BigDecimal nullAmount = innerResult2.get("null_amount").getDecimalValue().setScale(2, RoundingMode.HALF_UP);
+			logger.info("nullAmount/count: {}/{}", nullAmount, count);
+
+			JsonNode innerResult3 = getStrainMiscData3(jar.product, nullAmount.doubleValue());
+			String strainInventoryId = innerResult3.get("im_strain_inventory_id").getTextValue();
+			BigDecimal gramsPackaged = innerResult3.get("grams_packaged").getDecimalValue().setScale(2, RoundingMode.HALF_UP);
+			BigDecimal totalGrams = innerResult3.get("total_grams").getDecimalValue().setScale(2, RoundingMode.HALF_UP);
+
+			logger.info("strainInventoryId/gramsPackaged/totalGrams: {}/{}/{}", strainInventoryId, gramsPackaged, totalGrams);
+
+			BigDecimal gramsPackagesForUpdate = BigDecimal.ZERO;
+			if (strainInventoryId==null) {
+				if (gramsPackaged.add(nullAmount).compareTo(totalGrams)<=0) {
+					initial = gramsPackaged;
+					if (gramsPackaged.add(nullAmount).compareTo(initial.add(count)) > 0) {
+						gramsPackagesForUpdate = gramsPackaged.add(count);
+					} else {
+						gramsPackagesForUpdate = gramsPackaged.add(nullAmount);
+					}
+				} else {
+					initial = gramsPackaged;
+					if (totalGrams.compareTo(gramsPackaged.add(count))>0) {
+						gramsPackagesForUpdate = gramsPackaged.add(count);
+					} else {
+						gramsPackagesForUpdate = totalGrams;
+					}
+				}
+			} else {
+				initial = gramsPackaged;
+				if (totalGrams.compareTo(initial.add(count))>0) {
+					gramsPackagesForUpdate = gramsPackaged.add(count);
+				} else {
+					gramsPackagesForUpdate = totalGrams;
+				}
+			}
+			gramsPackagesForUpdate = gramsPackagesForUpdate.setScale(2, RoundingMode.HALF_UP);
+			loss = new BigDecimal(gramsPackagesForUpdate.doubleValue());
+			logger.info("gramsPackagesForUpdate/initial/loss: {}/{}/{}", gramsPackagesForUpdate, initial, loss);
+			updateStrainMisc2(jar.product, nullAmount.doubleValue(), gramsPackagesForUpdate.doubleValue());
+
+			//end loop
+			logger.info("count/loss/initial: {}/{}/{}", count, loss, initial);
+
+			count = count.subtract(loss.subtract(initial)).setScale(2, BigDecimal.ROUND_HALF_UP);
+		}
+	}
+
+	private JsonNode getStrainMiscData2(String product, String restaurantId) {
+		String query = miscQueryStore.getProperty("getStrainMiscData2");
+		logger.info("QUERY TO EXECUTE: {}", query);
+
+		MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("product", product)
+				.addValue("restaurantId", restaurantId);
+		logger.info("QUERY PARAMS. product: {}, restaurantId: {}", product, restaurantId);
+
+		List<JsonNode> queryResult =
+				namedParameterJdbcTemplate.query(
+						query,
+						params,
+						new JsonNodeRowMapper(objectMapper)
+				);
+
+		JsonNode singleResult = queryResult.iterator().next();
+		if (singleResult == null) {
+			throw new IllegalArgumentException("No strain misc found for product: " + product);
+		}
+
+		return singleResult;
+	}
+
+	private JsonNode getStrainMiscData3(String product, Double nullAmount) {
+		String query = miscQueryStore.getProperty("getStrainMiscData3");
+		logger.info("QUERY TO EXECUTE: {}", query);
+
+		MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("product", product)
+				.addValue("nullAmount", nullAmount);
+		logger.info("QUERY PARAMS. product/nullAmount: {}/{}", product, nullAmount);
+
+		List<JsonNode> queryResult =
+				namedParameterJdbcTemplate.query(
+						query,
+						params,
+						new JsonNodeRowMapper(objectMapper)
+				);
+
+		JsonNode singleResult = queryResult.iterator().next();
+		if (singleResult == null) {
+			throw new IllegalArgumentException("No strain misc found for product: " + product);
+		}
+
+		return singleResult;
+	}
+
+	private void updateStrainMisc2(String product, Double nullAmount, Double gramsPackaged) {
+		String query = miscQueryStore.getProperty("updateStrainMisc2");
+		logger.info("QUERY TO EXECUTE: {}", query);
+
+		MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("product", product)
+				.addValue("nullAmount", nullAmount)
+				.addValue("gramsPackaged", gramsPackaged)
+				;
+		logger.info("QUERY PARAMS: {}", params);
+
+		int rowsCount = namedParameterJdbcTemplate.update(query, params);
+		logger.info("rowsCount: {}", rowsCount);
+
+		if (rowsCount != 1) {
+			throw new IllegalArgumentException("Wrong number of rows updated on im_strain_misc: " + rowsCount);
 		}
 	}
 

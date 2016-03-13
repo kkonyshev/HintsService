@@ -96,6 +96,76 @@ WHERE id = concat(:product, '35');
         ]]>
     </entry>
 
+
+    <entry key="getStrainMiscData2">
+        <![CDATA[
+SELECT round(sum(total_grams) - sum(grams_packaged), 2) AS null_amount
+FROM im_strain_misc
+WHERE im_strain_inventory_id IS NULL AND name = :product
+  AND location_id = :restaurantId;
+        ]]>
+    </entry>
+
+    <entry key="getStrainMiscData3">
+        <![CDATA[
+SELECT
+  t2.im_strain_inventory_id AS im_strain_inventory_id,
+  t2.grams_packaged         AS grams_packaged,
+  t2.total_grams            AS total_grams
+FROM im_strain_misc mi, (SELECT *
+                         FROM (SELECT *
+                               FROM
+                                 (SELECT
+                                    id,
+                                    round(sum(total_grams), 2)    AS total_grams,
+                                    round(sum(grams_packaged), 2) AS grams_packaged,
+                                    im_strain_inventory_id,
+                                    min(start_date)               AS min_date
+                                  FROM im_strain_misc
+                                  WHERE name = :product
+                                  GROUP BY ifnull(im_strain_inventory_id, id)) t1
+                               WHERE grams_packaged IS NOT NULL AND
+                                     (:nullAmount > 0 OR im_strain_inventory_id IS NOT NULL)) t1
+                         WHERE round(t1.total_grams, 2) > round(t1.grams_packaged, 2)
+                         ORDER BY t1.min_date ASC
+                         LIMIT 1) t2
+WHERE t2.total_grams > t2.grams_packaged AND mi.name = :product
+      AND (t2.im_strain_inventory_id = mi.im_strain_inventory_id OR
+           (t2.im_strain_inventory_id IS NULL AND mi.im_strain_inventory_id IS NULL AND mi.id = t2.id))
+      AND mi.grams_packaged IS NOT NULL;
+        ]]>
+    </entry>
+
+    <entry key="updateStrainMisc2">
+        <![CDATA[
+UPDATE im_strain_misc mi, (SELECT *
+                         FROM (SELECT *
+                               FROM
+                                 (SELECT
+                                    id,
+                                    round(sum(total_grams), 2)    AS total_grams,
+                                    round(sum(grams_packaged), 2) AS grams_packaged,
+                                    im_strain_inventory_id,
+                                    min(start_date)               AS min_date
+                                  FROM im_strain_misc
+                                  WHERE name = :product
+                                  GROUP BY ifnull(im_strain_inventory_id, id)) t1
+                               WHERE grams_packaged IS NOT NULL AND
+                                     (:nullAmount > 0 OR im_strain_inventory_id IS NOT NULL)) t1
+                         WHERE round(t1.total_grams, 2) > round(t1.grams_packaged, 2)
+                         ORDER BY t1.min_date ASC
+                         LIMIT 1) t2
+SET mi.grams_packaged = :gramsPackaged,
+        mi.version    = mi.version + 1,
+        mi.updated_at = now()
+WHERE t2.total_grams > t2.grams_packaged AND mi.name = :product
+      AND (t2.im_strain_inventory_id = mi.im_strain_inventory_id OR
+           (t2.im_strain_inventory_id IS NULL AND mi.im_strain_inventory_id IS NULL AND mi.id = t2.id))
+      AND mi.grams_packaged IS NOT NULL;
+        ]]>
+    </entry>
+
+
     <entry key="insertProsperStockDairy2">
         <![CDATA[
 INSERT INTO posper_stockdiary

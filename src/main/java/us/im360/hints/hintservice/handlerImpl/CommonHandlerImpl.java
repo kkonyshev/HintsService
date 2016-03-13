@@ -538,7 +538,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 		try {
 			miscService.addInventoryMisc(miscInventory);
 			responseBuilder.success();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.warn(e.getMessage());
 			responseBuilder.fail(e.getMessage());
 		}

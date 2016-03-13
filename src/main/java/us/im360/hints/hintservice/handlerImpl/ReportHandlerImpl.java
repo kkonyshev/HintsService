@@ -78,7 +78,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			} else {
 				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.warn(e.getMessage());
 			responseBuilder.fail(e.getMessage());
 		}
@@ -102,7 +102,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			} else {
 				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.warn(e.getMessage());
 			responseBuilder.fail(e.getMessage());
 		}
@@ -127,7 +127,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			} else {
 				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.warn(e.getMessage());
 			responseBuilder.fail(e.getMessage());
 		}
@@ -152,7 +152,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			} else {
 				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.warn(e.getMessage());
 			responseBuilder.fail(e.getMessage());
 		}
@@ -194,7 +194,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			} else {
 				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.warn(e.getMessage());
 			responseBuilder.fail(e.getMessage());
 		}
@@ -242,7 +242,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			} else {
 				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.warn(e.getMessage());
 			responseBuilder.fail(e.getMessage());
 		}
@@ -266,7 +266,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			} else {
 				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.warn(e.getMessage());
 			responseBuilder.fail(e.getMessage());
 		}
@@ -291,7 +291,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			} else {
 				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.warn(e.getMessage());
 			responseBuilder.fail(e.getMessage());
 		}
@@ -317,7 +317,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			} else {
 				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.warn(e.getMessage());
 			responseBuilder.fail(e.getMessage());
 		}
@@ -354,7 +354,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			} else {
 				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.warn(e.getMessage());
 			responseBuilder.fail(e.getMessage());
 		}
@@ -380,7 +380,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			} else {
 				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.warn(e.getMessage());
 			responseBuilder.fail(e.getMessage());
 		}
@@ -438,7 +438,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			} else {
 				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.warn(e.getMessage());
 			responseBuilder.fail(e.getMessage());
 		}
@@ -462,7 +462,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 			} else {
 				throw new IllegalStateException(EMPTY_RESULT_EXCEPTION_MSG);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.warn(e.getMessage());
 			responseBuilder.fail(e.getMessage());
 		}
