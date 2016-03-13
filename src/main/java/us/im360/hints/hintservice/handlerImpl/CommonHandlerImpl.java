@@ -7,10 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
 import us.im360.hints.hintservice.CommonHandler;
 import us.im360.hints.hintservice.InitHandler;
 import us.im360.hints.hintservice.dto.FlowerInventoryReqDto;
+import us.im360.hints.hintservice.dto.MiscInventoryReqDto;
 import us.im360.hints.hintservice.service.*;
 import us.im360.hints.hintservice.util.ResponseBuilder;
 
@@ -62,6 +62,10 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 
 	@Autowired
 	private FlowerService flowerService;
+
+	@Autowired
+	private MiscService miscService;
+
 
 	@GET
 	@Path("user/list/userId/{userId}/restaurantId/{restaurantId}/groupId/{groupId}/active/{active}")
@@ -513,6 +517,26 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		try {
 			flowerService.addInventoryFlower(flowerInventory);
+			responseBuilder.success();
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+	@POST
+	@Path("inventory/misc")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Override
+	public Response addInventoryMisc(MiscInventoryReqDto miscInventory)
+	{
+		audit(miscInventory.userId);
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		try {
+			miscService.addInventoryMisc(miscInventory);
 			responseBuilder.success();
 		} catch (Exception e) {
 			logger.warn(e.getMessage());

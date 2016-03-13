@@ -1,6 +1,7 @@
 package us.im360.hints.hintservice;
 
 import us.im360.hints.hintservice.dto.FlowerInventoryReqDto;
+import us.im360.hints.hintservice.dto.MiscInventoryReqDto;
 
 import javax.ws.rs.core.Response;
 
@@ -276,6 +277,13 @@ public interface CommonHandler {
      * @param flowerInventory
      * @return
      */
-    Response addInventoryFlower(
-            FlowerInventoryReqDto flowerInventory);
+    Response addInventoryFlower(FlowerInventoryReqDto flowerInventory);
+
+    /**
+     * Add misc inventory
+     *
+     * @param miscInventory
+     * @return
+     */
+    Response addInventoryMisc(MiscInventoryReqDto miscInventory);
 }

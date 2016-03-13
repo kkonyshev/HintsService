@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+    <comment>Misc inventory</comment>
+<!--
+CREATE PROCEDURE `procedure1`(IN iInput1 INT, IN iInput2 INT)
+-->
+    <entry key="getStrainMiscData">
+        <![CDATA[
+SELECT
+  round(sum(total_grams), 2)    AS total_grams,
+  round(sum(grams_packaged), 2) AS grams_packaged,
+  im_strain_inventory_id        AS im_strain_inventory_id,
+  min(start_date)               AS min_date
+FROM im_strain_misc
+WHERE name = :product
+  AND location_id = :restaurantId
+GROUP BY im_strain_inventory_id
+HAVING round(total_grams, 2) > round(grams_packaged, 2)
+ORDER BY min_date
+LIMIT 1;
+        ]]>
+    </entry>
+
+
+    <entry key="insertStrainInventory">
+        <![CDATA[
+INSERT INTO im_strain_misc
+(`id`, `name`, `total_grams`, `im_strain_inventory_id`, `posper_product_id`, `version`, `location_id`)
+  SELECT
+    :miscStrainUUID,
+    :product,
+    :loss,
+    :strainInventoryId,
+    :product,
+    '0',
+    :restaurantId
+        ]]>
+    </entry>
+
+
+    <entry key="insertStrainDetail">
+        <![CDATA[
+INSERT INTO im_strain_detail
+(`id`, `total_grams`, `grams_per_jar`, `quantity`, `jars_sold`, `total_cost`, `cost_per_gram`, `ATTR1`, `posper_product_id`, `version`)
+  SELECT
+    :strainDetailUUID,
+    3.5 * :quantity,
+    '3.5',
+    :quantity,
+    '0',
+    round(sum(t1.cost_per_gram * t1.total_grams) / sum(t1.total_grams) * (3.5 * :quantity), 2),
+    round(sum(t1.cost_per_gram * t1.total_grams) / sum(t1.total_grams), 2),
+    'ACTIVE',
+    concat(:product, '35'),
+    '0'
+  FROM (
+         SELECT
+           im_strain_inventory_id,
+           cost_per_gram,
+           sum(total_grams) - sum(grams_packaged) AS total_grams
+         FROM im_strain_misc
+         WHERE name = :product
+         GROUP BY im_strain_inventory_id
+       ) t1;
+        ]]>
+    </entry>
+
+
+    <entry key="insertProsperStockDairy">
+        <![CDATA[
+INSERT INTO posper_stockdiary
+(`id`, `version`, `price`, `reason`, `units`, `location_id`, `product_id`, `priceSell`, `modifiers`, `im_strain_detail_id`, `restaurant_id`)
+VALUES (:prosperStockDairyMD5Id, '0', '0', '102', :quantity, '100', concat(:product, '35'), '0', '0', :strainDetailUUID, :restaurantId);
+        ]]>
+    </entry>
+
+
+    <entry key="insertPortalAuditMisc">
+        <![CDATA[
+INSERT INTO portal_audit
+(`action`, `user_id`, `reference_table`, `reference_id`)
+VALUES ('Misc Package', :userId, 'posper_stockdiary', :prosperStockDairyMD5Id);
+        ]]>
+    </entry>
+
+
+    <entry key="updateProsperProductMisc">
+        <![CDATA[
+UPDATE posper_product
+SET units = units + :quantity,
+  inStock = if(units > '0', 1, 0),
+  version = version + 1
+WHERE id = concat(:product, '35');
+        ]]>
+    </entry>
+
+    <entry key="insertProsperStockDairy2">
+        <![CDATA[
+INSERT INTO posper_stockdiary
+(`id`, `version`, `price`, `reason`, `units`, `location_id`, `product_id`, `priceSell`, `modifiers`, `restaurant_id`)
+VALUES (:prosperStockDairyMD5Id2, '0', '0', '-102', round(:quantity * (-3.5) - :loss, 2), '100', :product, '0', '0', :restaurantId);
+        ]]>
+    </entry>
+
+
+    <entry key="insertPortalAuditMisc2">
+        <![CDATA[
+INSERT INTO portal_audit
+(`action`, `user_id`, `reference_table`, `reference_id`)
+VALUES ('Misc Package', :userId, 'posper_stockdiary', :prosperStockDairyMD5Id2);
+        ]]>
+    </entry>
+
+
+    <entry key="updateProsperProductMisc2">
+        <![CDATA[
+UPDATE posper_product
+SET units = round(units - (:quantity * 3.5) - :loss, 2),
+  inStock = if(units > '0', 1, 0),
+  version = version + 1
+WHERE id = :product;
+        ]]>
+    </entry>
+
+    <entry key="empty">
+        <![CDATA[
+        ]]>
+    </entry>
+</properties>
