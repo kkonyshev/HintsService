@@ -287,7 +287,7 @@ FROM
      im_strain_detail dt, im_strain_extract_details ed1,
      im_strain_extract_details ed2 LEFT JOIN im_strain_certification ce
        ON ed2.id = ce.extract_details_id
-   WHERE dt.restaurant_id = :restaurantId AND dt.posper_product_id = pr.id AND pr.category_id = ca1.id AND ca1.parent_id = ca2.id AND dt.ATTR1 = 'ACTIVE' AND
+   WHERE dt.posper_product_id = pr.id AND pr.category_id = ca1.id AND ca1.parent_id = ca2.id AND dt.ATTR1 = 'ACTIVE' AND
          ed1.id = ed2.parent_id AND ex.id = dt.im_strain_extract_id AND et.category_id = ca1.id AND
          ex.extract_details_id = ed1.id AND ed2.ATTR1 = 'LAB') ce
   LEFT JOIN (
