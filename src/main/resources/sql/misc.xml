@@ -194,6 +194,69 @@ WHERE id = :product;
         ]]>
     </entry>
 
+
+    <!-- Adjust misc stock -->
+
+    <entry key="adjustMiscGetProperProduct">
+        <![CDATA[
+SELECT pr.id AS prosperProductId
+FROM posper_product pr
+WHERE pr.description = :product;
+        ]]>
+    </entry>
+
+
+    <entry key="adjustMiscInsertStrainMisc">
+        <![CDATA[
+INSERT INTO im_strain_misc
+(`id`, `name`, `total_grams`, `grams_packaged`, `grams_sold`, `total_price`, `total_cost`, `cost_per_gram`, `posper_product_id`, `version`, `location_id`)
+  SELECT
+    :miscUUID,
+    :product,
+    :grams,
+    0,
+    0,
+    0,
+    0,
+    0,
+    pr.id,
+    '0',
+    :restaurantId
+  FROM posper_product pr
+  WHERE pr.description = :product;
+        ]]>
+    </entry>
+
+
+    <entry key="adjustMiscInsertStockDairy">
+        <![CDATA[
+INSERT INTO posper_stockdiary
+(`id`, `version`, `price`, `reason`, `units`, `location_id`, `product_id`, `priceSell`, `modifiers`, `im_strain_misc_id`, `restaurant_id`)
+VALUES (:prosperMD5Id, '0', '0', '109', :grams, '100', :prosperProductId, '0', '0', :miscUUID, :restaurantId);
+        ]]>
+    </entry>
+
+
+    <entry key="adjustMiscInsertAudit">
+        <![CDATA[
+INSERT INTO portal_audit
+(`action`, `user_id`, `reference_table`, `reference_id`)
+VALUES ('Misc Change', :userId, 'posper_stockdiary', :prosperMD5Id);
+        ]]>
+    </entry>
+
+
+    <entry key="adjustMiscInsertProduct">
+        <![CDATA[
+UPDATE LOW_PRIORITY posper_product
+SET units = units + :grams,
+  inStock = if(units > '0', 1, 0),
+  version = version + 1
+WHERE id = :prosperProductId;
+        ]]>
+    </entry>
+
+
     <entry key="empty">
         <![CDATA[
         ]]>

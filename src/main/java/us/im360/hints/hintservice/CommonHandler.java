@@ -1,5 +1,6 @@
 package us.im360.hints.hintservice;
 
+import us.im360.hints.hintservice.dto.AdjustMiscReqDto;
 import us.im360.hints.hintservice.dto.FlowerInventoryReqDto;
 import us.im360.hints.hintservice.dto.MiscInventoryReqDto;
 
@@ -286,4 +287,12 @@ public interface CommonHandler {
      * @return
      */
     Response addInventoryMisc(MiscInventoryReqDto miscInventory);
+
+    /**
+     * Adjust misc stock
+     *
+     * @param reqDto
+     * @return
+     */
+    Response stockMistAdjust(AdjustMiscReqDto reqDto);
 }

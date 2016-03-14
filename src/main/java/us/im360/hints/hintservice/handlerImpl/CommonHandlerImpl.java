@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.im360.hints.hintservice.CommonHandler;
 import us.im360.hints.hintservice.InitHandler;
+import us.im360.hints.hintservice.dto.AdjustMiscReqDto;
 import us.im360.hints.hintservice.dto.FlowerInventoryReqDto;
 import us.im360.hints.hintservice.dto.MiscInventoryReqDto;
 import us.im360.hints.hintservice.service.*;
@@ -537,6 +538,26 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		try {
 			miscService.addInventoryMisc(miscInventory);
+			responseBuilder.success();
+		} catch (Throwable e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+	@POST
+	@Path("stock/adjust/misc")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Override
+	public Response stockMistAdjust(AdjustMiscReqDto reqDto)
+	{
+		audit(reqDto.userId);
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		try {
+			miscService.adjustMistStock(reqDto);
 			responseBuilder.success();
 		} catch (Throwable e) {
 			logger.warn(e.getMessage());

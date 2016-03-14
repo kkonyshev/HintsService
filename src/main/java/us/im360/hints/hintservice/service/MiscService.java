@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+import us.im360.hints.hintservice.dto.AdjustMiscProductReqDto;
+import us.im360.hints.hintservice.dto.AdjustMiscReqDto;
 import us.im360.hints.hintservice.dto.MiscInventoryJarReqDto;
 import us.im360.hints.hintservice.dto.MiscInventoryReqDto;
 import us.im360.hints.hintservice.util.HintsUtils;
@@ -409,6 +411,129 @@ public class MiscService {
 				.addValue("product", product)
 				.addValue("quantity", quantity)
 				.addValue("loss", loss)
+				;
+		logger.info("QUERY PARAMS: {}", params);
+
+		int rowsCount = namedParameterJdbcTemplate.update(query, params);
+		logger.info("rowsCount: {}", rowsCount);
+
+		if (rowsCount != 1) {
+			throw new IllegalArgumentException("Wrong number of rows updated on posper_product: " + rowsCount);
+		}
+	}
+
+	public void adjustMistStock(AdjustMiscReqDto req) {
+		logger.info("calling adjustMistStock");
+
+		for (AdjustMiscProductReqDto product: req.products) {
+			//01 -- adjustMiscGetProperProduct
+			String prosperProductId = adjustMiscGetProperProduct(product.product);
+
+			//02 -- adjustMiscInsertStrainMisc
+			String miscUUID = UUID.randomUUID().toString();
+			adjustMiscInsertStrainMisc(miscUUID, product.product, product.grams, req.restaurantId);
+
+			//03 -- adjustMiscInsertStockDairy
+			String prosperMD5Id = HintsUtils.md5Gen();
+			adjustMiscInsertStockDairy(prosperMD5Id, prosperProductId, miscUUID, product.grams, req.restaurantId);
+
+			//04 -- adjustMiscInsertAudit
+			adjustMiscInsertAudit(prosperMD5Id, req.userId);
+
+			//05 -- adjustMiscInsertProduct
+			adjustMiscInsertProduct(prosperProductId, product.grams);
+		}
+	}
+
+	private String adjustMiscGetProperProduct(String product) {
+		String query = miscQueryStore.getProperty("adjustMiscGetProperProduct");
+		logger.info("QUERY TO EXECUTE: {}", query);
+
+		MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("product", product);
+		logger.info("QUERY PARAMS. product: {}, restaurantId: {}", product);
+
+		List<JsonNode> queryResult =
+				namedParameterJdbcTemplate.query(
+						query,
+						params,
+						new JsonNodeRowMapper(objectMapper)
+				);
+
+		JsonNode singleResult = queryResult.iterator().next();
+		if (singleResult == null) {
+			throw new IllegalArgumentException("No strain misc found for product: " + product);
+		}
+
+		return singleResult.get("prosperProductId").asText();
+	}
+
+	private void adjustMiscInsertStrainMisc(String miscUUID, String product, Double grams, String restaurantId) {
+		String query = miscQueryStore.getProperty("adjustMiscInsertStrainMisc");
+		logger.info("QUERY TO EXECUTE: {}", query);
+
+		MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("miscUUID", miscUUID)
+				.addValue("product", product)
+				.addValue("grams", grams)
+				.addValue("restaurantId", restaurantId)
+				;
+		logger.info("QUERY PARAMS: {}", params);
+
+		int rowsCount = namedParameterJdbcTemplate.update(query, params);
+		logger.info("rowsCount: {}", rowsCount);
+
+		if (rowsCount != 1) {
+			throw new IllegalArgumentException("Wrong number of rows inserted into im_strain_misc: " + rowsCount);
+		}
+	}
+
+	private void adjustMiscInsertStockDairy(String prosperMD5Id, String prosperProductId, String miscUUID, Double grams, String restaurantId) {
+		String query = miscQueryStore.getProperty("adjustMiscInsertStockDairy");
+		logger.info("QUERY TO EXECUTE: {}", query);
+
+		MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("prosperMD5Id", prosperMD5Id)
+				.addValue("prosperProductId", prosperProductId)
+				.addValue("grams", grams)
+				.addValue("miscUUID", miscUUID)
+				.addValue("restaurantId", restaurantId)
+				;
+		logger.info("QUERY PARAMS: {}", params);
+
+		int rowsCount = namedParameterJdbcTemplate.update(query, params);
+		logger.info("rowsCount: {}", rowsCount);
+
+		if (rowsCount != 1) {
+			throw new IllegalArgumentException("Wrong number of rows inserted into posper_stockdiary: " + rowsCount);
+		}
+	}
+
+	private void adjustMiscInsertAudit(String prosperMD5Id, Integer userId) {
+		String query = miscQueryStore.getProperty("adjustMiscInsertAudit");
+		logger.info("QUERY TO EXECUTE: {}", query);
+
+		MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("prosperMD5Id", prosperMD5Id)
+				.addValue("userId", userId)
+				;
+		logger.info("QUERY PARAMS: {}", params);
+
+		int rowsCount = namedParameterJdbcTemplate.update(query, params);
+		logger.info("rowsCount: {}", rowsCount);
+
+		if (rowsCount != 1) {
+			throw new IllegalArgumentException("Wrong number of rows inserted into portal_audit: " + rowsCount);
+		}
+	}
+
+	private void adjustMiscInsertProduct(String prosperProductId, Double grams) {
+		String query = miscQueryStore.getProperty("adjustMiscInsertProduct");
+		logger.info("QUERY TO EXECUTE: {}", query);
+
+		MapSqlParameterSource params = new MapSqlParameterSource()
+				.addValue("prosperProductId", prosperProductId)
+				.addValue("grams", grams)
 				;
 		logger.info("QUERY PARAMS: {}", params);
 
