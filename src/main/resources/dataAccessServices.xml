@@ -78,6 +78,7 @@
     <util:properties id="editorQueryStore"  location="classpath:sql/editor.xml"     />
     <util:properties id="flowersQueryStore" location="classpath:sql/flowers.xml"    />
     <util:properties id="miscQueryStore"    location="classpath:sql/misc.xml"       />
+    <util:properties id="invQueryStore"     location="classpath:sql/inventory.xml"  />
 
     <!-- Enable annotation style of managing transactions -->
     <tx:annotation-driven transaction-manager="transactionManager" />

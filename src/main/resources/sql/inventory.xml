@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+    <comment>Inventory</comment>
+
+
+    <entry key="getParentId">
+        <![CDATA[
+SELECT ed.posper_category_id AS parentId
+FROM im_strain_extract_details ed
+WHERE ed.id = :extractDetailsId;
+        ]]>
+    </entry>
+
+
+    <entry key="insertStrainExtract">
+        <![CDATA[
+INSERT INTO im_strain_extracts
+(`id`, `location_id`, `extract_type_id`, `cost`, `starting_grams`, `ending_grams`, `loss`, `status`, `start_datetime`, `date`, `visibleId`, `user_id`, `weigh_tech`, `extract_details_id`)
+  SELECT
+    :extractUUID,
+    :restaurantId,
+    et.id,
+    :cost,
+    :gramsTotal,
+    :endingWeight,
+    :lossWeight,
+    'ACTIVE',
+    now(),
+    :date,
+    (SELECT if(max(visibleId) IS NULL, 1, max(visibleId) + 1)
+     FROM im_strain_extracts),
+    :userId,
+    :weightTech,
+    :extractDetailsId
+  FROM im_strain_extract_details ed, posper_category ca1, im_strain_extract_type et
+  WHERE ed.id = :extractDetailsId AND ed.posper_category_id = ca1.id AND et.category_id = ca1.id;
+        ]]>
+    </entry>
+
+
+    <entry key="updateStrainExtractsDetails">
+        <![CDATA[
+UPDATE im_strain_extract_details ed
+SET current_grams = :gramsRemaining,
+  status          = if(:gramsRemaining > 0, 0, 1)
+WHERE ed.id = :extractDetailsId;
+        ]]>
+    </entry>
+
+
+    <entry key="insertStrainUnitStockDairy">
+        <![CDATA[
+INSERT INTO im_strain_units_stockdiary
+(`id`, `posper_category_id`, `reason`, `units`, `datetime`, `reference_table`, `reference_id`, `reference_table2`, `reference_id2`)
+VALUES (:strainStockDairyUUID, :parentId, '-1', -:grams_total, now(), 'im_strain_extract_details', :extractDetailsId', 'im_strain_extracts', :extractUUID);
+        ]]>
+    </entry>
+
+
+    <!-- cycle start -->
+    <entry key="getProductId">
+        <![CDATA[
+SELECT pr.id AS productId
+FROM im_strain_extract_details ed, posper_product pr, posper_category ca
+WHERE ed.id = :extractDetailsId AND ed.posper_category_id = ca.id AND pr.category_id = ca.id AND pr.weight = :grams;
+        ]]>
+    </entry>
+
+    <entry key="insertStrainDetails">
+        <![CDATA[
+INSERT INTO im_strain_detail
+(`id`, `total_grams`, `grams_per_jar`, `quantity`, `jars_sold`, `total_cost`, `cost_per_gram`, `ATTR1`, `im_strain_extract_id`, `posper_product_id`, `version`)
+  SELECT
+    :detailUUID,
+    round($quantity * $grams, 2),
+    :grams,
+    :quantity,
+    '0',
+    round(:pricePerGram * :quantity * :grams, 2),
+    round(:pricePerGram, 2),
+    if(:quantity > 0, 'ACTIVE', 'FINISHED'),
+    :extractUUID,
+    pr.id,
+    '0'
+  FROM im_strain_extract_details ed, posper_product pr, posper_category ca
+  WHERE
+    ed.id = :extractDetailsId AND ed.posper_category_id = ca.id AND pr.category_id = ca.id AND pr.weight = :grams;
+        ]]>
+    </entry>
+
+
+    <entry key="insertProsperStockDairy">
+        <![CDATA[
+INSERT INTO posper_stockdiary
+(`id`, `version`, `price`, `reason`, `units`, `location_id`, `product_id`, `priceSell`, `modifiers`, `im_strain_detail_id`)
+VALUES (:prosperStockDairyMD5Id, '0', '0', '101', :quantity, '100', :productId, '0', '0', :detailUUID);
+        ]]>
+    </entry>
+
+
+    <entry key="updateProsperProduct">
+        <![CDATA[
+UPDATE LOW_PRIORITY posper_product pr, posper_tax ta
+SET pr.units = pr.units + :quantity,
+  pr.inStock = if(pr.units > '0', '1', '0'),
+  pr.version = pr.version + 1
+WHERE pr.id = :productId;
+        ]]>
+    </entry>
+    <!-- cycle end -->
+
+
+    <entry key="insertAuditPortal">
+        <![CDATA[
+INSERT INTO portal_audit
+(`action`, `user_id`, `reference_table`, `reference_id`)
+VALUES ('New Extract Inventory Sheet', :userId, 'im_strain_extracts', :extractUUID);
+        ]]>
+    </entry>
+
+
+    <entry key="empty">
+        <![CDATA[
+        ]]>
+    </entry>
+</properties>

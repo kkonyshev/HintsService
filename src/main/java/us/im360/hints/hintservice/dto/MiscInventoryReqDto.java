@@ -3,7 +3,7 @@ package us.im360.hints.hintservice.dto;
 import java.util.List;
 
 /**
- * Flower service implementation
+ * Misc inventory req dto
  *
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 13/03/16.
  */

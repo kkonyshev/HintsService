@@ -1,7 +1,7 @@
 package us.im360.hints.hintservice.dto;
 
 /**
- * Flower service implementation
+ * Misc inventory jar req dto
  *
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 11/03/16.
  */

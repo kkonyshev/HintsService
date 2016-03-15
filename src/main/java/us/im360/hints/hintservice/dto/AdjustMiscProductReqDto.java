@@ -1,7 +1,7 @@
 package us.im360.hints.hintservice.dto;
 
 /**
- * Flower service implementation
+ * Adjust mist product req dto
  *
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 14/03/16.
  */

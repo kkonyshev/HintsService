@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+import us.im360.hints.hintservice.dto.InventoryExtractReqDto;
 import us.im360.hints.hintservice.util.JsonNodeRowMapper;
 
 import java.util.List;
@@ -28,6 +29,10 @@ public class InventoryService {
     @Autowired
     @Qualifier("reportQueryStore")
     private Properties reportQueryStore;
+
+    @Autowired
+    @Qualifier("invQueryStore")
+    private Properties invQueryStore;
 
     @Autowired
     protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -58,5 +63,9 @@ public class InventoryService {
                 new JsonNodeRowMapper(objectMapper));
         logger.debug("result set: {}", rowResult);
         return rowResult;
+    }
+
+    public void addInventoryExtract(InventoryExtractReqDto req) {
+
     }
 }
