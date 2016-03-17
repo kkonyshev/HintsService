@@ -2,6 +2,7 @@ package us.im360.hints.hintservice;
 
 import us.im360.hints.hintservice.dto.AdjustMiscReqDto;
 import us.im360.hints.hintservice.dto.FlowerInventoryReqDto;
+import us.im360.hints.hintservice.dto.InventoryExtractReqDto;
 import us.im360.hints.hintservice.dto.MiscInventoryReqDto;
 
 import javax.ws.rs.core.Response;
@@ -295,4 +296,12 @@ public interface CommonHandler {
      * @return
      */
     Response stockMistAdjust(AdjustMiscReqDto reqDto);
+
+    /**
+     * Add inventory extract
+     *
+     * @param reqDto
+     * @return
+     */
+    Response inventoryExtractAdd(InventoryExtractReqDto reqDto);
 }

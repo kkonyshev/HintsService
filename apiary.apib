@@ -650,3 +650,31 @@ IM360 API
 + Response 200 (application/json)
 
                 {"resultCode":"success"}
+
+
+### Adjust inventory extract stock [POST /HintsService/v1.0/rest/inventory/extract]
++ Request (application/json)
+
+            {
+                "userId": 2,
+                "restaurantId": 1,
+                "extractDetailsId": "00957c7e-689c-11e5-ac36-4439c455558d",
+                "cost": 1.1,
+                "pricePerGram": 1.1,
+                "gramsTotal": 1.1,
+                "gramsRemaining": 1.1,
+                "endingWeight": 1.1,
+                "lossWeight": 1.1,
+                "jars": [
+                    {
+                        "grams": 1,
+                        "quantity": 10
+                    }
+                ],
+                "weighTech": 1.1,
+                "date": "2016-01-01"
+            }
+
++ Response 200 (application/json)
+
+                {"resultCode":"success"}

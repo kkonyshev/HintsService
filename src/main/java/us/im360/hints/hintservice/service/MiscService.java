@@ -1,5 +1,6 @@
 package us.im360.hints.hintservice.service;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -134,12 +135,11 @@ public class MiscService {
 						new JsonNodeRowMapper(objectMapper)
 				);
 
-		JsonNode singleResult = queryResult.iterator().next();
-		if (singleResult == null) {
+		if (CollectionUtils.isEmpty(queryResult)) {
 			throw new IllegalArgumentException("No strain misc found for product: " + product);
 		}
 
-		return singleResult;
+		return queryResult.iterator().next();
 	}
 
 	private void insertMiscStrain(String miscStrainUUID, String product, BigDecimal loss, String strainInventoryId, String restaurantId) {
@@ -313,12 +313,11 @@ public class MiscService {
 						new JsonNodeRowMapper(objectMapper)
 				);
 
-		JsonNode singleResult = queryResult.iterator().next();
-		if (singleResult == null) {
+		if (CollectionUtils.isEmpty(queryResult)) {
 			throw new IllegalArgumentException("No strain misc found for product: " + product);
 		}
 
-		return singleResult;
+		return queryResult.iterator().next();
 	}
 
 	private JsonNode getStrainMiscData3(String product, Double nullAmount) {
@@ -337,12 +336,11 @@ public class MiscService {
 						new JsonNodeRowMapper(objectMapper)
 				);
 
-		JsonNode singleResult = queryResult.iterator().next();
-		if (singleResult == null) {
+		if (CollectionUtils.isEmpty(queryResult)) {
 			throw new IllegalArgumentException("No strain misc found for product: " + product);
 		}
 
-		return singleResult;
+		return queryResult.iterator().next();
 	}
 
 	private void updateStrainMisc2(String product, Double nullAmount, Double gramsPackaged) {
@@ -460,12 +458,11 @@ public class MiscService {
 						new JsonNodeRowMapper(objectMapper)
 				);
 
-		JsonNode singleResult = queryResult.iterator().next();
-		if (singleResult == null) {
+		if (CollectionUtils.isEmpty(queryResult)) {
 			throw new IllegalArgumentException("No strain misc found for product: " + product);
 		}
 
-		return singleResult.get("prosperProductId").asText();
+		return queryResult.iterator().next().get("prosperProductId").asText();
 	}
 
 	private void adjustMiscInsertStrainMisc(String miscUUID, String product, Double grams, String restaurantId) {

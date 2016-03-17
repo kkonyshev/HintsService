@@ -6,6 +6,6 @@ package us.im360.hints.hintservice.dto;
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 15/03/16.
  */
 public class InventoryExtractJarReqDto {
-    public String jar;
+    public Double grams;
     public Double quantity;
 }

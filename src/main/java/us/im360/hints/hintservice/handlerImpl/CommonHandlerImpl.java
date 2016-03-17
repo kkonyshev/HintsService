@@ -11,6 +11,7 @@ import us.im360.hints.hintservice.CommonHandler;
 import us.im360.hints.hintservice.InitHandler;
 import us.im360.hints.hintservice.dto.AdjustMiscReqDto;
 import us.im360.hints.hintservice.dto.FlowerInventoryReqDto;
+import us.im360.hints.hintservice.dto.InventoryExtractReqDto;
 import us.im360.hints.hintservice.dto.MiscInventoryReqDto;
 import us.im360.hints.hintservice.service.*;
 import us.im360.hints.hintservice.util.ResponseBuilder;
@@ -67,6 +68,8 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Autowired
 	private MiscService miscService;
 
+	@Autowired
+	private InventoryService inventoryService;
 
 	@GET
 	@Path("user/list/userId/{userId}/restaurantId/{restaurantId}/groupId/{groupId}/active/{active}")
@@ -558,6 +561,26 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
 		try {
 			miscService.adjustMistStock(reqDto);
+			responseBuilder.success();
+		} catch (Throwable e) {
+			logger.warn(e.getMessage());
+			responseBuilder.fail(e.getMessage());
+		}
+
+		return buildResponse(responseBuilder);
+	}
+
+	@POST
+	@Path("inventory/extract")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Override
+	public Response inventoryExtractAdd(InventoryExtractReqDto reqDto)
+	{
+		audit(reqDto.userId);
+		ResponseBuilder responseBuilder = ResponseBuilder.create(objectMapper);
+		try {
+			inventoryService.addInventoryExtract(reqDto);
 			responseBuilder.success();
 		} catch (Throwable e) {
 			logger.warn(e.getMessage());

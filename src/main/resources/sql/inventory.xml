@@ -32,7 +32,7 @@ INSERT INTO im_strain_extracts
     (SELECT if(max(visibleId) IS NULL, 1, max(visibleId) + 1)
      FROM im_strain_extracts),
     :userId,
-    :weightTech,
+    :weighTech,
     :extractDetailsId
   FROM im_strain_extract_details ed, posper_category ca1, im_strain_extract_type et
   WHERE ed.id = :extractDetailsId AND ed.posper_category_id = ca1.id AND et.category_id = ca1.id;
@@ -43,7 +43,7 @@ INSERT INTO im_strain_extracts
     <entry key="updateStrainExtractsDetails">
         <![CDATA[
 UPDATE im_strain_extract_details ed
-SET current_grams = :gramsRemaining,
+SET grams = :gramsRemaining,
   status          = if(:gramsRemaining > 0, 0, 1)
 WHERE ed.id = :extractDetailsId;
         ]]>
@@ -54,7 +54,7 @@ WHERE ed.id = :extractDetailsId;
         <![CDATA[
 INSERT INTO im_strain_units_stockdiary
 (`id`, `posper_category_id`, `reason`, `units`, `datetime`, `reference_table`, `reference_id`, `reference_table2`, `reference_id2`)
-VALUES (:strainStockDairyUUID, :parentId, '-1', -:grams_total, now(), 'im_strain_extract_details', :extractDetailsId', 'im_strain_extracts', :extractUUID);
+VALUES (:strainStockDairyUUID, :parentId, '-1', -:gramsTotal, now(), 'im_strain_extract_details', :extractDetailsId, 'im_strain_extracts', :extractUUID);
         ]]>
     </entry>
 
@@ -71,10 +71,10 @@ WHERE ed.id = :extractDetailsId AND ed.posper_category_id = ca.id AND pr.categor
     <entry key="insertStrainDetails">
         <![CDATA[
 INSERT INTO im_strain_detail
-(`id`, `total_grams`, `grams_per_jar`, `quantity`, `jars_sold`, `total_cost`, `cost_per_gram`, `ATTR1`, `im_strain_extract_id`, `posper_product_id`, `version`)
+(`id`, `total_grams`, `grams_per_jar`, `quantity`, `jars_sold`, `total_cost`, `cost_per_gram`, `ATTR1`, `im_strain_extract_id`, `posper_product_id`, `version`, `restaurant_id`)
   SELECT
     :detailUUID,
-    round($quantity * $grams, 2),
+    round(:quantity * :grams, 2),
     :grams,
     :quantity,
     '0',
@@ -83,7 +83,8 @@ INSERT INTO im_strain_detail
     if(:quantity > 0, 'ACTIVE', 'FINISHED'),
     :extractUUID,
     pr.id,
-    '0'
+    '0',
+    :restaurantId
   FROM im_strain_extract_details ed, posper_product pr, posper_category ca
   WHERE
     ed.id = :extractDetailsId AND ed.posper_category_id = ca.id AND pr.category_id = ca.id AND pr.weight = :grams;
@@ -94,8 +95,8 @@ INSERT INTO im_strain_detail
     <entry key="insertProsperStockDairy">
         <![CDATA[
 INSERT INTO posper_stockdiary
-(`id`, `version`, `price`, `reason`, `units`, `location_id`, `product_id`, `priceSell`, `modifiers`, `im_strain_detail_id`)
-VALUES (:prosperStockDairyMD5Id, '0', '0', '101', :quantity, '100', :productId, '0', '0', :detailUUID);
+(`id`, `version`, `price`, `reason`, `units`, `location_id`, `product_id`, `priceSell`, `modifiers`, `im_strain_detail_id`, `restaurant_id`)
+VALUES (:prosperStockDairyMD5Id, '0', '0', '101', :quantity, '100', :productId, '0', '0', :detailUUID, :restaurantId);
         ]]>
     </entry>
 
