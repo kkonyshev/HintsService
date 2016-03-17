@@ -275,7 +275,7 @@ public class InventoryService {
 
     //cycle ends here
 
-    private void insertAuditPortal(Integer userId, String extractUUID) {
+    private void insertAuditPortal(String userId, String extractUUID) {
         String query = invQueryStore.getProperty("insertAuditPortal");
         logger.info("QUERY TO EXECUTE: {}", query);
 

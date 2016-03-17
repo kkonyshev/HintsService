@@ -75,7 +75,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Path("user/list/userId/{userId}/restaurantId/{restaurantId}/groupId/{groupId}/active/{active}")
 	@Override
 	public Response getUsers(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("groupId") Integer groupId,
 			@PathParam("active") Integer active)
@@ -100,7 +100,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Path("product/stock/userId/{userId}/restaurantId/{restaurantId}/productId/{productId}")
 	@Override
 	public Response getProductStock(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("productId") String productId)
 	{
@@ -125,7 +125,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Path("strain/list/userId/{userId}/restaurantId/{restaurantId}/active/{active}")
 	@Override
 	public Response getStrains(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("active") Integer active)
 	{
@@ -149,7 +149,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Path("attribute/list/userId/{userId}/restaurantId/{restaurantId}/active/{active}")
 	@Override
 	public Response getAttributes(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("active") Integer active)
 	{
@@ -173,7 +173,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Path("option/list/userId/{userId}/restaurantId/{restaurantId}/active/{active}")
 	@Override
 	public Response getOptions(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("active") Integer active)
 	{
@@ -197,7 +197,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Path("tier/costs/userId/{userId}/restaurantId/{restaurantId}")
 	@Override
 	public Response getTiersCost(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId)
 	{
 		audit(userId);
@@ -220,7 +220,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Path("extract/costs/userId/{userId}/restaurantId/{restaurantId}")
 	@Override
 	public Response getExtractsCost(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId)
 	{
 		audit(userId);
@@ -243,7 +243,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Path("details/ticket/userId/{userId}/restaurantId/{restaurantId}/ticketVisibleId/{ticketVisibleId}")
 	@Override
 	public Response getTicketDetail(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("ticketVisibleId") Integer ticketVisibleId)
 	{
@@ -267,7 +267,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Path("print/information/userId/{userId}/restaurantId/{restaurantId}/categoryId/{categoryId}/tier/{tier}")
 	@Override
 	public Response getPrintInformation(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("categoryId") String categoryId,
 			@PathParam("tier") Integer tier)
@@ -292,7 +292,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Path("menu/flowers/userId/{userId}/restaurantId/{restaurantId}")
 	@Override
 	public Response getFlowersMenu(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId)
 	{
 		audit(userId);
@@ -316,7 +316,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Path("menu/extracts/userId/{userId}/restaurantId/{restaurantId}")
 	@Override
 	public Response getExtractsMenu(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId)
 	{
 		audit(userId);
@@ -339,7 +339,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Path("shipments/flowers/userId/{userId}/restaurantId/{restaurantId}/dateStart/{dateStart}/dateEnd/{dateEnd}")
 	@Override
 	public Response getShipmentsFlowers(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("dateStart") String dateStart,
 			@PathParam("dateEnd") String dateEnd)
@@ -364,7 +364,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Path("shipment/details/flowers/userId/{userId}/restaurantId/{restaurantId}/shipmentId/{shipmentId}")
 	@Override
 	public Response getShipmentFlowersDetails(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("shipmentId") String shipmentId)
 	{
@@ -388,7 +388,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Path("shipments/extracts/userId/{userId}/restaurantId/{restaurantId}/dateStart/{dateStart}/dateEnd/{dateEnd}")
 	@Override
 	public Response getShipmentsExtracts(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("dateStart") String dateStart,
 			@PathParam("dateEnd") String dateEnd)
@@ -413,7 +413,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Path("shipment/details/extracts/userId/{userId}/restaurantId/{restaurantId}/shipmentId/{shipmentId}")
 	@Override
 	public Response getShipmentExtractsDetails(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("shipmentId") String shipmentId)
 	{
@@ -438,7 +438,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Path("strain/update/userId/{userId}/restaurantId/{restaurantId}/status/{status}/prevStrain/{prevStrain}/strain/{strain}/attribute/{attribute}")
 	@Override
 	public Response updateStrain(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("status") String status,
 			@PathParam("prevStrain") String prevStrain,
@@ -461,7 +461,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Path("strain/attribute/update/userId/{userId}/restaurantId/{restaurantId}/status/{status}/prevStrain/{prevStrain}/attribute/{attribute}")
 	@Override
 	public Response updateStrainAttribute(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("prevStrain") String prevStrain,
 			@PathParam("status") String status,
@@ -487,7 +487,7 @@ public class CommonHandlerImpl extends AbstractHandlerImpl implements CommonHand
 	@Path("cash/drop/insert/userId/{userId}/restaurantId/{restaurantId}/terminal/{terminal}/cashRegisterId/{cashRegisterId}/cashCount/{cashCount}")
 	@Override
 	public Response insertCashDrop(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("terminal") String terminal,
 			@PathParam("cashRegisterId") String cashRegisterId,

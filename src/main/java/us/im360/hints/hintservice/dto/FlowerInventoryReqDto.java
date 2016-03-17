@@ -8,8 +8,7 @@ import java.util.List;
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 11/03/16.
  */
 public class FlowerInventoryReqDto {
-    //TODO convert all userIds to String
-    public Integer userId;
+    public String userId;
     public String restaurantId;
 
     public String unitDetailId;

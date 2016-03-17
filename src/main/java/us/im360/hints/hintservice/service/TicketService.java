@@ -59,7 +59,7 @@ public class TicketService {
         return rowResult;
     }
 
-    public List<JsonNode> getTicketDetails(Integer userId, Integer restaurantId, Integer ticketVisibleId) {
+    public List<JsonNode> getTicketDetails(String userId, Integer restaurantId, Integer ticketVisibleId) {
         String query = commonQueryStore.getProperty("ticketDetails");
         logger.trace("QUERY TO EXECUTE: " + query);
         List<JsonNode> rowResult = namedParameterJdbcTemplate.query(

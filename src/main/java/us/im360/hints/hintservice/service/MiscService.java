@@ -203,7 +203,7 @@ public class MiscService {
 		}
 	}
 
-	private void insertStockDairyAudit(String prosperStockDairyMD5Id, Integer userId) {
+	private void insertStockDairyAudit(String prosperStockDairyMD5Id, String userId) {
 		String query = miscQueryStore.getProperty("insertPortalAuditMisc");
 		logger.info("QUERY TO EXECUTE: {}", query);
 
@@ -383,7 +383,7 @@ public class MiscService {
 		}
 	}
 
-	private void insertStockDairyAudit2(String prosperStockDairyMD5Id2, Integer userId) {
+	private void insertStockDairyAudit2(String prosperStockDairyMD5Id2, String userId) {
 		String query = miscQueryStore.getProperty("insertPortalAuditMisc2");
 		logger.info("QUERY TO EXECUTE: {}", query);
 
@@ -506,7 +506,7 @@ public class MiscService {
 		}
 	}
 
-	private void adjustMiscInsertAudit(String prosperMD5Id, Integer userId) {
+	private void adjustMiscInsertAudit(String prosperMD5Id, String userId) {
 		String query = miscQueryStore.getProperty("adjustMiscInsertAudit");
 		logger.info("QUERY TO EXECUTE: {}", query);
 

@@ -17,7 +17,7 @@ public interface ReportHandler {
      * @return
      */
     Response getCloseReportOnDate(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             String closeDate
     );
@@ -31,7 +31,7 @@ public interface ReportHandler {
      * @return
      */
     Response getCashClose(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             String cashRegisterId);
 
@@ -44,7 +44,7 @@ public interface ReportHandler {
      * @return
      */
     Response getProfitReport(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             String startDate,
             String endDate
@@ -60,7 +60,7 @@ public interface ReportHandler {
      * @return
      */
     Response getLossReport(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             String startDate,
             String endDate);
@@ -75,7 +75,7 @@ public interface ReportHandler {
      * @return
      */
     Response getPaymentReport(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             String startDate,
             String endDate
@@ -93,7 +93,7 @@ public interface ReportHandler {
      * @return
      */
     Response getTickets(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             String date,
             String timeStart,
@@ -111,7 +111,7 @@ public interface ReportHandler {
      * @return
      */
     Response getSalesReport(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             String dateStart,
             String dateEnd
@@ -125,7 +125,7 @@ public interface ReportHandler {
      * @return
      */
     Response getUnits(
-            Integer userId,
+            String userId,
             Integer restaurantId
     );
 
@@ -139,7 +139,7 @@ public interface ReportHandler {
      * @return
      */
     Response getBags(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             Integer status,
             String attr1
@@ -154,7 +154,7 @@ public interface ReportHandler {
      * @return
      */
     Response getBagsNullStatus(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             Integer status
     );
@@ -168,7 +168,7 @@ public interface ReportHandler {
      * @return
      */
     Response getStockReport(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             String date
     );
@@ -183,7 +183,7 @@ public interface ReportHandler {
      * @return
      */
     Response getExtracts(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             Integer status,
             String attr1
@@ -197,7 +197,7 @@ public interface ReportHandler {
      * @return
      */
     Response getExtractsNullStatus(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             Integer status
     );
@@ -209,7 +209,7 @@ public interface ReportHandler {
      * @return
      */
     Response getInventory(
-            Integer userId,
+            String userId,
             Integer restaurantId
     );
 
@@ -221,7 +221,7 @@ public interface ReportHandler {
      * @return
      */
     Response getInventoryList(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             String attr1
     );

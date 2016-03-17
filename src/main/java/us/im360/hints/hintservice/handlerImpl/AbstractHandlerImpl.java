@@ -50,7 +50,7 @@ public abstract class AbstractHandlerImpl  {
     @Autowired
     protected ObjectMapper objectMapper;
 
-    protected void audit(Integer userId) {
+    protected void audit(String userId) {
         auditService.start(userId, new AuditInfo(req, userId));
     }
 

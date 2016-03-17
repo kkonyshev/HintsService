@@ -82,7 +82,7 @@ public class FlowerService {
 
 		Double costPerGram = req.costPerGram;
 		String restaurantId = req.restaurantId;
-		Integer userId = req.userId;
+		String userId = req.userId;
 
 		//shake
 		processStrain(inventoryUUID, "shake", req.shake, costPerGram, restaurantId, userId);
@@ -90,7 +90,7 @@ public class FlowerService {
 		processStrain(inventoryUUID, "crumb", req.crumb, costPerGram, restaurantId, userId);
 	}
 
-	private void processStrain(String inventoryUUID, String productDescription, Double shake, Double costPerGram, String restaurantId, Integer userId) {
+	private void processStrain(String inventoryUUID, String productDescription, Double shake, Double costPerGram, String restaurantId, String userId) {
 		//5
 		String prosperProductId = getProsperProductByDescription(productDescription);
 		//6
@@ -259,7 +259,7 @@ public class FlowerService {
 		}
 	}
 
-	private void insertPortalAudit(String jarStockDairyMD5id, Integer userId) {
+	private void insertPortalAudit(String jarStockDairyMD5id, String userId) {
 		String queryInsertPortalAudit = flowersQueryStore.getProperty("insertPortalAudit");
 		logger.info("QUERY TO EXECUTE: {}", queryInsertPortalAudit);
 

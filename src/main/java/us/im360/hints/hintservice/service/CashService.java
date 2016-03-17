@@ -32,7 +32,7 @@ public class CashService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public int insertCashDrop(String terminal, String cashRegisterId, Double cashCount, Integer userId, Integer restaurantId) {
+    public int insertCashDrop(String terminal, String cashRegisterId, Double cashCount, String userId, Integer restaurantId) {
         String query = editorQueryStore.getProperty("cashDropInsert");
         logger.trace("QUERY TO EXECUTE: " + query);
         return namedParameterJdbcTemplate.update(

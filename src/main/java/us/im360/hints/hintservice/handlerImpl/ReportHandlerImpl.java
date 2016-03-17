@@ -65,7 +65,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	@Path("cash/userId/{userId}/restaurantId/{restaurantId}/closeDate/{closeDate}")
 	@Override
 	public Response getCloseReportOnDate(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("closeDate") String closeDate)
 	{
@@ -89,7 +89,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	@Path("cash/close/userId/{userId}/restaurantId/{restaurantId}/cashRegisterId/{cashRegisterId}")
 	@Override
 	public Response getCashClose(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("cashRegisterId") String cashRegisterId)
 	{
@@ -113,7 +113,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	@Path("profit/userId/{userId}/restaurantId/{restaurantId}/startDate/{startDate}/endDate/{endDate}")
 	@Override
 	public Response getProfitReport(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("startDate") String startDate,
 			@PathParam("endDate") String endDate)
@@ -138,7 +138,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	@Path("loss/userId/{userId}/restaurantId/{restaurantId}/startDate/{startDate}/endDate/{endDate}")
 	@Override
 	public Response getLossReport(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("startDate") String startDate,
 			@PathParam("endDate") String endDate)
@@ -164,7 +164,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	@Path("payment/userId/{userId}/restaurantId/{restaurantId}/startDate/{startDate}/endDate/{endDate}")
 	@Override
 	public Response getPaymentReport(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("startDate") String startDate,
 			@PathParam("endDate") String endDate)
@@ -206,7 +206,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	@Path("tickets/userId/{userId}/restaurantId/{restaurantId}/date/{date}/timeStart/{timeStart}/timeEnd/{timeEnd}/userIdList/{userIdList}")
 	@Override
 	public Response getTickets(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("date") String date,
 			@PathParam("timeStart") String timeStart,
@@ -254,7 +254,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	@Path("units/userId/{userId}/restaurantId/{restaurantId}")
 	@Override
 	public Response getUnits(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId)
 	{
 		audit(userId);
@@ -277,7 +277,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	@Path("sales/userId/{userId}/restaurantId/{restaurantId}/startDate/{startDate}/endDate/{endDate}")
 	@Override
 	public Response getSalesReport(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("startDate") String startDate,
 			@PathParam("endDate") String endDate)
@@ -303,7 +303,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	@Path("bags/userId/{userId}/restaurantId/{restaurantId}/status/{status}/attr1/{attr1}")
 	@Override
 	public Response getBags(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("status") Integer status,
 			@PathParam("attr1") String attr1)
@@ -329,7 +329,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	@Path("bags/userId/{userId}/restaurantId/{restaurantId}/status/{status}")
 	@Override
 	public Response getBagsNullStatus(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("status") Integer status)
 	{
@@ -341,7 +341,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	@Path("stock/userId/{userId}/restaurantId/{restaurantId}/date/{date}")
 	@Override
 	public Response getStockReport(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("date") String date)
 	{
@@ -366,7 +366,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	@Path("extracts/userId/{userId}/restaurantId/{restaurantId}/status/{status}/attr1/{attr1}")
 	@Override
 	public Response getExtracts(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("status") Integer status,
 			@PathParam("attr1") String attr1)
@@ -391,7 +391,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	@Path("extracts/userId/{userId}/restaurantId/{restaurantId}/status/{status}")
 	@Override
 	public Response getExtractsNullStatus(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("status") Integer status)
 	{
@@ -403,7 +403,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	@Path("inventory/userId/{userId}/restaurantId/{restaurantId}")
 	@Override
 	public Response getInventory(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId)
 	{
 		audit(userId);
@@ -449,7 +449,7 @@ public class ReportHandlerImpl extends AbstractHandlerImpl implements ReportHand
 	@Path("inventory/list/userId/{userId}/restaurantId/{restaurantId}/attr1/{attr1}")
 	@Override
 	public Response getInventoryList(
-			@PathParam("userId") Integer userId,
+			@PathParam("userId") String userId,
 			@PathParam("restaurantId") Integer restaurantId,
 			@PathParam("attr1") String attr1)
 	{

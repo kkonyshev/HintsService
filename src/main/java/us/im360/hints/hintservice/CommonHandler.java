@@ -22,7 +22,7 @@ public interface CommonHandler {
      * @return
      */
     Response getTicketDetail(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             Integer ticketVisibleId
     );
@@ -36,7 +36,7 @@ public interface CommonHandler {
      * @return
      */
     Response getUsers(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             Integer groupId,
             Integer active
@@ -51,7 +51,7 @@ public interface CommonHandler {
      * @return
      */
     Response getProductStock(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             String productId
     );
@@ -65,7 +65,7 @@ public interface CommonHandler {
      * @return
      */
     Response getStrains(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             Integer active
     );
@@ -79,7 +79,7 @@ public interface CommonHandler {
      * @return
      */
     Response getAttributes(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             Integer active
     );
@@ -92,7 +92,7 @@ public interface CommonHandler {
      * @return
      */
     Response getOptions(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             Integer active
     );
@@ -105,7 +105,7 @@ public interface CommonHandler {
      * @return
      */
     Response getTiersCost(
-            Integer userId,
+            String userId,
             Integer restaurantId
     );
 
@@ -118,7 +118,7 @@ public interface CommonHandler {
      * @return
      */
     Response getExtractsCost(
-            Integer userId,
+            String userId,
             Integer restaurantId
     );
 
@@ -132,7 +132,7 @@ public interface CommonHandler {
      * @return
      */
     Response getPrintInformation(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             String categoryId,
             Integer tier
@@ -146,7 +146,7 @@ public interface CommonHandler {
      * @return
      */
     Response getFlowersMenu(
-            Integer userId,
+            String userId,
             Integer restaurantId
     );
 
@@ -157,7 +157,7 @@ public interface CommonHandler {
      * @return
      */
     Response getExtractsMenu(
-            Integer userId,
+            String userId,
             Integer restaurantId
     );
 
@@ -171,7 +171,7 @@ public interface CommonHandler {
      * @return
      */
     Response getShipmentsFlowers(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             String dateStart,
             String dateEnd
@@ -186,7 +186,7 @@ public interface CommonHandler {
      * @return
      */
     Response getShipmentFlowersDetails(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             String shipmentId
     );
@@ -200,7 +200,7 @@ public interface CommonHandler {
      * @return
      */
     Response getShipmentsExtracts(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             String dateStart,
             String dateEnd
@@ -214,7 +214,7 @@ public interface CommonHandler {
      * @return
      */
     Response getShipmentExtractsDetails(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             String shipmentId
     );
@@ -231,7 +231,7 @@ public interface CommonHandler {
      * @return
      */
     Response updateStrain(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             String prevStrain,
             String strain,
@@ -250,7 +250,7 @@ public interface CommonHandler {
      * @return
      */
     Response updateStrainAttribute(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             String prevStrain,
             String status,
@@ -267,7 +267,7 @@ public interface CommonHandler {
      * @return
      */
     Response insertCashDrop(
-            Integer userId,
+            String userId,
             Integer restaurantId,
             String terminal,
             String cashRegisterId,

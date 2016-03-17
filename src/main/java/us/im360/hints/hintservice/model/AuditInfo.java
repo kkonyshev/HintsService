@@ -9,11 +9,11 @@ import java.util.UUID;
  * Created by Konstantin Konyshev <konyshev.konstantin@gmail.com> on 18/02/16.
  */
 public class AuditInfo {
-    public final Integer userId;
+    public final String userId;
     public final String sid;
     public final String rid;
     public final String url;
-    public AuditInfo(HttpServletRequest req, Integer userId) {
+    public AuditInfo(HttpServletRequest req, String userId) {
         this.userId = userId;
         this.sid = req.getSession().getId();
         this.url = req.getRequestURL().toString();
